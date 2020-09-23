@@ -9,6 +9,19 @@ const url =
 const mongooseUrl =
   "mongodb://admin_test:tUbswWCPZZIutNsIiLId@103.221.223.26:24569/facility_testing?retryWrites=true&w=majority";
 
+const convertStringtToDate = (dateString) => {
+  if (dateString) {
+    const dateParts = dateString.split("/");
+    const dateObject = new Date(
+      +dateParts[2],
+      +dateParts[1] - 1,
+      +dateParts[0] + 1
+    );
+    return dateObject;
+  }
+  return null;
+};
+
 const convertDate = async () => {
   try {
     const client = await MongoClient.connect(url, {
@@ -30,30 +43,25 @@ const convertDate = async () => {
         .then((items) => {
           // console.log(items);
           // items.map(item => {
-
           // })
           items.map((employee) => {
-            let temp = new Employee({
-              gender: employee.gender,
-              department: employee.department,
-              degree: employee.degree,
-              fullName: employee.fullName,
-            });
-            temp
-              .save()
-              .then(() => console.log("ok"))
-              .catch((err) => console.log(err));
+            const tempEmployee = {
+              ...employee,
+              _id: null,
+              DOB: convertStringtToDate(employee.DOB),
+              issueDate: convertStringtToDate(employee.issueDate),
+              dateIn: convertStringtToDate(employee.dateIn),
+              dateUnion: convertStringtToDate(employee.dateUnion),
+            };
+            const temp = new Employee({ ...tempEmployee });
+            temp.save();
           });
         })
         .catch((err) => console.log(err));
     });
 
     console.log("Connect ok");
-
-    const db = client.db("facility_testing");
   } catch (error) {
     console.log(error);
   }
 };
-
-convertDate();
