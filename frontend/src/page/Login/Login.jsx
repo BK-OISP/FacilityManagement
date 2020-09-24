@@ -12,7 +12,7 @@ const LoginPage = () => {
       <Container className="login">
         <Row className="justify-content-between">
           <Col md={5} className="d-none d-md-block login--logo">
-            <Tilt className="Tilt" options={{ max: 25, perspective: 600 }}>
+            <Tilt className="Tilt" options={{ perspective: 600 }}>
               <img className="img-fluid" src={OISP_Logo} alt="OISP_Logo" />
             </Tilt>
           </Col>
