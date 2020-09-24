@@ -41,7 +41,6 @@ mongoose
   .connect(process.env.DB_URL)
   .then(() => {
     app.listen(process.env.PORT || 5000);
-    console.log("ok");
   })
   .catch((err) => {});
 
