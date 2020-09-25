@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Tilt from "react-tilt";
 
-import OISP_Logo from "./OISP_Logo.png";
+import OISP_Logo from "../../asset/img/OISP_Logo.png";
 
 const LoginPage = () => {
   return (

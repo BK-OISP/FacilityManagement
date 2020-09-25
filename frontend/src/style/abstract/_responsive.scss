@@ -5,3 +5,49 @@
     }
   }
 }
+
+@media only screen and (min-width: 768px) {
+  .wrapper {
+    .col-md-3 {
+      flex: 0 0 24%;
+    }
+  }
+}
+
+@media only screen and (min-width: 576px) {
+  .col-sm-6 {
+    flex: 0 0 48%;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .sidebar {
+    width: 0;
+    &-expand .wrapper {
+      margin-left: 0;
+    }
+  }
+  .wrapper {
+    margin-left: 0;
+  }
+
+  .nvbar--search {
+    display: none;
+  }
+
+  .nv--right {
+    padding-top: 3px;
+    .nv--item {
+      display: none;
+    }
+    .noti {
+      display: list-item;
+    }
+    .avt-wrapper {
+      display: list-item;
+      .avt {
+        padding: 10px;
+      }
+    }
+  }
+}
