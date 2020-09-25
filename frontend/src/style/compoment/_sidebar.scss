@@ -6,7 +6,7 @@
   background: $main-bg-color;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 4px 1px;
   overflow: hidden;
-  z-index: 100;
+  z-index: 99;
   transition: all 0.2s;
   overflow-y: auto;
 
@@ -24,6 +24,11 @@
   &-close .sidebar {
     span {
       animation: closeSidebar 0.2s forwards;
+    }
+    .sidebar-nav--dropdown {
+      ul {
+        display: none;
+      }
     }
   }
 
@@ -51,43 +56,75 @@
     }
 
     &--link {
-      display: flex;
-      align-items: center;
-      color: $main-color;
-      text-decoration: none;
-      vertical-align: middle;
+      a {
+        display: flex;
+        align-items: center;
+        color: $main-color;
+        text-decoration: none;
+        vertical-align: middle;
 
-      &:hover {
-        background: $second-bg-color;
+        &:hover {
+          background: $second-bg-color;
+        }
+
+        &.active {
+          background: $second-bg-color;
+          color: $danger-color;
+        }
+
+        &.active div {
+          border-left: 5px solid $danger-color;
+        }
+
+        &.active i {
+          color: $danger-color;
+          margin-left: -5px;
+        }
+
+        i {
+          font-size: 1.8rem;
+          color: $second-color;
+          position: absolute;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+        }
+
+        div {
+          min-width: 82px;
+          height: 60px;
+          position: relative;
+        }
       }
+    }
 
-      &.active {
-        background: $second-bg-color;
-        color: $danger-color;
-      }
-
-      &.active div {
-        border-left: 5px solid $danger-color;
-      }
-
-      &.active i {
-        color: $danger-color;
-        margin-left: -5px;
-      }
-
-      i {
-        font-size: 1.8rem;
-        color: $second-color;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-      }
-
-      div {
-        min-width: 82px;
-        height: 60px;
-        position: relative;
+    &--dropdown {
+      ul {
+        padding-left: 60px;
+        padding-bottom: 10px;
+        &.appear {
+          visibility: visible;
+          opacity: 1;
+          display: block;
+          animation: openDropdown 0.2s ease-in-out;
+        }
+        &.hide {
+          visibility: hidden;
+          opacity: 0;
+          display: none;
+          animation: closeDropdown 0.2s ease-in-out;
+        }
+        li {
+          padding-top: 20px;
+          a.active {
+            background: none;
+          }
+        }
+        li:hover {
+          a {
+            background: none;
+          }
+        }
       }
     }
   }
@@ -120,5 +157,37 @@
   100% {
     opacity: 0;
     visibility: hidden;
+  }
+}
+
+@keyframes openDropdown {
+  0% {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
+  }
+  95% {
+    display: none;
+  }
+  100% {
+    opacity: 1;
+    visibility: visible;
+    display: block;
+  }
+}
+
+@keyframes closeDropdown {
+  0% {
+    opacity: 1;
+    visibility: visible;
+    display: block;
+  }
+  95% {
+    display: block;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    display: none;
   }
 }

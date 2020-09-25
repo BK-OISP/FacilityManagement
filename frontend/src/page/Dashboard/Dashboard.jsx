@@ -5,12 +5,11 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
 
-import AdminLayout from "../../compoment/layout/AdminLayout";
 import TodoCard from "../../compoment/card/todocard/TodoCard";
 
 const Dashboard = (props) => {
   return (
-    <AdminLayout>
+    <>
       <Container fluid>
         <Row className="d-flex justify-content-between">
           <TodoCard type="primary" icon="analytics" header="100+" text="Todo" />
@@ -26,7 +25,7 @@ const Dashboard = (props) => {
               <Row className="pb-3">
                 <Col style={{ fontWeight: "bold" }}>Table</Col>
               </Row>
-              <Table responsive="sm" hover>
+              <Table responsive hover>
                 <thead>
                   <tr>
                     <th>#</th>
@@ -73,7 +72,7 @@ const Dashboard = (props) => {
           <Col md={4}>b</Col>
         </Row>
       </Container>
-    </AdminLayout>
+    </>
   );
 };
 export default Dashboard;

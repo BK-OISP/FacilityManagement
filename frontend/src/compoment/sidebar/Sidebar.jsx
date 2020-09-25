@@ -1,161 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
 
-const Sidebar = () => {
+const Sidebar = (props) => {
+  const { menu } = props;
+
+  const [toggleDropdown, setToggleDropdown] = useState(false);
+
+  const handleDropdown = () => {
+    setToggleDropdown((pre) => !pre);
+  };
+
   return (
     <div className="sidebar overlay-scrollbar">
       <ul className="sidebar-nav">
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link active">
-            <div>
-              <i className="material-icons">home</i>
-            </div>
-            <span>Dashboard</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Quản lý tài sản</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Dashboard</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Dashboard</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Dashboard</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Dashboard</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Dashboard</span>
-          </div>
-        </li>
-        <li className="sidebar-nav--item">
-          <div className="sidebar-nav--link">
-            <div>
-              <i className="material-icons">dashboard</i>
-            </div>
-            <span>Dashboard</span>
-          </div>
-        </li>
+        {menu.map((item) => {
+          if (!item.sub) {
+            return (
+              <li className="sidebar-nav--item" key={item.key}>
+                <div className="sidebar-nav--link">
+                  <NavLink to={item.link}>
+                    <div>
+                      <i className="material-icons">{item.icon}</i>
+                    </div>
+                    <span>{item.title}</span>
+                  </NavLink>
+                </div>
+              </li>
+            );
+          } else {
+            return (
+              <li className="sidebar-nav--item" key={item.key}>
+                <div className="sidebar-nav--link sidebar-nav--dropdown">
+                  <Link to="#" onClick={handleDropdown}>
+                    <div>
+                      <i className="material-icons">dashboard</i>
+                    </div>
+                    <span>{item.title}</span>
+                  </Link>
+                  <ul className={`${toggleDropdown ? "appear" : "hide"}`}>
+                    {item.sub.map((sub) => {
+                      return (
+                        <li>
+                          <NavLink to={sub.link}>{sub.title}</NavLink>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </li>
+            );
+          }
+        })}
       </ul>
     </div>
   );
