@@ -23,7 +23,11 @@ const EmployeeSchema = new Schema({
   branch: String,
   transOff: String,
   dateIn: Date,
-  email: String,
+  email: {
+    type: String,
+    index: true,
+    unique: true,
+  },
   personalEmail: String,
   unionMem: Boolean,
   noteUnion: String,

@@ -1,4 +1,5 @@
 require("dotenv").config();
+require("./helper/passport");
 const path = require("path");
 const fs = require("fs");
 
@@ -8,6 +9,8 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const compression = require("compression");
+
+const loginRoute = require("./route/loginRoute");
 
 const app = express();
 
@@ -19,6 +22,7 @@ app.use(bodyParser.json());
 app.use("/oisp/upload", express.static(path.join(__dirname, "upload")));
 
 //route
+app.use("/oisp/auth", loginRoute);
 
 //Error handling
 app.use((err, req, res, next) => {

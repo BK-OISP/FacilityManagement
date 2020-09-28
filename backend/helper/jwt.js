@@ -3,11 +3,10 @@ const JWT = require("jsonwebtoken");
 const genAccessToken = (userData) => {
   return JWT.sign(
     {
-      iss: "OIS - Management",
-      userId: userData.userId,
-      role: userData.role,
+      iss: "OISP - Management",
+      userId: userData._id,
       // exp: new Date().setDate(new Date().getDate() + 1),
-      expiresIn: "1 days",
+      expiresIn: "7 days",
     },
     process.env.ACCESS_TOKEN_SECRET
   );
