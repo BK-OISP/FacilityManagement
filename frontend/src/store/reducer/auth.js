@@ -2,7 +2,7 @@ import * as actionType from "../action/actionType";
 import updateObject from "../../helper/updateObject/updateObject";
 
 const initState = {
-  username: null,
+  fullName: null,
   userId: null,
   error: null,
   loading: false,
@@ -17,7 +17,7 @@ const authStart = (state, action) => {
 
 const authSuccess = (state, action) => {
   return updateObject(state, {
-    username: action.username,
+    username: action.fullName,
     userId: action.userId,
     error: null,
     loading: false,
@@ -36,7 +36,7 @@ const authFailed = (state, action) => {
 
 const authLogout = (state, action) => {
   return updateObject(state, {
-    username: "",
+    fullName: "",
     userId: "",
     error: null,
     loading: false,

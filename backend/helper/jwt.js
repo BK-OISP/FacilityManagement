@@ -12,11 +12,11 @@ const genAccessToken = (userData) => {
   );
 };
 
-const genRefreshToken = (userID) => {
+const genRefreshToken = (userData) => {
   return JWT.sign(
     {
       iss: "Annien - Porfolio",
-      userID: userID,
+      userID: userData._id,
       iat: new Date().getTime(),
     },
     process.env.REFRESH_TOKEN_SECRET

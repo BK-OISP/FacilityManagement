@@ -10,7 +10,7 @@ export const authStart = () => {
 export const authSuccess = (userData) => {
   return {
     type: actionType.AUTH_SUCCESS,
-    username: userData.username,
+    username: userData.fullName,
     userId: userData.userId,
     acToken: userData.acToken,
     rfToken: userData.rfToken,

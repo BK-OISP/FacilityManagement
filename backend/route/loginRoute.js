@@ -24,9 +24,11 @@ router.get(
     const userData = {
       acToken: userToken,
       rfToken: userRf,
-      userData: req.user,
+      fullName: req.user.fullName,
+      userId: req.user._id,
+      role: req.user.role,
     };
-    res.json(userData);
+    return res.json(userData);
   }
 );
 
