@@ -40,7 +40,7 @@ const Sidebar = (props) => {
                   <ul className={`${toggleDropdown ? "appear" : "hide"}`}>
                     {item.sub.map((sub) => {
                       return (
-                        <li>
+                        <li key={sub.key}>
                           <NavLink to={sub.link}>{sub.title}</NavLink>
                         </li>
                       );

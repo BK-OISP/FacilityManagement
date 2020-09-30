@@ -1,68 +1,44 @@
-import React, { useCallback, useState } from "react";
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
-import Navbar from "./compoment/navbar/Navbar.jsx";
-import Sidebar from "./compoment/sidebar/Sidebar.jsx";
-import Dashboard from "./page/dashboard/Dashboard.jsx";
-import Facility from "./page/facility/Facility.jsx";
+
+import localStorageService from "./helper/localStorage/localStorageService";
 import LoginPage from "./page/login/Login";
+import Welcome from "./page/welcome/Welcome.jsx";
+import * as actionCreator from "./store/action/index";
 
 const App = () => {
   let routes;
 
-  const [isSidebarOpen, SetIsSidebarOpen] = useState(true);
-  const toggleSidebar = useCallback(() => {
-    SetIsSidebarOpen((pre) => !pre);
-  }, []);
+  const auth = useSelector((state) => state.auth);
 
-  const MENU = [
-    {
-      key: "dashboard",
-      title: "Dashboard",
-      link: "/dashboard",
-      icon: "dashboard",
-    },
-    {
-      key: "facility",
-      title: "Quản lý tài sản",
-      icon: "dashboard",
-      sub: [
-        {
-          key: "addRequest",
-          title: "Thêm đề xuất",
-          link: "/facility/addrequest",
-        },
-      ],
-    },
-  ];
+  let isAuthenticate =
+    auth.acToken || localStorageService.getAccessToken() ? true : false;
 
-  routes = (
-    <Switch>
-      <Route path="/login">
-        <LoginPage />
-      </Route>
-      <Route path="/dashboard">
-        <Dashboard />
-      </Route>
-      <Route path="/facility">
-        <Facility />
-      </Route>
-      <Redirect to="/login" />
-    </Switch>
-  );
+  useEffect(() => {
+    actionCreator.onTryAutoLogin();
+  });
 
-  return (
-    <BrowserRouter>
-      <div
-        className={`overlay-scrollbar ${
-          isSidebarOpen ? "sidebar-expand" : "sidebar-close"
-        }`}
-      >
-        <Navbar toggleSidebar={toggleSidebar} />
-        <Sidebar menu={MENU} />
-        <div className="wrapper">{routes}</div>
-      </div>
-    </BrowserRouter>
-  );
+  if (isAuthenticate) {
+    routes = (
+      <Switch>
+        <Route path="/">
+          <Welcome />
+        </Route>
+      </Switch>
+    );
+  } else {
+    routes = (
+      <Switch>
+        <Route path="/login" exact>
+          <LoginPage />
+        </Route>
+        <Redirect to="/login" />
+      </Switch>
+    );
+  }
+
+  return <BrowserRouter>{routes}</BrowserRouter>;
 };
 
 export default App;

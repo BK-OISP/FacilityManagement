@@ -1,5 +1,6 @@
 require("dotenv").config();
 require("./helper/passport");
+
 const path = require("path");
 const fs = require("fs");
 
@@ -14,8 +15,8 @@ const loginRoute = require("./route/loginRoute");
 
 const app = express();
 
-app.use("*", cors());
-app.use(helmet());
+app.use(cors());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 app.use(bodyParser.json());
 

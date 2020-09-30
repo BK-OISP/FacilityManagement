@@ -1,4 +1,4 @@
-import localStorageService from "../../helper/localStorage/LocalStorageService";
+import localStorageService from "../../helper/localStorage/localStorageService";
 import * as actionType from "./actionType";
 
 export const authStart = () => {
@@ -10,7 +10,7 @@ export const authStart = () => {
 export const authSuccess = (userData) => {
   return {
     type: actionType.AUTH_SUCCESS,
-    username: userData.fullName,
+    fullName: userData.fullName,
     userId: userData.userId,
     acToken: userData.acToken,
     rfToken: userData.rfToken,

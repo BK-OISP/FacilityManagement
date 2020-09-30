@@ -2,8 +2,8 @@ const localStorageService = {
   setUserData(tokenObj) {
     localStorage.setItem("acToken", tokenObj.acToken);
     localStorage.setItem("rfToken", tokenObj.rfToken);
-    localStorage.setItem("username", tokenObj.username);
-    localStorage.setItem("role", tokenObj.role);
+    localStorage.setItem("fullName", tokenObj.fullName);
+    localStorage.setItem("role", JSON.stringify(tokenObj.role));
     localStorage.setItem("userId", tokenObj.userId);
   },
 
@@ -11,7 +11,7 @@ const localStorageService = {
     return {
       acToken: this.getAccessToken(),
       rfToken: this.getRefreshToken(),
-      username: this.getUserName(),
+      fullName: this.getFullName(),
       role: this.getRole(),
       userId: this.getUserId(),
     };
@@ -29,12 +29,16 @@ const localStorageService = {
     return localStorage.getItem("rfToken");
   },
 
-  getUserName() {
-    return localStorage.getItem("username");
+  setRefreshToken(rfToken) {
+    return localStorage.setItem("rfToken", rfToken);
+  },
+
+  getFullName() {
+    return localStorage.getItem("fullName");
   },
 
   getRole() {
-    return localStorage.getItem("role");
+    return JSON.parse(localStorage.getItem("role"));
   },
 
   getUserId() {

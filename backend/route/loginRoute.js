@@ -1,6 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const router = express.Router();
+const popupTools = require("popup-tools");
 
 const jwtHelper = require("../helper/jwt");
 
@@ -28,7 +29,8 @@ router.get(
       userId: req.user._id,
       role: req.user.role,
     };
-    return res.json(userData);
+    res.set({ "content-type": "text/html; charset=utf-8" });
+    res.end(popupTools.popupResponse(userData));
   }
 );
 
