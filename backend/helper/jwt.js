@@ -5,6 +5,7 @@ const genAccessToken = (userData) => {
     {
       iss: "OISP - Management",
       userId: userData._id,
+      role: userData.role,
       // exp: new Date().setDate(new Date().getDate() + 1),
       expiresIn: "7 days",
     },
@@ -17,6 +18,7 @@ const genRefreshToken = (userData) => {
     {
       iss: "Annien - Porfolio",
       userID: userData._id,
+      role: userData.role,
       iat: new Date().getTime(),
     },
     process.env.REFRESH_TOKEN_SECRET

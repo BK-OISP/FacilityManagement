@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Navbar from "../../compoment/navbar/Navbar";
 import Sidebar from "../../compoment/sidebar/Sidebar";
 import Dashboard from "../dashboard/Dashboard";
+import Facility from "../facility/Facility";
 import MENU from "../MENU";
 
 const Welcome = () => {
@@ -18,7 +19,10 @@ const Welcome = () => {
       <Route path="/dashboard">
         <Dashboard />
       </Route>
-      <Redirect to="/dashboard" />
+      <Route path="/facility">
+        <Facility />
+      </Route>
+      {/* <Redirect to="/dashboard" /> */}
     </Switch>
   );
 

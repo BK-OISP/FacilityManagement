@@ -1,17 +1,32 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+
+import * as actionCreator from "../../../store/action/index";
 
 const UserMenu = (props) => {
   const { id, index, icon, active, tabIndex, toggleRightMenu } = props;
+
+  const dispatch = useDispatch();
+
+  const handleUserMenuClick = (item) => {
+    console.log(item);
+    switch (item.key) {
+      case "clear":
+        return dispatch(actionCreator.authLogout());
+
+      default:
+        break;
+    }
+  };
 
   const USER_MENU = [
     {
       key: "profile",
       icon: "person",
       text: "Profile",
-      link: "#",
     },
-    { key: "settings", icon: "settings", text: "Settings", link: "#" },
-    { key: "clear", icon: "clear", text: "Log out", link: "#" },
+    { key: "settings", icon: "settings", text: "Settings" },
+    { key: "clear", icon: "clear", text: "Log out" },
   ];
   return (
     <li className="nv--item owdropdown avt-wrapper">
@@ -31,12 +46,15 @@ const UserMenu = (props) => {
           {USER_MENU.map((item) => {
             return (
               <li key={item.key} className="owdropdown-menu--item">
-                <a href={item.link} className="owdropdown-menu--link">
+                <div
+                  onClick={() => handleUserMenuClick(item)}
+                  className="owdropdown-menu--link"
+                >
                   <div>
                     <span className="material-icons">{item.icon}</span>
                   </div>
                   <span className="owdropdown-menu--text">{item.text}</span>
-                </a>
+                </div>
               </li>
             );
           })}

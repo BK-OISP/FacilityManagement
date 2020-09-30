@@ -30,7 +30,7 @@ const App = () => {
   } else {
     routes = (
       <Switch>
-        <Route path="/login" exact>
+        <Route path="/login">
           <LoginPage />
         </Route>
         <Redirect to="/login" />

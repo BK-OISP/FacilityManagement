@@ -36,6 +36,16 @@ const Sidebar = (props) => {
                       <i className="material-icons">dashboard</i>
                     </div>
                     <span>{item.title}</span>
+                    <span
+                      style={{
+                        color: "#727475",
+                        fontSize: "15px",
+                        paddingLeft: "5px",
+                      }}
+                      className="material-icons"
+                    >
+                      keyboard_arrow_down
+                    </span>
                   </Link>
                   <ul className={`${toggleDropdown ? "appear" : "hide"}`}>
                     {item.sub.map((sub) => {

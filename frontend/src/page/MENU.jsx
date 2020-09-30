@@ -11,9 +11,14 @@ const MENU = [
     icon: "dashboard",
     sub: [
       {
+        key: "viewRequest",
+        title: "Theo dõi đề xuất",
+        link: "/facility/manage",
+      },
+      {
         key: "addRequest",
         title: "Thêm đề xuất",
-        link: "/facility/addrequest",
+        link: "/facility/add",
       },
     ],
   },
