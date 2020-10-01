@@ -12,6 +12,7 @@ const helmet = require("helmet");
 const compression = require("compression");
 
 const loginRoute = require("./route/loginRoute");
+const prepareRoute = require("./route/prepareRoute");
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/oisp/upload", express.static(path.join(__dirname, "upload")));
 
 //route
 app.use("/oisp/auth", loginRoute);
+app.use("/oisp/prepare", prepareRoute);
 
 //Error handling
 app.use((err, req, res, next) => {

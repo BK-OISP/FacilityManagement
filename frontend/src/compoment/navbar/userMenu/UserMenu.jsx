@@ -32,7 +32,7 @@ const UserMenu = (props) => {
     <li className="nv--item owdropdown avt-wrapper">
       <div className="avt" id={id}>
         <span
-          className="material-icons "
+          className="material-icons"
           tabIndex={tabIndex}
           onClick={() => {
             toggleRightMenu(index);

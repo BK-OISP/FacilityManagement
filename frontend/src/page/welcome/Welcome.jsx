@@ -22,7 +22,7 @@ const Welcome = () => {
       <Route path="/facility">
         <Facility />
       </Route>
-      {/* <Redirect to="/dashboard" /> */}
+      <Redirect to="/dashboard" />
     </Switch>
   );
 

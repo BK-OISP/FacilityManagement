@@ -1,9 +1,10 @@
 const express = require("express");
 const passport = require("passport");
-const router = express.Router();
 const popupTools = require("popup-tools");
 
 const jwtHelper = require("../helper/jwt");
+
+const router = express.Router();
 
 router.get(
   "/google",

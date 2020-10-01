@@ -38,7 +38,7 @@ export const onTryAutoLogin = () => {
     if (!rfToken || !acToken) {
       return dispatch(authLogout());
     }
-    const userData = localStorageService.setUserData();
+    const userData = localStorageService.getUserData();
     dispatch(authSuccess(userData));
   };
 };
