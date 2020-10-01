@@ -1,16 +1,19 @@
 const FMType = require("../model/fm-Type");
 
-const addFMType = (req, res, next) => {
+const addFMType = async (req, res, next) => {
   const data = req.body.table;
-  data.forEach(async (element) => {
-    try {
-      const dataType = new FMType(element);
-      await dataType.save();
-    } catch (error) {
-      return res.json({ error });
-    }
-  });
-  return res.json({ message: "Import Complete" });
+
+  try {
+    await Promise.all(
+      data.map(async (item) => {
+        const dataType = new FMType(item);
+        await dataType.save();
+      })
+    );
+    return res.json({ message: "Import Complete" });
+  } catch (error) {
+    return res.json({ error });
+  }
 };
 
 module.exports = {
