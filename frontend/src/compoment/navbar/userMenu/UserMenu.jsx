@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+import localStorageService from "../../../helper/localStorage/localStorageService";
 
 import * as actionCreator from "../../../store/action/index";
 
@@ -12,6 +13,7 @@ const UserMenu = (props) => {
     console.log(item);
     switch (item.key) {
       case "clear":
+        localStorageService.clearAll();
         return dispatch(actionCreator.authLogout());
 
       default:

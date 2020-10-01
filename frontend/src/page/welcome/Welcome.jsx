@@ -16,7 +16,7 @@ const Welcome = () => {
 
   routes = (
     <Switch>
-      <Route path="/dashboard">
+      <Route path="/dashboard" exact>
         <Dashboard />
       </Route>
       <Route path="/facility">

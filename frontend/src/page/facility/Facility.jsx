@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import AddRequest from "./add/AddRequest";
 import ViewAll from "./viewPersonRequest/ViewAll";
 
@@ -11,12 +11,13 @@ const Facility = (props) => {
 
   routes = (
     <Switch>
-      <Route path={`${match.path}/manage`}>
+      <Route path={`${match.path}/manage`} exact>
         <ViewAll />
       </Route>
-      <Route path={`${match.path}/add`}>
+      <Route path={`${match.path}/add`} exact>
         <AddRequest />
       </Route>
+      <Redirect to="/error" />
     </Switch>
   );
 

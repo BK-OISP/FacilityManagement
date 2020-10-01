@@ -14,7 +14,7 @@ const FM_RequestSchema = new Schema({
     default: "",
   },
   //file mã code tài sản
-  smallType: {
+  fmType: {
     type: Schema.Types.ObjectId,
     ref: "FM_Type",
   },
