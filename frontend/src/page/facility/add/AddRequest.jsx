@@ -37,7 +37,7 @@ const AddRequest = () => {
         <Row>
           <Col md={4}>
             <Select
-              id="check"
+              id="fm-types"
               options={fmType}
               clearable={true}
               placeholder="Loại tài sản"
