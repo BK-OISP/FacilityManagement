@@ -13,6 +13,7 @@ const compression = require("compression");
 
 const loginRoute = require("./route/loginRoute");
 const prepareRoute = require("./route/prepareRoute");
+const facilityRoute = require("./route/facilityRoute");
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use("/oisp/upload", express.static(path.join(__dirname, "upload")));
 //route
 app.use("/oisp/auth", loginRoute);
 app.use("/oisp/prepare", prepareRoute);
+app.use("/oisp/fm", facilityRoute);
 
 //Error handling
 app.use((err, req, res, next) => {

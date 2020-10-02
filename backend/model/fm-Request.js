@@ -43,11 +43,12 @@ const FM_RequestSchema = new Schema({
   unitPrice: { type: Number, min: 0 },
   totalPrice: { type: Number, min: 0 },
   status: {
-    isDeputyHeadApproval: Boolean, //trưởng bộ phận
-    isFMTeamLeadApproval: Boolean, //anh Hải - facility teamlead
-    isAdmiLeadApproval: Boolean, //HCTH - Thanh Trang
-    isAccountLeadApproval: Boolean, //kế toán - Diệu
-    isDirectorApproval: Boolean, // thầy Tùng
+    //trưởng bộ phận
+    isDeputyHeadApproval: { type: Boolean, default: false },
+    isFMTeamLeadApproval: { type: Boolean, default: false }, //anh Hải - facility teamlead
+    isAdmiLeadApproval: { type: Boolean, default: false }, //HCTH - Thanh Trang
+    isAccountLeadApproval: { type: Boolean, default: false }, //kế toán - Thi
+    isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
   },
 });
 
