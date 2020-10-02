@@ -14,7 +14,7 @@ const refreshAccessToken = async (accessToken) => {
 axiosClient.interceptors.request.use(
   async (config) => {
     const acToken = localStorageService.getAccessToken();
-    if (token) {
+    if (acToken) {
       config.headers["Authorization"] = "Bearer" + acToken;
     }
     return config;

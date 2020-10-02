@@ -7,8 +7,6 @@ const Facility = (props) => {
   let routes;
   const match = useRouteMatch();
 
-  console.log(match);
-
   routes = (
     <Switch>
       <Route path={`${match.path}/manage`} exact>

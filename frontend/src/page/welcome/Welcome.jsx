@@ -16,13 +16,13 @@ const Welcome = () => {
 
   routes = (
     <Switch>
-      <Route path="/dashboard" exact>
+      <Route path="/dashboard">
         <Dashboard />
       </Route>
       <Route path="/facility">
         <Facility />
       </Route>
-      <Redirect to="/dashboard" />
+      <Redirect from="/" to="/dashboard" />
     </Switch>
   );
 

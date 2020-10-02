@@ -5,7 +5,9 @@ import { useDispatch } from "react-redux";
 import * as actionCreator from "../../store/action/index";
 import localStorageService from "../../helper/localStorage/localStorageService";
 
-const GoogleIcon = () => {
+const GoogleIcon = (props) => {
+  const { setRedirectToReferrer } = props;
+
   const dispatch = useDispatch();
 
   const handleLoginGoogle = () => {
@@ -16,9 +18,9 @@ const GoogleIcon = () => {
       (err, user) => {
         if (err) {
         } else {
-          dispatch(actionCreator.authSuccess(user));
           localStorageService.setUserData(user);
-          console.log("User", user);
+          setRedirectToReferrer(true);
+          dispatch(actionCreator.authSuccess(user));
         }
       }
     );
