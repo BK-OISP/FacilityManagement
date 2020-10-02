@@ -1,0 +1,25 @@
+.ad-tab {
+  background-color: #fff;
+  color: $main-color;
+  margin-bottom: 10px;
+  @extend .border-style;
+
+  .table {
+    thead {
+      th {
+        vertical-align: middle;
+      }
+    }
+  }
+}
+
+.tab-view {
+  tr,
+  td,
+  th {
+    text-align: center;
+  }
+  .material-icons:hover {
+    cursor: pointer;
+  }
+}
