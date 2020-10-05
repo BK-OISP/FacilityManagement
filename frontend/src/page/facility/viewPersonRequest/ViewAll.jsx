@@ -1,12 +1,19 @@
 import React from "react";
-import { Col, Container, Row, Table } from "react-bootstrap";
+import { Button, Col, Container, Row, Table } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import Heading from "../../../compoment/Heading/Heading";
 
 const ViewAll = () => {
   return (
     <Container fluid>
       <div className="ad-tab px-3 py-3 tab-view">
         <Row className="pb-3">
-          <Col style={{ fontWeight: "bold" }}>Các đề xuất của bạn</Col>
+          <Heading title="Các đề xuất của bạn" />
+          <Col className="ml-auto text-right" style={{ paddingRight: "10px" }}>
+            <Link to="/facility/add">
+              <Button variant="success">Thêm đề xuất</Button>
+            </Link>
+          </Col>
         </Row>
         <Table responsive hover bordered sedittyle={{ textAlign: "center" }}>
           <thead>
@@ -17,14 +24,13 @@ const ViewAll = () => {
               <th rowSpan={2} style={{ width: "45%" }}>
                 Danh mục đề xuất
               </th>
-              <th colSpan={5} style={{ textAlign: "center", width: "40%" }}>
+              <th colSpan={5} style={{ width: "40%" }}>
                 Tiến độ phê duyệt
               </th>
               <th rowSpan={2} style={{ width: "10%" }}>
                 Thao tác
               </th>
             </tr>
-
             <tr>
               <th>Trưởng Bộ phận </th>
               <th>Cơ sở vật chất</th>
@@ -33,6 +39,7 @@ const ViewAll = () => {
               <th>Ban giám đốc</th>
             </tr>
           </thead>
+
           <tbody>
             <tr>
               <td>1</td>

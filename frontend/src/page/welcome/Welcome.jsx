@@ -9,7 +9,7 @@ import MENU from "../MENU";
 
 const Welcome = () => {
   let routes;
-  const [isSidebarOpen, SetIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, SetIsSidebarOpen] = useState(false);
   const toggleSidebar = useCallback(() => {
     SetIsSidebarOpen((pre) => !pre);
   }, []);
@@ -22,7 +22,7 @@ const Welcome = () => {
       <Route path="/facility">
         <Facility />
       </Route>
-      <Redirect from="/" to="/dashboard" />
+      <Redirect to="/dashboard" />
     </Switch>
   );
 

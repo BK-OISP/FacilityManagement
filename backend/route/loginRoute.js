@@ -31,7 +31,7 @@ router.get(
       role: req.user.role,
     };
     res.set({ "content-type": "text/html; charset=utf-8" });
-    res.end(popupTools.popupResponse(userData));
+    res.send(popupTools.popupResponse(userData));
   }
 );
 

@@ -26,6 +26,7 @@ export const authFailed = (error) => {
 };
 
 export const authLogout = () => {
+  localStorageService.clearAll();
   return {
     type: actionType.AUTH_LOGOUT,
   };

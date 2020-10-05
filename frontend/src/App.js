@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import PrivateRoute from "./compoment/privateRoute/PrivateRoute";
+import localStorageService from "./helper/localStorage/localStorageService";
 
 import LoginPage from "./page/login/Login";
 import Welcome from "./page/welcome/Welcome.jsx";
@@ -11,6 +12,9 @@ const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (localStorageService.getAccessToken === undefined) {
+      localStorageService.clearAll();
+    }
     dispatch(actionCreator.onTryAutoLogin());
   }, [dispatch]);
 
