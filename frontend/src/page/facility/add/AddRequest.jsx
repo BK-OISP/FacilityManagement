@@ -21,7 +21,6 @@ const AddRequest = () => {
         };
       });
       setFmType(convertData);
-      console.log(data.allType);
     };
     fetchFMType();
   }, []);
@@ -36,13 +35,18 @@ const AddRequest = () => {
         <Heading title="Thêm đề xuất" />
         <Row>
           <Col md={4}>
+            <Row>
+              <Col>Loại tài sản</Col>
+            </Row>
             <Select
               id="fm-types"
               options={fmType}
               clearable={true}
-              placeholder="Loại tài sản"
+              placeholder="Danh mục tài sản"
               onChange={handleInputChange}
               noDataLabel="Không tìm thấy"
+              className="mt-2"
+              style={{ marginLeft: "10px" }}
             />
           </Col>
         </Row>
