@@ -7,7 +7,7 @@ const FM_RequestSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Employee",
   },
-  //file loại tài sản - có 14 dòng
+  //file loại tài sản - có 14 dòng -- để sau
   bigGroup: {
     type: String,
     trim: true,
@@ -19,7 +19,7 @@ const FM_RequestSchema = new Schema({
     ref: "FM_Type",
   },
   //danh mục đề xuất
-  name: {
+  fmName: {
     type: String,
     trim: true,
   },
