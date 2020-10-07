@@ -11,9 +11,12 @@ import TextInputComponent from "../../../compoment/TextInputComponent/TextInputC
 
 import addRequestApi from "../../../helper/axios/facilityApi/addRequest";
 import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
+import { Button } from "react-bootstrap";
 
 const AddRequest = () => {
   const [fmOptionsType, setOptionsFmType] = useState();
+  const [files, setFiles] = useState([]);
+  const [previewURLs, setPreviewURLs] = useState([]);
 
   const initForm = {
     fmName: "",
@@ -46,8 +49,9 @@ const AddRequest = () => {
     fetchFMType();
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = (values, actions) => {
     console.log("Submit");
+    const formData = new FormData();
   };
 
   const handleInputChange = (event) => {
@@ -61,7 +65,7 @@ const AddRequest = () => {
 
         <Formik
           initialValues={initForm}
-          validationSchema={validationForm}
+          // validationSchema={validationForm}
           validateOnBlur={true}
           onSubmit={handleSubmit}
         >
@@ -84,7 +88,17 @@ const AddRequest = () => {
                     />
                   </Col>
                 </Row>
-                <ImageUpload />
+                <ImageUpload
+                  files={files}
+                  setFiles={setFiles}
+                  previewURLs={previewURLs}
+                  setPreviewURLs={setPreviewURLs}
+                />
+                <Row>
+                  <Button variant="primary" type="submit">
+                    Gửi đề xuất
+                  </Button>
+                </Row>
               </Form>
             );
           }}

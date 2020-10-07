@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Row } from "react-bootstrap";
 
-const ImageUpload = () => {
-  const [files, setFiles] = useState([]);
-  const [previewURLs, setPreviewURLs] = useState([]);
+const ImageUpload = (props) => {
+  const { files, setFiles, previewURLs, setPreviewURLs } = props;
 
   const loadMultipleFiles = (event) => {
     event.preventDefault();
