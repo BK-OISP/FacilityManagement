@@ -10,6 +10,7 @@ import Heading from "../../../compoment/Heading/Heading";
 import TextInputComponent from "../../../compoment/TextInputComponent/TextInputComponent";
 
 import addRequestApi from "../../../helper/axios/facilityApi/addRequest";
+import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
 
 const AddRequest = () => {
   const [fmOptionsType, setOptionsFmType] = useState();
@@ -83,6 +84,7 @@ const AddRequest = () => {
                     />
                   </Col>
                 </Row>
+                <ImageUpload />
               </Form>
             );
           }}

@@ -32,12 +32,15 @@ axiosClient.interceptors.response.use(
   },
   async (err) => {
     const originalRequest = err.config;
-    if (err.response.status === 403 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      const accessToken = await refreshAccessToken();
-      if (accessToken) {
-        axios.defaults.headers.common["Authorization"] = "Bearer" + accessToken;
-        return axiosClient(originalRequest);
+    if (err.response) {
+      if (err.response.status === 403 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        const accessToken = await refreshAccessToken();
+        if (accessToken) {
+          axios.defaults.headers.common["Authorization"] =
+            "Bearer" + accessToken;
+          return axiosClient(originalRequest);
+        }
       }
     }
     return Promise.reject(err);
