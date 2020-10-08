@@ -8,7 +8,7 @@ const ImageUpload = (props) => {
     event.preventDefault();
 
     const fileList = Array.from(event.target.files);
-    setFiles(fileList);
+    setFiles(event.target.files);
 
     const mappedFiles = fileList.map((file) => ({
       ...file,
@@ -16,7 +16,6 @@ const ImageUpload = (props) => {
     }));
 
     setPreviewURLs(mappedFiles);
-    console.log(previewURLs);
   };
 
   const uploadFiles = (event) => {

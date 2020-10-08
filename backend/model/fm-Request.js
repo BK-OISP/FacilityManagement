@@ -36,6 +36,9 @@ const FM_RequestSchema = new Schema({
       message: `{VALUE} is not an integer`,
     },
   },
+  imgCollection: {
+    type: Array,
+  },
   specs: {
     type: String,
     trim: true,

@@ -33,8 +33,6 @@ const convertData = async () => {
     mongoose.set("useCreateIndex", true);
     mongoose.set("useUnifiedTopology", true);
     mongoose.connect(mongooseUrl).then(() => {
-      console.log("mongoose ");
-
       client
         .db("facility_testing")
         .collection("employee")

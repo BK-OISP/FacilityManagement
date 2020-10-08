@@ -6,7 +6,7 @@ import Heading from "../../../compoment/Heading/Heading";
 const ViewAll = () => {
   return (
     <Container fluid>
-      <div className="ad-tab px-3 py-3 tab-view">
+      <div className="ad-tab px-3 py-3 tab-view fm-viewall">
         <Row className="pb-3">
           <Heading title="Các đề xuất của bạn" />
           <Col className="ml-auto text-right" style={{ paddingRight: "10px" }}>

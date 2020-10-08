@@ -5,13 +5,13 @@ import Row from "react-bootstrap/Row";
 import Select from "react-dropdown-select";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { Button } from "react-bootstrap";
 
 import Heading from "../../../compoment/Heading/Heading";
 import TextInputComponent from "../../../compoment/TextInputComponent/TextInputComponent";
 
 import addRequestApi from "../../../helper/axios/facilityApi/addRequest";
 import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
-import { Button } from "react-bootstrap";
 
 const AddRequest = () => {
   const [fmOptionsType, setOptionsFmType] = useState();
@@ -49,9 +49,25 @@ const AddRequest = () => {
     fetchFMType();
   }, []);
 
-  const handleSubmit = (values, actions) => {
+  const handleSubmit = async (values, actions) => {
     console.log("Submit");
     const formData = new FormData();
+    for (let key of Object.keys(files)) {
+      console.log(files[key]);
+      formData.append("imgCollection", files[key]);
+    }
+    console.log("Files", files);
+    console.log("formdata");
+    for (let value of formData.values()) {
+      console.log(value);
+    }
+    try {
+      await addRequestApi.postRequest(formData);
+      actions.resetForm();
+      actions.setSubmitting(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleInputChange = (event) => {
