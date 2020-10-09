@@ -1,5 +1,5 @@
 const multer = require("multer");
-
+const util = require("util");
 const MIME_TYPE_MAP = {
   "image/png": "png",
   "image/jpeg": "jpeg",
@@ -25,4 +25,8 @@ const addRequestFMUpload = multer({
   },
 });
 
-module.exports = addRequestFMUpload;
+const addRequestMiddleware = util.promisify(
+  addRequestFMUpload.array("imgCollection", 5)
+);
+
+module.exports = addRequestMiddleware;

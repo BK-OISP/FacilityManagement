@@ -2,16 +2,16 @@ import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
-import Select from "react-dropdown-select";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Button } from "react-bootstrap";
 
 import Heading from "../../../compoment/Heading/Heading";
-import TextInputComponent from "../../../compoment/TextInputComponent/TextInputComponent";
+import TextInputComponent from "../../../compoment/Form/TextInputComponent/TextInputComponent";
 
 import addRequestApi from "../../../helper/axios/facilityApi/addRequest";
 import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
+import SelectComponent from "../../../compoment/Form/SelectCompoment/SelectComponent";
 
 const AddRequest = () => {
   const [fmOptionsType, setOptionsFmType] = useState();
@@ -27,11 +27,16 @@ const AddRequest = () => {
     imgUpload: "",
   };
 
+  const digitsOnly = (value) => /^\d+$/.test(value);
+
   const validationForm = Yup.object().shape({
     fmName: Yup.string().min(1).required("Vui lòng nhập thông tin"),
-    fmType: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+    fmType: Yup.string().min(1).required("Vui lòng chọn thông tin"),
     purpose: Yup.string().min(1).required("Vui lòng nhập thông tin"),
-    quantity: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+    quantity: Yup.string()
+      .min(1)
+      .required("Vui lòng nhập thông tin")
+      .test("Digits only", "Vui lòng chỉ nhập số", digitsOnly),
   });
 
   useEffect(() => {
@@ -56,22 +61,17 @@ const AddRequest = () => {
       console.log(files[key]);
       formData.append("imgCollection", files[key]);
     }
-    console.log("Files", files);
-    console.log("formdata");
+    console.log("vales ssss ", values);
     for (let value of formData.values()) {
       console.log(value);
     }
-    try {
-      await addRequestApi.postRequest(formData);
-      actions.resetForm();
-      actions.setSubmitting(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleInputChange = (event) => {
-    console.log(event);
+    // try {
+    //   await addRequestApi.postRequest(formData);
+    //   actions.resetForm();
+    //   actions.setSubmitting(false);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -81,15 +81,23 @@ const AddRequest = () => {
 
         <Formik
           initialValues={initForm}
-          // validationSchema={validationForm}
+          validationSchema={validationForm}
           validateOnBlur={true}
           onSubmit={handleSubmit}
         >
-          {({ values, errors, touched, handleChange, handleBlur }) => {
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            setFieldValue,
+            setFieldTouched,
+          }) => {
             return (
               <Form>
                 <Row>
-                  <Col md={5}>
+                  <Col lg={4}>
                     <Field
                       id="fmName"
                       name="fmName"
@@ -103,14 +111,80 @@ const AddRequest = () => {
                       value={values.fmName || ""}
                     />
                   </Col>
+                  <Col lg={4}>
+                    <Field
+                      id="fmType"
+                      name="fmType"
+                      label="Loại danh mục đề xuất *"
+                      placeholder="Loại danh mục"
+                      component={SelectComponent}
+                      errorMessage={errors["fmType"]}
+                      touched={touched["fmType"]}
+                      setFieldValue={setFieldValue}
+                      onBlur={handleBlur}
+                      fmOptionsType={fmOptionsType}
+                      value={values.fmType || ""}
+                      setFieldTouched={setFieldTouched}
+                    />
+                  </Col>
+                  <Col lg={4}>
+                    <Field
+                      id="quantity"
+                      name="quantity"
+                      label="Số lượng đề xuất *"
+                      placeholder="Số lượng đề xuất"
+                      component={TextInputComponent}
+                      errorMessage={errors["quantity"]}
+                      touched={touched["quantity"]}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.quantity || ""}
+                    />
+                  </Col>
                 </Row>
-                <ImageUpload
-                  files={files}
-                  setFiles={setFiles}
-                  previewURLs={previewURLs}
-                  setPreviewURLs={setPreviewURLs}
-                />
                 <Row>
+                  <Col lg={4}>
+                    <Field
+                      id="purpose"
+                      name="purpose"
+                      label="Mục đích sử dụng *"
+                      placeholder="Mục đích sử dụng"
+                      component={TextInputComponent}
+                      errorMessage={errors["purpose"]}
+                      touched={touched["purpose"]}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.purpose || ""}
+                      asType="textarea"
+                    />
+                  </Col>
+                  <Col lg={4}>
+                    <Field
+                      id="specs"
+                      name="specs"
+                      label="Qui cách *"
+                      placeholder="Qui cách"
+                      component={TextInputComponent}
+                      errorMessage={errors["specs"]}
+                      touched={touched["specs"]}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      value={values.specs || ""}
+                      asType="textarea"
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <ImageUpload
+                      files={files}
+                      setFiles={setFiles}
+                      previewURLs={previewURLs}
+                      setPreviewURLs={setPreviewURLs}
+                    />
+                  </Col>
+                </Row>
+                <Row className="justify-content-center">
                   <Button variant="primary" type="submit">
                     Gửi đề xuất
                   </Button>
@@ -119,27 +193,9 @@ const AddRequest = () => {
             );
           }}
         </Formik>
-
-        <Row>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos velit
-          quas iste quod nulla cupiditate. Nostrum natus iure sed minima
-          sapiente quia vel commodi velit? Omnis consequuntur quidem dolore
-          commodi.
-        </Row>
       </div>
     </Container>
   );
 };
 
 export default AddRequest;
-
-// <Select
-// id="fm-types"
-// options={fmOptionsType}
-// clearable={true}
-// placeholder="Danh mục tài sản"
-// onChange={handleInputChange}
-// noDataLabel="Không tìm thấy"
-// className="mt-2"
-// style={{ marginLeft: "10px" }}
-// />

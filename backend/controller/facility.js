@@ -1,3 +1,5 @@
+const addRequestMiddleware = require("../middleware/addRequestMiddleware");
+
 const FM_Type = require("../model/fm-Type");
 const HttpError = require("../model/http-error");
 
@@ -10,9 +12,17 @@ const getFMType = async (req, res, next) => {
   }
 };
 
-const postAddRequestFM = (req, res, next) => {
-  console.log("ok");
-  return res.json({ mess: "ok" });
+const postAddRequestFM = async (req, res, next) => {
+  try {
+    await addRequestMiddleware(req, res);
+    return res.json({ mess: "ok" });
+  } catch (error) {
+    if (error.code === "LIMIT_UNEXPECTED_FILE") {
+      return res
+        .status(406)
+        .json({ message: "Exceeds the number of files allowed to upload" });
+    }
+  }
 };
 
 module.exports = {
