@@ -42,36 +42,26 @@ const AddRequest = () => {
   useEffect(() => {
     const fetchFMType = async () => {
       const data = await addRequestApi.getAllFMType();
-      const convertData = data.allType.map((item) => {
-        return {
-          ...item,
-          value: item.name,
-          label: item.name,
-        };
-      });
-      setOptionsFmType(convertData);
+      setOptionsFmType(data.allType);
     };
     fetchFMType();
   }, []);
 
   const handleSubmit = async (values, actions) => {
-    console.log("Submit");
     const formData = new FormData();
     for (let key of Object.keys(files)) {
-      console.log(files[key]);
       formData.append("imgCollection", files[key]);
     }
-    console.log("vales ssss ", values);
-    for (let value of formData.values()) {
-      console.log(value);
+    formData.append("requestFacility", JSON.stringify(values));
+    console.log(values);
+    try {
+      const respone = await addRequestApi.postRequest(formData);
+      console.log(respone);
+      actions.resetForm();
+      actions.setSubmitting(false);
+    } catch (error) {
+      console.log(error);
     }
-    // try {
-    //   await addRequestApi.postRequest(formData);
-    //   actions.resetForm();
-    //   actions.setSubmitting(false);
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   return (

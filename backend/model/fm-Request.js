@@ -8,7 +8,7 @@ const FM_RequestSchema = new Schema({
     ref: "Employee",
   },
   //file loại tài sản - có 14 dòng -- để sau
-  bigGroup: {
+  fmBigGroup: {
     type: String,
     trim: true,
     default: "",

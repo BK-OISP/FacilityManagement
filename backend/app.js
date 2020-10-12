@@ -15,6 +15,8 @@ const loginRoute = require("./route/loginRoute");
 const prepareRoute = require("./route/prepareRoute");
 const facilityRoute = require("./route/facilityRoute");
 
+const authMiddleware = require("./middleware/authMiddleware");
+
 const app = express();
 
 app.use(cors());
@@ -24,9 +26,14 @@ app.use(bodyParser.json());
 
 app.use("/oisp/upload", express.static(path.join(__dirname, "upload")));
 
-//route
-app.use("/oisp/auth", loginRoute);
+//prepare database
 app.use("/oisp/prepare", prepareRoute);
+app.use("/oisp/auth", loginRoute);
+
+//check authenticated
+app.use(authMiddleware.isAuth);
+
+//route
 app.use("/oisp/fm", facilityRoute);
 
 //Error handling
