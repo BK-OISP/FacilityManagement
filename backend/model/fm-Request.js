@@ -9,14 +9,14 @@ const FM_RequestSchema = new Schema({
   },
   //file loại tài sản - có 14 dòng -- để sau
   fmBigGroup: {
-    type: String,
-    trim: true,
-    default: "",
+    type: Schema.Types.ObjectId,
+    ref: "FM_BigGroup",
   },
   //file mã code tài sản
   fmType: {
     type: Schema.Types.ObjectId,
     ref: "FM_Type",
+    default: null,
   },
   //danh mục đề xuất
   fmName: {
@@ -43,13 +43,13 @@ const FM_RequestSchema = new Schema({
     type: String,
     trim: true,
   },
-  unitPrice: { type: Number, min: 0 },
-  totalPrice: { type: Number, min: 0 },
+  unitPrice: { type: Number, min: 0, default: 0 },
+  totalPrice: { type: Number, min: 0, default: 0 },
   status: {
     //trưởng bộ phận
     isDeputyHeadApproval: { type: Boolean, default: false },
     isFMTeamLeadApproval: { type: Boolean, default: false }, //anh Hải - facility teamlead
-    isAdmiLeadApproval: { type: Boolean, default: false }, //HCTH - Thanh Trang
+    isAdminLeadApproval: { type: Boolean, default: false }, //HCTH - Thanh Trang
     isAccountLeadApproval: { type: Boolean, default: false }, //kế toán - Thi
     isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
   },

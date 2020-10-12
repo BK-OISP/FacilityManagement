@@ -3,6 +3,7 @@ const addRequestMiddleware = require("../middleware/addRequestMiddleware");
 const FM_Type = require("../model/fm-Type");
 const HttpError = require("../model/http-error");
 const FM_BigGroup = require("../model/fm-BigGroup");
+const FM_Reuqest = require("../model/fm-Request");
 
 const getFMType = async (req, res, next) => {
   try {
@@ -16,9 +17,32 @@ const getFMType = async (req, res, next) => {
 const postAddRequestFM = async (req, res, next) => {
   try {
     await addRequestMiddleware(req, res);
-    const requestFacility = JSON.parse(req.body.requestFacility);
+    const facilityRequest = JSON.parse(req.body.facilityRequest);
 
-    console.log(requestFacility);
+    console.log(facilityRequest);
+
+    const findFmBigGroup = await FM_BigGroup.findOne({
+      value: facilityRequest.fmBigGroup,
+    });
+
+    if (findFmBigGroup) {
+      let imgCollection = [];
+      if (req.files && req.files.length > 0) {
+        imgCollection = req.files.map((item) => item.path);
+      }
+
+      const convertRequest = {
+        ...facilityRequest,
+        fmBigGroup: findFmBigGroup._id,
+        imgCollection: imgCollection,
+        employeeId: req.userId,
+        // fmType: facilityRequest.fmType !== "" ? facilityRequest.fmType : null,
+      };
+
+      const saveRequest = new FM_Reuqest(convertRequest);
+
+      await saveRequest.save();
+    }
 
     return res.json({ mess: "ok" });
   } catch (error) {

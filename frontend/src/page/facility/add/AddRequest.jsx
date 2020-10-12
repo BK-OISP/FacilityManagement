@@ -14,13 +14,13 @@ import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
 import SelectComponent from "../../../compoment/Form/SelectCompoment/SelectComponent";
 
 const AddRequest = () => {
-  const [fmOptionsType, setOptionsFmType] = useState();
+  const [fmBigGroupType, setFmBigGroupType] = useState();
   const [files, setFiles] = useState([]);
   const [previewURLs, setPreviewURLs] = useState([]);
 
   const initForm = {
     fmName: "",
-    fmType: "",
+    fmBigGroup: "",
     purpose: "",
     quantity: "",
     specs: "",
@@ -31,7 +31,7 @@ const AddRequest = () => {
 
   const validationForm = Yup.object().shape({
     fmName: Yup.string().min(1).required("Vui lòng nhập thông tin"),
-    fmType: Yup.string().min(1).required("Vui lòng chọn thông tin"),
+    fmBigGroup: Yup.string().min(1).required("Vui lòng chọn thông tin"),
     purpose: Yup.string().min(1).required("Vui lòng nhập thông tin"),
     quantity: Yup.string()
       .min(1)
@@ -40,11 +40,11 @@ const AddRequest = () => {
   });
 
   useEffect(() => {
-    const fetchFMType = async () => {
+    const fetchFNBigGroup = async () => {
       const data = await addRequestApi.getAllFMType();
-      setOptionsFmType(data.allType);
+      setFmBigGroupType(data.allType);
     };
-    fetchFMType();
+    fetchFNBigGroup();
   }, []);
 
   const handleSubmit = async (values, actions) => {
@@ -52,13 +52,14 @@ const AddRequest = () => {
     for (let key of Object.keys(files)) {
       formData.append("imgCollection", files[key]);
     }
-    formData.append("requestFacility", JSON.stringify(values));
+    formData.append("facilityRequest", JSON.stringify(values));
     console.log(values);
     try {
-      const respone = await addRequestApi.postRequest(formData);
-      console.log(respone);
+      await addRequestApi.postRequest(formData);
       actions.resetForm();
       actions.setSubmitting(false);
+      setPreviewURLs([]);
+      setFiles([]);
     } catch (error) {
       console.log(error);
     }
@@ -103,18 +104,19 @@ const AddRequest = () => {
                   </Col>
                   <Col lg={4}>
                     <Field
-                      id="fmType"
-                      name="fmType"
+                      id="fmBigGroup"
+                      name="fmBigGroup"
                       label="Loại danh mục đề xuất *"
                       placeholder="Loại danh mục"
                       component={SelectComponent}
-                      errorMessage={errors["fmType"]}
-                      touched={touched["fmType"]}
+                      errorMessage={errors["fmBigGroup"]}
+                      touched={touched["fmBigGroup"]}
                       setFieldValue={setFieldValue}
                       onBlur={handleBlur}
-                      fmOptionsType={fmOptionsType}
-                      value={values.fmType || ""}
+                      fmOptionsType={fmBigGroupType}
+                      value={values.fmBigGroup || ""}
                       setFieldTouched={setFieldTouched}
+                      handleChange={handleChange}
                     />
                   </Col>
                   <Col lg={4}>
