@@ -11,19 +11,16 @@ const SelectComponent = ({ field, ...props }) => {
     placeholder,
     setFieldValue,
     touched,
-    value,
     setFieldTouched,
   } = props;
 
-  console.log(props);
+  const { name } = field;
 
-  const { name, handleChange } = field;
-
-  // const handleChange = (option) => {
-  //   if (option) {
-  //     setFieldValue(name, option.value);
-  //   } else setFieldValue(name, "");
-  // };
+  const handleChange = (option) => {
+    if (option) {
+      setFieldValue(name, option.value);
+    } else setFieldValue(name, "");
+  };
 
   return (
     <FormGroup controlId={id}>
@@ -32,12 +29,9 @@ const SelectComponent = ({ field, ...props }) => {
         name={name}
         placeholder={placeholder}
         options={fmOptionsType}
-        onChange={(selectedOption) => {
-          handleChange(name)(selectedOption);
-        }}
+        onChange={handleChange}
         onBlur={() => setFieldTouched(name, true)}
         isClearable={true}
-        value={value}
       />
       <FormText className="text-danger">
         {touched && errorMessage ? errorMessage : ""}
