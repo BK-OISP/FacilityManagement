@@ -8,14 +8,14 @@
 
 @media only screen and (min-width: 768px) {
   .wrapper {
-    .ant-col-md-3 {
+    .ant-col-md-6 {
       max-width: 24%;
     }
   }
 }
 
 @media only screen and (min-width: 576px) {
-  .ant-col-sm-6 {
+  .ant-col-sm-12 {
     max-width: 48%;
   }
 }
