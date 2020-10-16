@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Row, Col, Space } from "antd";
+import { Row, Col } from "antd";
 import Tilt from "react-tilt";
 
 import OISP_Logo from "../../asset/img/OISP_Logo.png";
@@ -33,7 +33,7 @@ const LoginPage = (props) => {
               Sign In With
             </Row>
 
-            <Row justify="center" className="mt-4">
+            <Row justify="center" style={{ marginTop: "2rem" }}>
               <GoogleIcon setRedirectToReferrer={setRedirectToReferrer} />
             </Row>
           </Col>
