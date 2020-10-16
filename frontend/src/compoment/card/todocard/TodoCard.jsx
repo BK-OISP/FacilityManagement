@@ -1,11 +1,10 @@
 import React from "react";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
+import { Row, Col } from "antd";
 
 const TodoCard = (props) => {
   const { type, icon, header, text } = props;
   return (
-    <Col sm={6} md={3} className={`counter bg-${type} text-center`}>
+    <Col sm={12} md={6} className={`counter bg-${type} text-center`}>
       <Row>
         <Col>
           <span className="material-icons">{icon}</span>
