@@ -10,7 +10,7 @@ const TodoCard = (props) => {
           <span className="material-icons">{icon}</span>
         </Col>
       </Row>
-      <Row className="counter--header" justify="center">
+      <Row className="counter__header" justify="center">
         <Col>
           <h3>{header}</h3>
         </Col>
