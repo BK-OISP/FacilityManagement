@@ -47,6 +47,8 @@ const FM_RequestSchema = new Schema({
   totalPrice: { type: Number, min: 0, default: 0 },
   status: {
     //trưởng bộ phận
+    //overallStatus: true - dang duyệt - false : reject
+    overallStatus: { type: Boolean, default: true },
     isDeputyHeadApproval: { type: Boolean, default: false },
     isFMTeamLeadApproval: { type: Boolean, default: false }, //anh Hải - facility teamlead
     isAdminLeadApproval: { type: Boolean, default: false }, //HCTH - Thanh Trang

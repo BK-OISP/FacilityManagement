@@ -41,22 +41,22 @@
   margin-bottom: 1rem;
 }
 
-.btn-primary {
-  background-color: $primary-color;
-}
-
-.btn-success {
-  background-color: $success-color;
-}
-
-.btn-warning {
-  background-color: $warning-color;
-}
-
 .d-flex {
   display: flex !important;
 }
 
 .align-center {
   align-items: center !important;
+}
+
+.ant-icon {
+  font-size: 20px;
+}
+
+button {
+  &:disabled {
+    .ant-icon {
+      color: lightgrey !important;
+    }
+  }
 }
