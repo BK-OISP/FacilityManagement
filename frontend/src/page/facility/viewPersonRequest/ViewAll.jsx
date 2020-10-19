@@ -1,21 +1,170 @@
 import React from "react";
-import { Button, Col, Container, Row, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { Row, Col, Button, Table } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+
 import Heading from "../../../compoment/Heading/Heading";
+import ColumnGroup from "antd/lib/table/ColumnGroup";
+import Column from "antd/lib/table/Column";
 
 const ViewAll = () => {
+  const column = [
+    {
+      title: "#",
+      dataIndex: "no",
+      key: "nnumber",
+    },
+    {
+      title: "Danh mục đề xuất",
+      dataIndex: "fmName",
+      key: "fmName",
+    },
+    {
+      title: "Tiến độ phê duyệt",
+      dataIndex: "requestStatus",
+      key: "requestStatus",
+    },
+    {
+      title: "Trưởng bộ phận",
+      dataIndex: "deputyHead",
+      key: "deputyHead",
+      render: (isCheck) => (
+        <>
+          {console.log(isCheck)}
+          <p> {isCheck ? "đúng" : "sai"} </p>
+        </>
+      ),
+    },
+    {
+      title: "Cơ sở vật chất",
+      dataIndex: "facility",
+      key: "facility",
+      render: (isCheck) => <p> {isCheck ? "đúng" : "sai"} </p>,
+    },
+    {
+      title: "Hành chính tổng hợp",
+      dataIndex: "admin",
+      key: "admin",
+      render: (isCheck) => <p> {isCheck ? "đúng" : "sai"} </p>,
+    },
+    {
+      title: "Kế toán",
+      dataIndex: "accountant",
+      key: "accountant",
+      render: (isCheck) => <p> {isCheck ? "đúng" : "sai"} </p>,
+    },
+    {
+      title: "Ban giám đốc",
+      dataIndex: "director",
+      key: "director",
+      render: (isCheck) => <p> {isCheck ? "đúng" : "sai"} </p>,
+    },
+  ];
+
+  const data = [
+    {
+      key: "11",
+      number: 1,
+      fmName: "máy in",
+      deputyHead: false,
+      facility: true,
+      admin: true,
+      accountant: true,
+      director: true,
+    },
+    {
+      key: "21",
+      number: 2,
+      fmName: "máy inaaa",
+      deputyHead: true,
+      facility: true,
+      admin: true,
+      accountant: true,
+      director: false,
+    },
+    {
+      key: "3",
+      number: 3,
+      fmName: "máy ina",
+      deputyHead: false,
+      facility: true,
+      admin: false,
+      accountant: true,
+      director: false,
+    },
+  ];
+
   return (
-    <Container fluid>
-      <div className="ad-tab px-3 py-3 tab-view fm-viewall">
-        <Row className="pb-3">
+    <>
+      <div className="ad-tab px-1 py-1 table fm-viewall">
+        <Row className="mb-1">
           <Heading title="Các đề xuất của bạn" />
-          <Col className="ml-auto text-right" style={{ paddingRight: "10px" }}>
+
+          <Col className="ml-auto text-right d-flex align-center">
             <Link to="/facility/add">
-              <Button variant="success">Thêm đề xuất</Button>
+              <Button type="primary" icon={<PlusOutlined />} className="border">
+                Thêm đề xuất
+              </Button>
             </Link>
           </Col>
         </Row>
-        <Table responsive hover bordered sedittyle={{ textAlign: "center" }}>
+        <Table dataSource={data}>
+          <Column title="#" dataIndex="number" key="number" width="2%" />
+          <Column
+            title="Danh mục đề xuất"
+            dataIndex="fmName"
+            key="fmName"
+            width="25%"
+          />
+          <ColumnGroup title="Tiến độ phê duyệt" width="58%">
+            <Column
+              title="Trưởng bộ phận"
+              dataIndex="deputyHead"
+              key="deputyHead"
+              render={(isCheck) => <>{isCheck ? "đúng" : "sai"}</>}
+            />
+            <Column
+              title="Cơ sở vật chất"
+              dataIndex="facility"
+              key="facility"
+              render={(isCheck) => <>{isCheck ? "đúng" : "sai"}</>}
+            />
+            <Column
+              title="Hành chính tổng hợp"
+              dataIndex="admin"
+              key="admin"
+              render={(isCheck) => <>{isCheck ? "đúng" : "sai"}</>}
+            />
+            <Column
+              title="Kế toán"
+              dataIndex="accountant"
+              key="accountant"
+              render={(isCheck) => <>{isCheck ? "đúng" : "sai"}</>}
+            />
+            <Column
+              title="Ban Giám đốc"
+              dataIndex="director"
+              key="director"
+              render={(isCheck) => <>{isCheck ? "đúng" : "sai"}</>}
+            />
+          </ColumnGroup>
+          <Column
+            title="Thao tác"
+            width="15%"
+            render={() => (
+              <>
+                <div className="material-icons" style={{ color: "#4834d4" }}>
+                  create
+                </div>
+                <div className="material-icons" style={{ color: "#eb4d4b" }}>
+                  delete
+                </div>
+              </>
+            )}
+          />
+        </Table>
+
+        {/* <table responsive hover bordered sedittyle={{ textAlign: "center" }}>
           <thead>
             <tr>
               <th rowSpan={2} style={{ width: "5%" }}>
@@ -89,9 +238,9 @@ const ViewAll = () => {
               <td>Table cell</td>
             </tr>
           </tbody>
-        </Table>
+  </table> */}
       </div>
-    </Container>
+    </>
   );
 };
 

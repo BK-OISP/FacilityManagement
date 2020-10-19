@@ -1,13 +1,13 @@
 import React from "react";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Row, Col, Typography, Space } from "antd";
 
 const Heading = (props) => {
+  const { Title } = Typography;
   const { title } = props;
   return (
     <Row>
       <Col>
-        <h4>{title}</h4>
+        <Title level={3}>{title}</Title>
       </Col>
     </Row>
   );

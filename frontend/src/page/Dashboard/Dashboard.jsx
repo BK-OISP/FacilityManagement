@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Row, Col } from "antd";
-import Table from "react-bootstrap/Table";
 
 import TodoCard from "../../compoment/card/todocard/TodoCard";
 
@@ -21,7 +20,7 @@ const Dashboard = (props) => {
             <Row className="pb-3">
               <Col style={{ fontWeight: "bold" }}>Table</Col>
             </Row>
-            <Table responsive hover>
+            <table responsive hover>
               <thead>
                 <tr>
                   <th>#</th>
@@ -62,7 +61,7 @@ const Dashboard = (props) => {
                   <td>Table cell</td>
                 </tr>
               </tbody>
-            </Table>
+            </table>
           </div>
         </Col>
         <Col md={4}>b</Col>
