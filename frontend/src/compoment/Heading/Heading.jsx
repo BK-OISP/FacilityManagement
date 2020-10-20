@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Typography, Space } from "antd";
+import { Row, Col, Typography } from "antd";
 
 const Heading = (props) => {
   const { Title } = Typography;

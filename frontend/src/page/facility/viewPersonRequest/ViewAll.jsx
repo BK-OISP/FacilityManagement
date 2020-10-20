@@ -1,77 +1,115 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Row, Col, Button, Table, Space } from "antd";
-import {
-  PlusOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  CheckCircleOutlined,
-  ExclamationCircleOutlined,
-  CloseCircleOutlined,
-} from "@ant-design/icons";
+import { Row, Col, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 import Heading from "../../../compoment/Heading/Heading";
-import ColumnGroup from "antd/lib/table/ColumnGroup";
-import Column from "antd/lib/table/Column";
-import { useCallback } from "react";
+
+import ViewAllTable from "./ViewAllTable";
 
 const ViewAll = () => {
-  const column = [
-    {
-      title: "#",
-      dataIndex: "no",
-      key: "nnumber",
-    },
-    {
-      title: "Danh mục đề xuất",
-      dataIndex: "fmName",
-      key: "fmName",
-    },
-    {
-      title: "Tiến độ phê duyệt",
-      dataIndex: "requestStatus",
-      key: "requestStatus",
-    },
-    {
-      title: "Trưởng bộ phận",
-      dataIndex: "deputyHead",
-      key: "deputyHead",
-      render: (isCheck) => (
-        <>
-          {console.log(isCheck)}
-          <p> {isCheck ? "đúng" : "sai"} </p>
-        </>
-      ),
-    },
-    {
-      title: "Cơ sở vật chất",
-      dataIndex: "facility",
-      key: "facility",
-      render: (isCheck) => <p> {isCheck ? "đúng" : "sai"} </p>,
-    },
-    {
-      title: "Hành chính tổng hợp",
-      dataIndex: "admin",
-      key: "admin",
-      render: (isCheck) => <p> {isCheck ? "đúng" : "sai"} </p>,
-    },
-    {
-      title: "Kế toán",
-      dataIndex: "accountant",
-      key: "accountant",
-      render: (isCheck) => <p> {isCheck ? "đúng" : "sai"} </p>,
-    },
-    {
-      title: "Ban giám đốc",
-      dataIndex: "director",
-      key: "director",
-      render: (isCheck) => <p> {isCheck ? "đúng" : "sai"} </p>,
-    },
-  ];
-
-  const data = [
+  const [data, setData] = useState([
     {
       key: "11",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "12",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "13",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "14",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "15",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "16",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "17",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "18",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "19",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "111",
       number: 1,
       fmName: "máy in",
       overallStatus: true,
@@ -104,21 +142,7 @@ const ViewAll = () => {
       accountant: false,
       director: false,
     },
-  ];
-
-  const renderStatus = useCallback((checkingStatus, record, index) => {
-    console.log(record, index);
-
-    if (record.overallStatus) {
-      //true = dang duyệt
-      if (checkingStatus) {
-        return <CheckCircleOutlined className="btn-success ant-icon" />;
-      } else
-        return <ExclamationCircleOutlined className="btn-warning ant-icon" />;
-    }
-    //reject rồi
-    return <CloseCircleOutlined className="btn-danger ant-icon" />;
-  }, []);
+  ]);
 
   return (
     <div className="ad-tab px-1 py-1 table fm-viewall">
@@ -133,73 +157,9 @@ const ViewAll = () => {
           </Link>
         </Col>
       </Row>
-      <Table
-        dataSource={data}
-        bordered
-        pagination={{ pageSize: 10 }}
-        scroll={{ y: 240 }}
-      >
-        <Column title="#" dataIndex="number" key="number" width="4%" />
-        <Column
-          title="Danh mục đề xuất"
-          dataIndex="fmName"
-          key="fmName"
-          width="25%"
-        />
-        <ColumnGroup title="Tiến độ phê duyệt" width="58%">
-          <Column
-            title="Trưởng bộ phận"
-            dataIndex="deputyHead"
-            key="deputyHead"
-            render={renderStatus}
-          />
-          <Column
-            title="Cơ sở vật chất"
-            dataIndex="facility"
-            key="facility"
-            render={renderStatus}
-            c
-          />
-          <Column
-            title="Hành chính tổng hợp"
-            dataIndex="admin"
-            key="admin"
-            render={renderStatus}
-          />
-          <Column
-            title="Kế toán"
-            dataIndex="accountant"
-            key="accountant"
-            render={renderStatus}
-          />
-          <Column
-            title="Ban Giám đốc"
-            dataIndex="director"
-            key="director"
-            render={renderStatus}
-          />
-        </ColumnGroup>
-        <Column
-          title="Thao tác"
-          width="15%"
-          render={(record) => (
-            <Space size="middle">
-              {console.log("record", record)}
-              <Button
-                type="text"
-                icon={<EditOutlined className="ant-icon btn-primary" />}
-                disabled={record.deputyHead}
-              />
-              <Button
-                type="text"
-                icon={<DeleteOutlined className="ant-icon btn-danger" />}
-              />
-            </Space>
-          )}
-        />
-      </Table>
+      <ViewAllTable data={data} />
     </div>
   );
 };
 
-export default React.memo(ViewAll);
+export default ViewAll;
