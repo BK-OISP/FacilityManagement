@@ -29,38 +29,25 @@ const ViewAllTable = (props) => {
   return useMemo(
     () => (
       <Table dataSource={data} bordered pagination={{ pageSize: PAGE_SIZE }}>
-        <Column
-          title="#"
-          dataIndex="number"
-          key="number"
-          width="4%"
-          shouldCellUpdate={false}
-        />
+        <Column title="#" dataIndex="number" key="number" width="4%" />
         <Column
           title="Danh mục đề xuất"
           dataIndex="fmName"
           key="fmName"
           width="25%"
-          shouldCellUpdate={false}
         />
-        <ColumnGroup
-          title="Tiến độ phê duyệt"
-          width="58%"
-          shouldCellUpdate={false}
-        >
+        <ColumnGroup title="Tiến độ phê duyệt" width="58%">
           <Column
             title="Trưởng bộ phận"
             dataIndex="deputyHead"
             key="deputyHead"
             render={renderStatus}
-            shouldCellUpdate={false}
           />
           <Column
             title="Cơ sở vật chất"
             dataIndex="facility"
             key="facility"
             render={renderStatus}
-            shouldCellUpdate={false}
             c
           />
           <Column
@@ -68,27 +55,23 @@ const ViewAllTable = (props) => {
             dataIndex="admin"
             key="admin"
             render={renderStatus}
-            shouldCellUpdate={false}
           />
           <Column
             title="Kế toán"
             dataIndex="accountant"
             key="accountant"
             render={renderStatus}
-            shouldCellUpdate={false}
           />
           <Column
             title="Ban Giám đốc"
             dataIndex="director"
             key="director"
             render={renderStatus}
-            shouldCellUpdate={false}
           />
         </ColumnGroup>
         <Column
           title="Thao tác"
           width="15%"
-          shouldCellUpdate={false}
           render={(record) => (
             <Space size="middle">
               <Tooltip title="View/Edit">

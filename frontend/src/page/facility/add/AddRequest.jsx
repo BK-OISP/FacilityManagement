@@ -90,9 +90,9 @@ const AddRequest = () => {
         >
           {({ handleSubmit, submitCount, values }) => {
             return (
-              <Form onSubmit={handleSubmit}>
-                <Row gutter={{ xs: 16, sm: 24, md: 48 }}>
-                  <Col md={10}>
+              <Form onSubmit={handleSubmit} className="fm-rq__wrapper">
+                <Row gutter={[48, 16]}>
+                  <Col md={8}>
                     <Field
                       component={AntInput}
                       name="fmName"
@@ -102,7 +102,7 @@ const AddRequest = () => {
                       hasFeedback
                     />
                   </Col>
-                  <Col md={10}>
+                  <Col md={8}>
                     <Field
                       component={AntSelect}
                       name="fmBigGroup"
@@ -110,12 +110,12 @@ const AddRequest = () => {
                       selectOptions={fmBigGroupType}
                       submitCount={submitCount}
                       hasFeedback
-                      style={{ minWidth: 100 }}
+                      style={{ minWidth: 150 }}
                     />
                   </Col>
                 </Row>
-                <Row gutter={{ xs: 16, sm: 24, md: 48 }}>
-                  <Col md={10}>
+                <Row gutter={[48, 16]}>
+                  <Col md={8}>
                     <Field
                       component={AntSelect}
                       name="purpose"
@@ -125,18 +125,18 @@ const AddRequest = () => {
                       hasFeedback
                     />
                   </Col>
-                  <Col md={10}>
+                  <Col md={8}>
                     <Field
                       component={AntSelect}
                       name="specs"
-                      label="Qui cách danh mục"
+                      label="Quy cách cấu hình"
                       type="textarea"
                       submitCount={submitCount}
                       hasFeedback
                     />
                   </Col>
                 </Row>
-                <Row>
+                <Row gutter={[32, 16]}>
                   <Col md={8}>
                     <Field
                       component={AntInput}
@@ -146,7 +146,7 @@ const AddRequest = () => {
                       submitCount={submitCount}
                       hasFeedback
                       defaultValue={values.quantity}
-                      style={{ minWidth: 100 }}
+                      style={{ width: "100%" }}
                     />
                   </Col>
                 </Row>

@@ -40,7 +40,7 @@ const CreateAntField = (AntComponent) => {
         >
           {selectOptions &&
             selectOptions.map((name) => (
-              <Option key={name._id}>{name.label}</Option>
+              <Option key={name.label}>{name.label}</Option>
             ))}
         </AntComponent>
       );
@@ -53,9 +53,8 @@ const CreateAntField = (AntComponent) => {
               {...props}
               onBlur={onBlur}
               onChange={onInputChange}
-              style={{ resize: "none" }}
               rows={5}
-              allowClear
+              style={{ resize: "none" }}
             />
           );
         case "number":
