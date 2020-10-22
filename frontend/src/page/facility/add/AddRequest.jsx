@@ -7,7 +7,10 @@ import Heading from "../../../compoment/Heading/Heading";
 
 import addRequestApi from "../../../helper/axios/facilityApi/addRequest";
 import { Row, Col, message } from "antd";
-import { AntInput } from "../../../compoment/Form/CreateAntField/CreateAntField";
+import {
+  AntInput,
+  AntSelect,
+} from "../../../compoment/Form/CreateAntField/CreateAntField";
 // import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
 // import SelectComponent from "../../../compoment/Form/SelectCompoment/SelectComponent";
 
@@ -20,7 +23,7 @@ const AddRequest = () => {
     fmName: "",
     fmBigGroup: "",
     purpose: "",
-    quantity: "",
+    quantity: 1,
     specs: "",
     imgUpload: "",
   };
@@ -29,12 +32,12 @@ const AddRequest = () => {
 
   const validationForm = Yup.object().shape({
     fmName: Yup.string().min(1).required("Vui lòng nhập thông tin"),
-    // fmBigGroup: Yup.string().min(1).required("Vui lòng chọn thông tin"),
+    fmBigGroup: Yup.string().min(1).required("Vui lòng chọn thông tin"),
     purpose: Yup.string().min(1).required("Vui lòng nhập thông tin"),
-    // quantity: Yup.string()
-    //   .min(1)
-    //   .required("Vui lòng nhập thông tin")
-    //   .test("Digits only", "Vui lòng chỉ nhập số", digitsOnly),
+    quantity: Yup.string()
+      .min(1)
+      .required("Vui lòng nhập thông tin")
+      .test("Digits only", "Vui lòng chỉ nhập số", digitsOnly),
   });
 
   useEffect(() => {
@@ -42,6 +45,7 @@ const AddRequest = () => {
       try {
         const data = await addRequestApi.getAllFMType();
         setFmBigGroupType(data.allType);
+        console.log(data);
       } catch (error) {
         message.error(
           "Something went wrong! Please contact IT Support or try again",
@@ -84,28 +88,65 @@ const AddRequest = () => {
           validationSchema={validationForm}
           onSubmit={handleSubmitForm}
         >
-          {({ handleSubmit, submitCount }) => {
+          {({ handleSubmit, submitCount, values }) => {
             return (
               <Form onSubmit={handleSubmit}>
-                <Row gutter={{ xs: 8, sm: 16, md: 24 }}>
-                  <Col md={8}>
+                <Row gutter={{ xs: 16, sm: 24, md: 48 }}>
+                  <Col md={10}>
                     <Field
                       component={AntInput}
                       name="fmName"
-                      type="number"
-                      label="Danh mục đề xuất"
+                      type="text"
+                      label="Danh mục đề xuất*"
                       submitCount={submitCount}
                       hasFeedback
                     />
                   </Col>
+                  <Col md={10}>
+                    <Field
+                      component={AntSelect}
+                      name="fmBigGroup"
+                      label="Loại danh mục*"
+                      selectOptions={fmBigGroupType}
+                      submitCount={submitCount}
+                      hasFeedback
+                      style={{ minWidth: 100 }}
+                    />
+                  </Col>
+                </Row>
+                <Row gutter={{ xs: 16, sm: 24, md: 48 }}>
+                  <Col md={10}>
+                    <Field
+                      component={AntSelect}
+                      name="purpose"
+                      label="Mục đích sử dụng*"
+                      type="textarea"
+                      submitCount={submitCount}
+                      hasFeedback
+                    />
+                  </Col>
+                  <Col md={10}>
+                    <Field
+                      component={AntSelect}
+                      name="specs"
+                      label="Qui cách danh mục"
+                      type="textarea"
+                      submitCount={submitCount}
+                      hasFeedback
+                    />
+                  </Col>
+                </Row>
+                <Row>
                   <Col md={8}>
                     <Field
                       component={AntInput}
-                      name="purpose"
-                      type="textarea"
-                      label="Mục đích sử dụng"
+                      name="quantity"
+                      label="Số lượng đề xuất *"
+                      type="number"
                       submitCount={submitCount}
                       hasFeedback
+                      defaultValue={values.quantity}
+                      style={{ minWidth: 100 }}
                     />
                   </Col>
                 </Row>

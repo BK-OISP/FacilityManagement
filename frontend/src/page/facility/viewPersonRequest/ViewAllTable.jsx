@@ -91,7 +91,6 @@ const ViewAllTable = (props) => {
           shouldCellUpdate={false}
           render={(record) => (
             <Space size="middle">
-              {console.log("record", record)}
               <Tooltip title="View/Edit">
                 <Button
                   type="text"

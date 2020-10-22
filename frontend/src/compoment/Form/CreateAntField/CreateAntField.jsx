@@ -23,8 +23,6 @@ const CreateAntField = (AntComponent) => {
 
     const onInputChange = ({ target: { value } }) => {
       form.setFieldValue(field.name, value);
-      console.log(form);
-      console.log(field);
     };
 
     const onChange = (value) => form.setFieldValue(field.name, value);
@@ -41,7 +39,9 @@ const CreateAntField = (AntComponent) => {
           onChange={type ? onInputChange : onChange}
         >
           {selectOptions &&
-            selectOptions.map((name) => <Option key={name}>{name}</Option>)}
+            selectOptions.map((name) => (
+              <Option key={name._id}>{name.label}</Option>
+            ))}
         </AntComponent>
       );
 
@@ -53,6 +53,9 @@ const CreateAntField = (AntComponent) => {
               {...props}
               onBlur={onBlur}
               onChange={onInputChange}
+              style={{ resize: "none" }}
+              rows={5}
+              allowClear
             />
           );
         case "number":
@@ -62,7 +65,6 @@ const CreateAntField = (AntComponent) => {
               {...props}
               onBlur={onBlur}
               onChange={onChange}
-              style={{ width: "100%" }}
             />
           );
 
@@ -72,20 +74,16 @@ const CreateAntField = (AntComponent) => {
     };
 
     return (
-      <div className="field-container">
-        <FormItem
-          label={label}
-          hasFeedback={
-            (hasFeedback && submitted) || (hasFeedback && touched)
-              ? true
-              : false
-          }
-          help={submittedError || touchedError ? hasError : false}
-          validateStatus={submittedError || touchedError ? "error" : "success"}
-        >
-          {AntStyle(type)}
-        </FormItem>
-      </div>
+      <FormItem
+        label={label}
+        hasFeedback={
+          (hasFeedback && submitted) || (hasFeedback && touched) ? true : false
+        }
+        help={submittedError || touchedError ? hasError : false}
+        validateStatus={submittedError || touchedError ? "error" : "success"}
+      >
+        {AntStyle(type)}
+      </FormItem>
     );
   };
 };
