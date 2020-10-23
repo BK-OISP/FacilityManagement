@@ -88,7 +88,7 @@ const AddRequest = () => {
             return (
               <Form onSubmit={handleSubmit} className="fm-rq__wrapper">
                 <Row gutter={[48, 16]}>
-                  <Col md={8}>
+                  <Col md={9}>
                     <Field
                       component={CreateAntField}
                       name="fmName"
@@ -98,7 +98,7 @@ const AddRequest = () => {
                       hasFeedback
                     />
                   </Col>
-                  <Col md={8}>
+                  <Col md={9}>
                     <Field
                       component={CreateAntField}
                       name="fmBigGroup"
@@ -112,7 +112,7 @@ const AddRequest = () => {
                   </Col>
                 </Row>
                 <Row gutter={[48, 16]}>
-                  <Col md={8}>
+                  <Col md={9}>
                     <Field
                       component={CreateAntField}
                       name="purpose"
@@ -122,7 +122,7 @@ const AddRequest = () => {
                       hasFeedback
                     />
                   </Col>
-                  <Col md={8}>
+                  <Col md={9}>
                     <Field
                       component={CreateAntField}
                       name="specs"
@@ -134,7 +134,7 @@ const AddRequest = () => {
                   </Col>
                 </Row>
                 <Row gutter={[48, 16]}>
-                  <Col md={8}>
+                  <Col md={9}>
                     <Field
                       component={CreateAntField}
                       name="quantity"

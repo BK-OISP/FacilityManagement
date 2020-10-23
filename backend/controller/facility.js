@@ -19,10 +19,8 @@ const postAddRequestFM = async (req, res, next) => {
     await addRequestMiddleware(req, res);
     const facilityRequest = JSON.parse(req.body.facilityRequest);
 
-    console.log(facilityRequest);
-
     const findFmBigGroup = await FM_BigGroup.findOne({
-      value: facilityRequest.fmBigGroup,
+      label: facilityRequest.fmBigGroup,
     });
 
     if (findFmBigGroup) {
