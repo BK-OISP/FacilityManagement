@@ -38,14 +38,8 @@ const EmployeeSchema = new Schema({
     // enum: ["Biên chế, HĐ đơn vị"],
   },
   role: {
-    facility: {
-      position: {
-        type: String,
-        default: "fulltime",
-        enum: ["fulltime", "teamLead", "deputyHead", "head", "director"],
-      },
-      department: String,
-    },
+    type: [String],
+    default: ["Fulltime"],
   },
 });
 

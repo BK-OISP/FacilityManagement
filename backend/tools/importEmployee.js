@@ -7,7 +7,7 @@ const url =
   "mongodb://OISP_ADMIN:LcxUen4oyGTB7H20OvJg@103.221.223.26:24569/admin?retryWrites=true&w=majority";
 
 const mongooseUrl =
-  "mongodb://admin_001:2h0vJqKTT3P12wIXFeYb@103.221.223.26:24569/DB_OISP?retryWrites=true&w=majority";
+  "mongodb://admin_test:tUbswWCPZZIutNsIiLId@103.221.223.26:24569/facility_testing?retryWrites=true&w=majority";
 
 const convertStringtToDate = (dateString) => {
   if (dateString) {
@@ -63,3 +63,4 @@ const convertData = async () => {
     console.log(error);
   }
 };
+convertData();
