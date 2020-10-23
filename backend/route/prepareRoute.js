@@ -6,4 +6,6 @@ const router = express.Router();
 
 router.post("/fmadd", prepare.addFMType);
 
+router.post("/addfmbiggroup", prepare.addFMBigGroup);
+
 module.exports = router;

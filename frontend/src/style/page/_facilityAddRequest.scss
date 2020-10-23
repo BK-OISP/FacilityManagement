@@ -1,4 +1,24 @@
 .fm-rq {
-  @extend .border-style;
+  @extend .border-radius;
   background-color: $main-bg-color;
+
+  &__wrapper {
+    margin: 30px auto;
+  }
+
+  .img {
+    &__preview {
+      width: 150px;
+      height: 150px;
+      margin: 1rem;
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .fm-rq {
+    &__wrapper {
+      padding-left: 100px;
+    }
+  }
 }

@@ -1,8 +1,8 @@
-.ad-tab {
+.table {
   background-color: #fff;
   color: $main-color;
   margin-bottom: 10px;
-  @extend .border-style;
+  @extend .border-radius;
 
   .table {
     thead {
@@ -13,11 +13,19 @@
   }
 }
 
-.tab-view {
+.table {
   tr,
-  td,
-  th {
+  th,
+  td {
     text-align: center;
+  }
+  td:nth-child(2) {
+    text-align: left;
+  }
+  tr {
+    th {
+      text-align: center;
+    }
   }
   .material-icons:hover {
     cursor: pointer;

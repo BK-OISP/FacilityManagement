@@ -1,97 +1,164 @@
-import React from "react";
-import { Button, Col, Container, Row, Table } from "react-bootstrap";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { Row, Col, Button } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+
 import Heading from "../../../compoment/Heading/Heading";
 
-const ViewAll = () => {
-  return (
-    <Container fluid>
-      <div className="ad-tab px-3 py-3 tab-view">
-        <Row className="pb-3">
-          <Heading title="Các đề xuất của bạn" />
-          <Col className="ml-auto text-right" style={{ paddingRight: "10px" }}>
-            <Link to="/facility/add">
-              <Button variant="success">Thêm đề xuất</Button>
-            </Link>
-          </Col>
-        </Row>
-        <Table responsive hover bordered sedittyle={{ textAlign: "center" }}>
-          <thead>
-            <tr>
-              <th rowSpan={2} style={{ width: "5%" }}>
-                #
-              </th>
-              <th rowSpan={2} style={{ width: "45%" }}>
-                Danh mục đề xuất
-              </th>
-              <th colSpan={5} style={{ width: "40%" }}>
-                Tiến độ phê duyệt
-              </th>
-              <th rowSpan={2} style={{ width: "10%" }}>
-                Thao tác
-              </th>
-            </tr>
-            <tr>
-              <th>Trưởng Bộ phận </th>
-              <th>Cơ sở vật chất</th>
-              <th>Hành chính tổng hợp </th>
-              <th>Kế toán</th>
-              <th>Ban giám đốc</th>
-            </tr>
-          </thead>
+import ViewAllTable from "./ViewAllTable";
 
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>
-                <div
-                  className="material-icons"
-                  style={{ color: "#4834d4", margin: "5px" }}
-                >
-                  create
-                </div>
-                <div
-                  className="material-icons"
-                  style={{ color: "#eb4d4b", margin: "5px" }}
-                >
-                  delete
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam
-                voluptatem ea aperiam consectetur accusantium suscipit
-                perspiciatis inventore non omnis, assumenda repudiandae fugiat,
-                sequi deleniti reprehenderit consequatur! Porro sapiente quae
-                eum!
-              </td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-              <td>Table cell</td>
-            </tr>
-          </tbody>
-        </Table>
-      </div>
-    </Container>
+const ViewAll = () => {
+  const [data, setData] = useState([
+    {
+      key: "11",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "12",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "13",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "14",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "15",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "16",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "17",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "18",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "19",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "111",
+      number: 1,
+      fmName: "máy in",
+      overallStatus: true,
+      deputyHead: true,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+    {
+      key: "21",
+      number: 2,
+      fmName: "máy inaaa",
+      overallStatus: false,
+      deputyHead: false,
+      facility: true,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+
+    {
+      key: "3",
+      number: 3,
+      fmName: "máy ina",
+      overallStatus: false,
+      deputyHead: true,
+      facility: false,
+      admin: false,
+      accountant: false,
+      director: false,
+    },
+  ]);
+
+  return (
+    <div className="ad-tab px-1 py-1 table fm-viewall">
+      <Row className="mb-1">
+        <Heading title="Các đề xuất của bạn" />
+
+        <Col className="ml-auto text-right d-flex align-center">
+          <Link to="/facility/add">
+            <Button type="primary" icon={<PlusOutlined />} className="border">
+              Thêm đề xuất
+            </Button>
+          </Link>
+        </Col>
+      </Row>
+      <ViewAllTable data={data} />
+    </div>
   );
 };
 

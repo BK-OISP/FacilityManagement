@@ -1,113 +1,172 @@
 import React, { useEffect, useState } from "react";
-import Container from "react-bootstrap/Container";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Select from "react-dropdown-select";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 import Heading from "../../../compoment/Heading/Heading";
-import TextInputComponent from "../../../compoment/TextInputComponent/TextInputComponent";
-
 import addRequestApi from "../../../helper/axios/facilityApi/addRequest";
+import { Row, Col, message, Button } from "antd";
+import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
+import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
+// import SelectComponent from "../../../compoment/Form/SelectCompoment/SelectComponent";
 
 const AddRequest = () => {
-  const [fmOptionsType, setOptionsFmType] = useState();
+  const [fmBigGroupType, setFmBigGroupType] = useState();
+  const [files, setFiles] = useState([]);
+  const [previewURLs, setPreviewURLs] = useState([]);
 
   const initForm = {
     fmName: "",
-    fmType: "",
+    fmBigGroup: "",
     purpose: "",
-    quantity: "",
+    quantity: 1,
     specs: "",
     imgUpload: "",
   };
 
+  const digitsOnly = (value) => /^\d+$/.test(value);
+
   const validationForm = Yup.object().shape({
     fmName: Yup.string().min(1).required("Vui lòng nhập thông tin"),
-    fmType: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+    fmBigGroup: Yup.string().min(1).required("Vui lòng chọn thông tin"),
     purpose: Yup.string().min(1).required("Vui lòng nhập thông tin"),
-    quantity: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+    quantity: Yup.string()
+      .min(1)
+      .required("Vui lòng nhập thông tin")
+      .test("Digits only", "Vui lòng chỉ nhập số", digitsOnly),
   });
 
   useEffect(() => {
-    const fetchFMType = async () => {
-      const data = await addRequestApi.getAllFMType();
-      const convertData = data.allType.map((item) => {
-        return {
-          ...item,
-          value: item.name,
-          label: item.name,
-        };
-      });
-      setOptionsFmType(convertData);
+    const fetchFNBigGroup = async () => {
+      try {
+        const data = await addRequestApi.getAllFMType();
+        setFmBigGroupType(data.allType);
+      } catch (error) {
+        message.error(
+          "Something went wrong! Please contact IT Support or try again",
+          10
+        );
+      }
     };
-    fetchFMType();
+    fetchFNBigGroup();
   }, []);
 
-  const handleSubmit = () => {
-    console.log("Submit");
-  };
-
-  const handleInputChange = (event) => {
-    console.log(event);
+  const handleSubmitForm = async (values, actions) => {
+    actions.setSubmitting(false);
+    const formData = new FormData();
+    for (let key of Object.keys(files)) {
+      formData.append("imgCollection", files[key]);
+    }
+    formData.append("facilityRequest", JSON.stringify(values));
+    try {
+      await addRequestApi.postRequest(formData);
+      actions.resetForm();
+      actions.setSubmitting(false);
+      setPreviewURLs([]);
+      setFiles([]);
+      message.success("Upload Completed", 10);
+    } catch (error) {
+      message.error(
+        "Something went wrong! Please contact IT Support or try again",
+        10
+      );
+    }
   };
 
   return (
-    <Container fluid>
-      <div className="px-3 py-3 fm-rq">
-        <Heading title="Thêm đề xuất" />
+    <>
+      <div className="px-1 py-1 fm-rq">
+        <Row className="mb-1">
+          <Heading title="Thêm đề xuất" />
+        </Row>
 
         <Formik
           initialValues={initForm}
           validationSchema={validationForm}
-          validateOnBlur={true}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmitForm}
         >
-          {({ values, errors, touched, handleChange, handleBlur }) => {
+          {({ handleSubmit, submitCount, values }) => {
             return (
-              <Form>
-                <Row>
-                  <Col md={5}>
+              <Form onSubmit={handleSubmit} className="fm-rq__wrapper">
+                <Row gutter={[48, 16]}>
+                  <Col md={9}>
                     <Field
-                      id="fmName"
+                      component={CreateAntField}
                       name="fmName"
-                      label="Tên danh mục đề xuất *"
-                      placeholder="Tên danh mục đề xuất"
-                      component={TextInputComponent}
-                      errorMessage={errors["fmName"]}
-                      touched={touched["fmName"]}
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.fmName || ""}
+                      type="text"
+                      label="Danh mục đề xuất*"
+                      submitCount={submitCount}
+                      hasFeedback
                     />
                   </Col>
+                  <Col md={9}>
+                    <Field
+                      component={CreateAntField}
+                      name="fmBigGroup"
+                      type="select"
+                      label="Loại danh mục *"
+                      selectOptions={fmBigGroupType}
+                      submitCount={submitCount}
+                      hasFeedback
+                      style={{ minWidth: 150 }}
+                    />
+                  </Col>
+                </Row>
+                <Row gutter={[48, 16]}>
+                  <Col md={9}>
+                    <Field
+                      component={CreateAntField}
+                      name="purpose"
+                      label="Mục đích sử dụng*"
+                      type="textarea"
+                      submitCount={submitCount}
+                      hasFeedback
+                    />
+                  </Col>
+                  <Col md={9}>
+                    <Field
+                      component={CreateAntField}
+                      name="specs"
+                      label="Quy cách cấu hình"
+                      type="textarea"
+                      submitCount={submitCount}
+                      hasFeedback
+                    />
+                  </Col>
+                </Row>
+                <Row gutter={[48, 16]}>
+                  <Col md={9}>
+                    <Field
+                      component={CreateAntField}
+                      name="quantity"
+                      label="Số lượng đề xuất *"
+                      type="number"
+                      submitCount={submitCount}
+                      hasFeedback
+                      defaultValue={values.quantity}
+                      style={{ width: "100%" }}
+                    />
+                  </Col>
+                </Row>
+
+                <ImageUpload
+                  files={files}
+                  setFiles={setFiles}
+                  previewURLs={previewURLs}
+                  setPreviewURLs={setPreviewURLs}
+                />
+
+                <Row justify="center" style={{ marginTop: "2rem" }}>
+                  <Button type="primary" htmlType="submit" className="border">
+                    Gửi thông tin
+                  </Button>
                 </Row>
               </Form>
             );
           }}
         </Formik>
-
-        <Row>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos velit
-          quas iste quod nulla cupiditate. Nostrum natus iure sed minima
-          sapiente quia vel commodi velit? Omnis consequuntur quidem dolore
-          commodi.
-        </Row>
       </div>
-    </Container>
+    </>
   );
 };
 
 export default AddRequest;
-
-// <Select
-// id="fm-types"
-// options={fmOptionsType}
-// clearable={true}
-// placeholder="Danh mục tài sản"
-// onChange={handleInputChange}
-// noDataLabel="Không tìm thấy"
-// className="mt-2"
-// style={{ marginLeft: "10px" }}
-// />

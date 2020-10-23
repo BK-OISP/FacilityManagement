@@ -1,22 +1,22 @@
 @media screen and (min-width: 768px) {
   .login-wrapper {
-    .container {
-      max-width: 640px;
+    .login {
+      width: 640px;
     }
   }
 }
 
 @media only screen and (min-width: 768px) {
   .wrapper {
-    .col-md-3 {
-      flex: 0 0 24%;
+    .ant-col-md-6 {
+      max-width: 24%;
     }
   }
 }
 
 @media only screen and (min-width: 576px) {
-  .col-sm-6 {
-    flex: 0 0 48%;
+  .ant-col-sm-12 {
+    max-width: 48%;
   }
 }
 

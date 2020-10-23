@@ -27,7 +27,7 @@ const GoogleIcon = (props) => {
   };
   return (
     <button
-      className="btn btn-outline-light login--google "
+      className="login--google "
       id="buttonGoogle"
       onClick={handleLoginGoogle}
     >

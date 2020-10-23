@@ -23,3 +23,24 @@
 .bg-danger {
   background: $danger-color !important;
 }
+
+.btn-primary {
+  color: $primary-color !important;
+}
+
+.btn-success {
+  color: $success-color !important;
+}
+
+.btn-warning {
+  color: $warning-color !important;
+}
+
+.btn-danger {
+  color: $danger-color !important;
+}
+
+.form-control:focus {
+  border-color: #2684ff;
+  box-shadow: 0 0 0 1px #2684ff;
+}

@@ -25,6 +25,7 @@ const TextInputComponent = ({ field, ...props }) => {
         value={value}
         as={asType ? asType : "input"}
         rows={asType === "textarea" ? 3 : ""}
+        style={{ resize: "none" }}
       />
       <FormText className="text-danger">
         {touched && errorMessage ? errorMessage : ""}

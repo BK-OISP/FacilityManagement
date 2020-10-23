@@ -6,4 +6,6 @@ const router = express.Router();
 
 router.get("/type", facilityController.getFMType);
 
+router.post("/addrequest", facilityController.postAddRequestFM);
+
 module.exports = router;

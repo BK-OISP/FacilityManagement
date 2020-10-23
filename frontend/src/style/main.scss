@@ -1,3 +1,4 @@
+@import "~antd/dist/antd.css";
 @import "./abstract/variable";
 @import "./base/base";
 @import "./abstract/extend";
@@ -8,4 +9,7 @@
 @import "./compoment/counter";
 @import "./compoment/table";
 @import "./page/facilityAddRequest";
+@import "./page/facilityViewAll";
+@import "./compoment/btnUpload";
 @import "./abstract/responsive";
+@import "./abstract/custom";
