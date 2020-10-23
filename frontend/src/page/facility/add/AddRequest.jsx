@@ -3,15 +3,10 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
 import Heading from "../../../compoment/Heading/Heading";
-// import TextInputComponent from "../../../compoment/Form/TextInputComponent/TextInputComponent";
-
 import addRequestApi from "../../../helper/axios/facilityApi/addRequest";
-import { Row, Col, message } from "antd";
-import {
-  AntInput,
-  AntSelect,
-} from "../../../compoment/Form/CreateAntField/CreateAntField";
-// import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
+import { Row, Col, message, Button } from "antd";
+import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
+import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
 // import SelectComponent from "../../../compoment/Form/SelectCompoment/SelectComponent";
 
 const AddRequest = () => {
@@ -45,7 +40,6 @@ const AddRequest = () => {
       try {
         const data = await addRequestApi.getAllFMType();
         setFmBigGroupType(data.allType);
-        console.log(data);
       } catch (error) {
         message.error(
           "Something went wrong! Please contact IT Support or try again",
@@ -56,24 +50,26 @@ const AddRequest = () => {
     fetchFNBigGroup();
   }, []);
 
-  const handleSubmitForm = async (props) => {
-    console.log(props);
-    // actions.setSubmitting(false);
-    // const formData = new FormData();
-    // for (let key of Object.keys(files)) {
-    //   formData.append("imgCollection", files[key]);
-    // }
-    // formData.append("facilityRequest", JSON.stringify(values));
-    // console.log(values);
-    // try {
-    //   await addRequestApi.postRequest(formData);
-    //   actions.resetForm();
-    //   actions.setSubmitting(false);
-    //   setPreviewURLs([]);
-    //   setFiles([]);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+  const handleSubmitForm = async (values, actions) => {
+    actions.setSubmitting(false);
+    const formData = new FormData();
+    for (let key of Object.keys(files)) {
+      formData.append("imgCollection", files[key]);
+    }
+    formData.append("facilityRequest", JSON.stringify(values));
+    try {
+      await addRequestApi.postRequest(formData);
+      actions.resetForm();
+      actions.setSubmitting(false);
+      setPreviewURLs([]);
+      setFiles([]);
+      message.success("Upload Completed", 10);
+    } catch (error) {
+      message.error(
+        "Something went wrong! Please contact IT Support or try again",
+        10
+      );
+    }
   };
 
   return (
@@ -94,7 +90,7 @@ const AddRequest = () => {
                 <Row gutter={[48, 16]}>
                   <Col md={8}>
                     <Field
-                      component={AntInput}
+                      component={CreateAntField}
                       name="fmName"
                       type="text"
                       label="Danh mục đề xuất*"
@@ -104,9 +100,10 @@ const AddRequest = () => {
                   </Col>
                   <Col md={8}>
                     <Field
-                      component={AntSelect}
+                      component={CreateAntField}
                       name="fmBigGroup"
-                      label="Loại danh mục*"
+                      type="select"
+                      label="Loại danh mục *"
                       selectOptions={fmBigGroupType}
                       submitCount={submitCount}
                       hasFeedback
@@ -117,7 +114,7 @@ const AddRequest = () => {
                 <Row gutter={[48, 16]}>
                   <Col md={8}>
                     <Field
-                      component={AntSelect}
+                      component={CreateAntField}
                       name="purpose"
                       label="Mục đích sử dụng*"
                       type="textarea"
@@ -127,7 +124,7 @@ const AddRequest = () => {
                   </Col>
                   <Col md={8}>
                     <Field
-                      component={AntSelect}
+                      component={CreateAntField}
                       name="specs"
                       label="Quy cách cấu hình"
                       type="textarea"
@@ -136,10 +133,10 @@ const AddRequest = () => {
                     />
                   </Col>
                 </Row>
-                <Row gutter={[32, 16]}>
+                <Row gutter={[48, 16]}>
                   <Col md={8}>
                     <Field
-                      component={AntInput}
+                      component={CreateAntField}
                       name="quantity"
                       label="Số lượng đề xuất *"
                       type="number"
@@ -150,11 +147,19 @@ const AddRequest = () => {
                     />
                   </Col>
                 </Row>
-                <div className="submit-container">
-                  <button className="ant-btn ant-btn-primary" type="submit">
-                    Submit
-                  </button>
-                </div>
+
+                <ImageUpload
+                  files={files}
+                  setFiles={setFiles}
+                  previewURLs={previewURLs}
+                  setPreviewURLs={setPreviewURLs}
+                />
+
+                <Row justify="center" style={{ marginTop: "2rem" }}>
+                  <Button type="primary" htmlType="submit" className="border">
+                    Gửi thông tin
+                  </Button>
+                </Row>
               </Form>
             );
           }}

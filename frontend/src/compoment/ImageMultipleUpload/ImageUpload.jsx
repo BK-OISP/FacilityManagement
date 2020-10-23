@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Row } from "react-bootstrap";
+import { Row } from "antd";
 import BtnUpload from "./BtnUpload";
 
 const ImageUpload = (props) => {
@@ -30,7 +30,7 @@ const ImageUpload = (props) => {
 
   return (
     <>
-      <Row className="justify-content-center">
+      <Row justify="center">
         <input
           type="file"
           multiple
@@ -40,18 +40,22 @@ const ImageUpload = (props) => {
         />
         <BtnUpload handleClick={showFileUpload} />
       </Row>
-      <Row className="justify-content-center">
-        {previewURLs.length > 0 &&
-          previewURLs.map((file) => {
-            return (
-              <img
-                key={file.preview}
-                src={file.preview}
-                alt={file.preview}
-                className="img__preview"
-              />
-            );
-          })}
+      <Row justify="center">(Tối đa 5 hình)</Row>
+      <Row justify="center">
+        <Row>
+          {previewURLs.length > 0 &&
+            previewURLs.length <= 5 &&
+            previewURLs.map((file) => {
+              return (
+                <img
+                  key={file.preview}
+                  src={file.preview}
+                  alt={file.preview}
+                  className="img__preview"
+                />
+              );
+            })}
+        </Row>
       </Row>
     </>
   );
