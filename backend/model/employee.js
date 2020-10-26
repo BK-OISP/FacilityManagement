@@ -39,7 +39,7 @@ const EmployeeSchema = new Schema({
   },
   role: {
     type: [String],
-    default: ["Fulltime"],
+    default: ["FULLTIME"],
   },
 });
 
