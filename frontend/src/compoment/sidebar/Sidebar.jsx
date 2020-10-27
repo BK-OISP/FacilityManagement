@@ -4,7 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import localStorageService from "../../helper/localStorage/localStorageService";
 
 const Sidebar = (props) => {
-  const { menu } = props;
+  const { menu, roles } = props;
 
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
@@ -12,16 +12,21 @@ const Sidebar = (props) => {
     setToggleDropdown((pre) => !pre);
   };
 
-  const checkAuthorization = useCallback((appRoles) => {
-    const userRole = localStorageService.getRole();
+  const checkAuthorization = useCallback(
+    (appRoles) => {
+      const userRole = localStorageService.getRole();
 
-    return (
-      appRoles.role &&
-      appRoles.role.reduce((isAuthor, role) => {
-        return isAuthor && userRole.includes(role);
-      }, true)
-    );
-  }, []);
+      if (roles) {
+        return (
+          appRoles.role &&
+          appRoles.role.reduce((isAuthor, role) => {
+            return isAuthor && userRole.includes(role);
+          }, true)
+        );
+      } else return true;
+    },
+    [roles]
+  );
 
   return (
     <div className="sidebar overlay-scrollbar">
