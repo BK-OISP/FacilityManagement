@@ -54,6 +54,15 @@ const postAddRequestFM = async (req, res, next) => {
   }
 };
 
+const getRequestByEmployeeId = (req, res, next) => {
+  const {employeeId} = req.params;
+
+  if (req.userId === employeeId){
+
+  }
+  else return res.json({message: "Unauthorization! Can't fetch data."})
+}
+
 module.exports = {
   getFMType,
   postAddRequestFM,
