@@ -17,7 +17,9 @@ const GoogleIcon = (props) => {
       {},
       (err, user) => {
         if (err) {
+          console.log("Err", err);
         } else {
+          console.log("user", user);
           localStorageService.setUserData(user);
           setRedirectToReferrer(true);
           dispatch(actionCreator.authSuccess(user));

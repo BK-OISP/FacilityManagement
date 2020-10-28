@@ -1,3 +1,4 @@
+import { Result } from "antd";
 import React from "react";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
@@ -9,34 +10,42 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => {
   const auth = useSelector((state) => state.auth);
   const isAuthenticate = auth.acToken ? true : false;
 
-  const checkAuthorization = useCallback(
-    (appRoles) => {
-      const userRole = localStorageService.getRole();
-      if (roles) {
-        return (
-          appRoles.role &&
-          appRoles.role.reduce((isAuthor, role) => {
-            return isAuthor && userRole.includes(role);
-          }, true)
-        );
-      } else return true;
-    },
-    [roles]
-  );
+  console.log("Roles", roles);
+  const checkAuthorization = useCallback((appRoles) => {
+    const userRole = localStorageService.getRole();
+    const result =
+      appRoles &&
+      appRoles.reduce((isAuthor, role) => {
+        return isAuthor && userRole.includes(role);
+      }, true);
+    return result;
+  }, []);
 
   return (
     <Route
       {...rest}
       render={(props) => {
-        if (isAuthenticate && checkAuthorization(roles)) {
-          return <Component {...props} />;
-        } else {
+        //unauthenticated
+        if (!isAuthenticate) {
           return (
             <Redirect
               to={{ pathname: "/login", state: { from: props.location } }}
             />
           );
         }
+        //authenticated && authorized
+        if (isAuthenticate && checkAuthorization(roles)) {
+          return <Component {...props} />;
+        }
+
+        //not authorized
+        return (
+          <Result
+            status="403"
+            title="403"
+            subTitle="Sorry, you are not authorized to access this page."
+          />
+        );
       }}
     />
   );

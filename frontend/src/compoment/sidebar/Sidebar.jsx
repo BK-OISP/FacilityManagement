@@ -4,7 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import localStorageService from "../../helper/localStorage/localStorageService";
 
 const Sidebar = (props) => {
-  const { menu, roles } = props;
+  const { menu } = props;
 
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
@@ -12,21 +12,16 @@ const Sidebar = (props) => {
     setToggleDropdown((pre) => !pre);
   };
 
-  const checkAuthorization = useCallback(
-    (appRoles) => {
-      const userRole = localStorageService.getRole();
+  const checkAuthorization = useCallback((appRoles) => {
+    const userRole = localStorageService.getRole();
+    const result =
+      appRoles.role &&
+      appRoles.role.reduce((isAuthor, role) => {
+        return isAuthor && userRole.includes(role);
+      }, true);
 
-      if (roles) {
-        return (
-          appRoles.role &&
-          appRoles.role.reduce((isAuthor, role) => {
-            return isAuthor && userRole.includes(role);
-          }, true)
-        );
-      } else return true;
-    },
-    [roles]
-  );
+    return result;
+  }, []);
 
   return (
     <div className="sidebar overlay-scrollbar">
@@ -68,17 +63,18 @@ const Sidebar = (props) => {
                         keyboard_arrow_down
                       </span>
                     </Link>
-                    {checkAuthorization(item) && (
-                      <ul className={`${toggleDropdown ? "appear" : "hide"}`}>
-                        {item.sub.map((sub) => {
-                          return (
+
+                    <ul className={`${toggleDropdown ? "appear" : "hide"}`}>
+                      {item.sub.map((sub) => {
+                        return (
+                          checkAuthorization(sub) && (
                             <li key={sub.key}>
                               <NavLink to={sub.link}>{sub.title}</NavLink>
                             </li>
-                          );
-                        })}
-                      </ul>
-                    )}
+                          )
+                        );
+                      })}
+                    </ul>
                   </div>
                 </li>
               )
