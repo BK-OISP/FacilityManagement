@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import GoogleLogin from "react-google-login";
+import { message } from "antd";
 
 import * as actionCreator from "../../store/action/index";
 import localStorageService from "../../helper/localStorage/localStorageService";
@@ -11,36 +12,25 @@ const GoogleIcon = (props) => {
 
   const dispatch = useDispatch();
 
-  // const handleLoginGoogle = (event) => {
-  //   // popupTools.popup(
-  //   //   "http://localhost:5000/oisp/auth/google",
-  //   //   "Google Connect",
-  //   //   {},
-  //   //   (err, user) => {
-  //   //     if (err) {
-  //   //       console.log("Err", err);
-  //   //     } else {
-  //   //       console.log("user", user);
-  //   //       localStorageService.setUserData(user);
-  //   //       setRedirectToReferrer(true);
-  //   //       dispatch(actionCreator.authSuccess(user));
-  //   //     }
-  //   //   }
-  //   // );
-  //   // event.preventDefault();
-  //   // window.open("http://localhost:5000/oisp/auth/google", "_self");
-  // };
-
   const responseSuccessGoogle = async (response) => {
-    const verifiedData = await loginApi.postIdToken(response.tokenId);
-    const user = verifiedData.user;
-    localStorageService.setUserData(user);
-    setRedirectToReferrer(true);
-    dispatch(actionCreator.authSuccess(user));
+    try {
+      const verifiedData = await loginApi.postIdToken(response.tokenId);
+      const user = verifiedData.user;
+      if (user) {
+        localStorageService.setUserData(user);
+        setRedirectToReferrer(true);
+        dispatch(actionCreator.authSuccess(user));
+      } else {
+        localStorageService.clearAll();
+        throw new Error();
+      }
+    } catch (error) {
+      message.error("Something went wrong! Please try again", 5);
+    }
   };
 
   const responseErrorGoogle = (response) => {
-    console.log(response);
+    message.error("Something went wrong! Please try again", 5);
   };
 
   return (
@@ -70,3 +60,23 @@ const GoogleIcon = (props) => {
 };
 
 export default GoogleIcon;
+
+// const handleLoginGoogle = (event) => {
+//   popupTools.popup(
+//     "http://localhost:5000/oisp/auth/google",
+//     "Google Connect",
+//     {},
+//     (err, user) => {
+//       if (err) {
+//         console.log("Err", err);
+//       } else {
+//         console.log("user", user);
+//         localStorageService.setUserData(user);
+//         setRedirectToReferrer(true);
+//         dispatch(actionCreator.authSuccess(user));
+//       }
+//     }
+//   );
+//   event.preventDefault();
+//   window.open("http://localhost:5000/oisp/auth/google", "_self");
+// };

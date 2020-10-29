@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Switch } from "react-router-dom";
 
 import Navbar from "../../compoment/navbar/Navbar";
 import PrivateRoute from "../../compoment/privateRoute/PrivateRoute";
