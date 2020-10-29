@@ -1,7 +1,10 @@
 import React from "react";
-import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Redirect, Switch, useRouteMatch } from "react-router-dom";
+
+import PrivateRoute from "../../compoment/privateRoute/PrivateRoute";
+import Roles from "../../helper/config/Roles";
 import AddRequest from "./add/AddRequest";
-import ViewAll from "./viewPersonRequest/ViewAll";
+import ViewStatusRequest from "./viewStatusRequest/ViewStatusRequest";
 
 const Facility = (props) => {
   let routes;
@@ -9,12 +12,18 @@ const Facility = (props) => {
 
   routes = (
     <Switch>
-      <Route path={`${match.path}/manage`} exact>
-        <ViewAll />
-      </Route>
-      <Route path={`${match.path}/add`} exact>
-        <AddRequest />
-      </Route>
+      <PrivateRoute
+        path={`${match.path}/manage`}
+        roles={[Roles.FULLTIME]}
+        component={ViewStatusRequest}
+      />
+
+      <PrivateRoute
+        path={`${match.path}/add`}
+        roles={[Roles.FULLTIME]}
+        component={AddRequest}
+      />
+
       <Redirect to="/error" />
     </Switch>
   );

@@ -48,6 +48,7 @@ const CreateAntField = ({
             {...props}
             onBlur={onBlur}
             onChange={onChange}
+            min={0}
           />
         );
       case "text":

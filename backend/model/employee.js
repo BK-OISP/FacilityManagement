@@ -39,8 +39,11 @@ const EmployeeSchema = new Schema({
   },
   role: {
     type: [String],
-    default: ["Fulltime"],
+    default: ["FULLTIME"],
   },
+  picture: String,
+  acToken: String,
+  rfToken: String,
 });
 
 const Employee = mongoose.model("Employee", EmployeeSchema);

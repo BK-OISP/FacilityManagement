@@ -8,6 +8,7 @@ const cors = require("cors");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const passport = require("passport");
 const helmet = require("helmet");
 const compression = require("compression");
 
@@ -19,10 +20,11 @@ const authMiddleware = require("./middleware/authMiddleware");
 
 const app = express();
 
-app.use(cors());
+app.use("*", cors());
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
 app.use("/oisp/upload", express.static(path.join(__dirname, "upload")));
 
@@ -37,15 +39,12 @@ app.use(authMiddleware.isAuth);
 app.use("/oisp/fm", facilityRoute);
 
 //Error handling
-app.use((err, req, res, next) => {
-  if (req.file) {
-    fs.unlink(req.file.path, () => {});
-  }
+app.use((error, req, res, next) => {
   if (res.headerSent) {
-    return next(err);
+    return next(error);
   }
-  res.status(err.code || 500);
-  res.json({ message: err.message || "Something went wrong!" });
+  res.status(error.code || 500);
+  res.json({ message: error.message || "An unknown error occurred!" });
 });
 
 mongoose.set("useNewUrlParser", true);

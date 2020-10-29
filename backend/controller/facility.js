@@ -54,7 +54,30 @@ const postAddRequestFM = async (req, res, next) => {
   }
 };
 
+const getRequestByEmployeeId = async (req, res, next) => {
+  const { employeeId } = req.params;
+
+  if (req.userId === employeeId) {
+    console.log(employeeId);
+    try {
+      const allRequest = await FM_Reuqest.find({
+        employeeId: employeeId,
+      }).sort({ updatedAt: -1 });
+
+      return res.json({ allRequest });
+    } catch (error) {
+      return next(
+        new HttpError("Can't get all request. Please try again!", 500)
+      );
+    }
+  } else
+    return next(
+      new HttpError({ message: "Unauthorization! Can't fetch data." })
+    );
+};
+
 module.exports = {
   getFMType,
   postAddRequestFM,
+  getRequestByEmployeeId,
 };

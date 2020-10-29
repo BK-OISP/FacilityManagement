@@ -1,11 +1,13 @@
 import React, { useCallback, useState } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Redirect, Switch } from "react-router-dom";
 
 import Navbar from "../../compoment/navbar/Navbar";
+import PrivateRoute from "../../compoment/privateRoute/PrivateRoute";
 import Sidebar from "../../compoment/sidebar/Sidebar";
 import Dashboard from "../dashboard/Dashboard";
 import Facility from "../facility/Facility";
 import MENU from "../MENU";
+import roles from "../../helper/config/Roles";
 
 const Welcome = () => {
   let routes;
@@ -16,12 +18,18 @@ const Welcome = () => {
 
   routes = (
     <Switch>
-      <Route path="/dashboard">
-        <Dashboard />
-      </Route>
-      <Route path="/facility">
-        <Facility />
-      </Route>
+      <PrivateRoute
+        path="/dashboard"
+        component={Dashboard}
+        roles={[roles.FULLTIME]}
+      />
+
+      <PrivateRoute
+        path="/facility"
+        component={Facility}
+        roles={[roles.FULLTIME]}
+      />
+
       <Redirect to="/dashboard" />
     </Switch>
   );
