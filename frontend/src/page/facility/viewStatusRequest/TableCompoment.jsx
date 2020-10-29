@@ -9,18 +9,28 @@ import {
 } from "@ant-design/icons";
 import { useMemo } from "react";
 
-const ViewAllTable = (props) => {
+const TableCompoment = (props) => {
   const { data } = props;
   const { Column, ColumnGroup } = Table;
   const PAGE_SIZE = 6;
 
   const renderStatus = useCallback((checkingStatus, record, index) => {
+    console.log("ck", checkingStatus);
+    console.log("record", record);
     if (record.overallStatus) {
       //true = dang chờ duyệt
       if (checkingStatus) {
-        return <CheckCircleOutlined className="btn-success ant-icon" />;
+        return (
+          <Tooltip title="Accepted!">
+            <CheckCircleOutlined className="btn-success ant-icon" />;
+          </Tooltip>
+        );
       } else
-        return <ExclamationCircleOutlined className="btn-warning ant-icon" />;
+        return (
+          <Tooltip title="Pending">
+            <ExclamationCircleOutlined className="btn-warning ant-icon" />;
+          </Tooltip>
+        );
     }
     //reject rồi
     return <CloseCircleOutlined className="btn-danger ant-icon" />;
@@ -95,4 +105,4 @@ const ViewAllTable = (props) => {
   );
 };
 
-export default ViewAllTable;
+export default TableCompoment;

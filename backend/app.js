@@ -39,15 +39,12 @@ app.use(authMiddleware.isAuth);
 app.use("/oisp/fm", facilityRoute);
 
 //Error handling
-app.use((err, req, res, next) => {
-  if (req.file) {
-    fs.unlink(req.file.path, () => {});
-  }
+app.use((error, req, res, next) => {
   if (res.headerSent) {
-    return next(err);
+    return next(error);
   }
-  res.status(err.code || 500);
-  res.json({ message: err.message || "Something went wrong!" });
+  res.status(error.code || 500);
+  res.json({ message: error.message || "An unknown error occurred!" });
 });
 
 mongoose.set("useNewUrlParser", true);

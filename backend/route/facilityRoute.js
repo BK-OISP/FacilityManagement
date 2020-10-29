@@ -6,7 +6,10 @@ const router = express.Router();
 
 router.get("/type", facilityController.getFMType);
 
-router.get("/getallrequest/:employeeId")
+router.get(
+  "/getallrequest/:employeeId",
+  facilityController.getRequestByEmployeeId
+);
 
 router.post("/addrequest", facilityController.postAddRequestFM);
 
