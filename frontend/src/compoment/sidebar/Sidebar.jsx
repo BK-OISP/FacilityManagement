@@ -14,12 +14,15 @@ const Sidebar = (props) => {
 
   const checkAuthorization = useCallback((appRoles) => {
     const userRole = localStorageService.getRole();
-    const result =
-      appRoles.role &&
-      appRoles.role.reduce((isAuthor, role) => {
-        return isAuthor && userRole.includes(role);
-      }, true);
-
+    let result = false;
+    if (appRoles.role) {
+      appRoles.role.forEach((role) => {
+        if (userRole.includes(role)) {
+          result = true;
+          return true;
+        }
+      });
+    }
     return result;
   }, []);
 

@@ -22,7 +22,11 @@ const App = () => {
   const routes = (
     <Switch>
       <Route path="/login" component={LoginPage} />
-      <PrivateRoute path="/" component={Welcome} roles={[roles.FULLTIME]} />
+      <PrivateRoute
+        path="/"
+        component={Welcome}
+        roles={[roles.FULLTIME, roles.DIRECTOR]}
+      />
     </Switch>
   );
 

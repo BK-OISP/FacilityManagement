@@ -10,14 +10,17 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => {
   const auth = useSelector((state) => state.auth);
   const isAuthenticate = auth.acToken ? true : false;
 
-  console.log("Roles", roles);
   const checkAuthorization = useCallback((appRoles) => {
     const userRole = localStorageService.getRole();
-    const result =
-      appRoles &&
-      appRoles.reduce((isAuthor, role) => {
-        return isAuthor && userRole.includes(role);
-      }, true);
+    let result = false;
+    if (appRoles) {
+      appRoles.forEach((role) => {
+        if (userRole.includes(role)) {
+          result = true;
+          return true;
+        }
+      });
+    }
     return result;
   }, []);
 
