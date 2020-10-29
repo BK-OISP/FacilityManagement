@@ -1,6 +1,5 @@
 const localStorageService = {
   setUserData(tokenObj) {
-    console.log(tokenObj);
     localStorage.setItem("acToken", tokenObj.acToken);
     localStorage.setItem("rfToken", tokenObj.rfToken);
     localStorage.setItem("fullName", tokenObj.fullName);

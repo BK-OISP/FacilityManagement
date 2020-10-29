@@ -41,6 +41,9 @@ const EmployeeSchema = new Schema({
     type: [String],
     default: ["FULLTIME"],
   },
+  picture: String,
+  acToken: String,
+  rfToken: String,
 });
 
 const Employee = mongoose.model("Employee", EmployeeSchema);

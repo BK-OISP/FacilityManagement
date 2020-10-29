@@ -29,6 +29,7 @@ axiosClient.interceptors.response.use(
     if (response && response.data) {
       return response.data;
     }
+    return response;
   },
   async (err) => {
     const originalRequest = err.config;

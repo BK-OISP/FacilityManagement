@@ -13,14 +13,12 @@ const Facility = (props) => {
     <Switch>
       <PrivateRoute
         path={`${match.path}/manage`}
-        exact
         roles={[Roles.FULLTIME]}
         component={ViewAll}
       />
 
       <PrivateRoute
         path={`${match.path}/add`}
-        exact
         roles={[Roles.FULLTIME]}
         component={AddRequest}
       />

@@ -8,6 +8,7 @@ const cors = require("cors");
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const passport = require("passport");
 const helmet = require("helmet");
 const compression = require("compression");
 
@@ -19,10 +20,11 @@ const authMiddleware = require("./middleware/authMiddleware");
 
 const app = express();
 
-app.use(cors());
-app.use(helmet({ contentSecurityPolicy: false }));
-app.use(compression());
+app.use("*", cors());
+// app.use(helmet({ contentSecurityPolicy: false }));
+// app.use(compression());
 app.use(bodyParser.json());
+app.use(passport.initialize());
 
 app.use("/oisp/upload", express.static(path.join(__dirname, "upload")));
 
