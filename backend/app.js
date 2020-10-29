@@ -21,8 +21,8 @@ const authMiddleware = require("./middleware/authMiddleware");
 const app = express();
 
 app.use("*", cors());
-// app.use(helmet({ contentSecurityPolicy: false }));
-// app.use(compression());
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(compression());
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
