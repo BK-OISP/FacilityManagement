@@ -58,10 +58,10 @@ const getRequestByEmployeeId = async (req, res, next) => {
   const { employeeId } = req.params;
 
   if (req.userId === employeeId) {
-    console.log(employeeId);
     try {
       const allRequest = await FM_Reuqest.find({
         employeeId: employeeId,
+        isDelete: false,
       }).sort({ updatedAt: -1 });
 
       return res.json({ allRequest });
@@ -76,8 +76,24 @@ const getRequestByEmployeeId = async (req, res, next) => {
     );
 };
 
+const deleteRequest = async (req, res, next) => {
+  const userId = req.userId;
+  const { requestId } = req.params;
+  const request = await FM_Reuqest.findById(requestId);
+  if (userId === request.employeeId.toString()) {
+    //đang chờ duyệt
+    if (request.status.overallStatus && !request.status.isDeputyHeadApproval) {
+      request.isDelete = true;
+      await request.save();
+      return res.json({ message: "ok" });
+    }
+  }
+  return next(new HttpError("Can't delete", 501));
+};
+
 module.exports = {
   getFMType,
   postAddRequestFM,
   getRequestByEmployeeId,
+  deleteRequest,
 };

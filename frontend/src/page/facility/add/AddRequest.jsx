@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { Row, Col, message, Button } from "antd";
 
 import Heading from "../../../compoment/Heading/Heading";
-import addRequestApi from "../../../helper/axios/facilityApi/addRequest";
-import { Row, Col, message, Button } from "antd";
 import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
 import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
+import requestApi from "../../../helper/axios/facilityApi/requestApi";
 // import SelectComponent from "../../../compoment/Form/SelectCompoment/SelectComponent";
 
 const AddRequest = () => {
@@ -38,7 +38,7 @@ const AddRequest = () => {
   useEffect(() => {
     const fetchFNBigGroup = async () => {
       try {
-        const data = await addRequestApi.getAllFMType();
+        const data = await requestApi.getAllFMType();
         setFmBigGroupType(data.allType);
       } catch (error) {
         message.error(
@@ -58,7 +58,7 @@ const AddRequest = () => {
     }
     formData.append("facilityRequest", JSON.stringify(values));
     try {
-      await addRequestApi.postRequest(formData);
+      await requestApi.postRequest(formData);
       actions.resetForm();
       actions.setSubmitting(false);
       setPreviewURLs([]);

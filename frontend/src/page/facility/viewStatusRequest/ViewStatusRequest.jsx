@@ -7,7 +7,7 @@ import Heading from "../../../compoment/Heading/Heading";
 
 import TableCompoment from "./TableCompoment";
 import { useEffect } from "react";
-import viewRequest from "../../../helper/axios/facilityApi/viewRequest";
+import requestApi from "../../../helper/axios/facilityApi/requestApi";
 
 const ViewStatusRequest = () => {
   const [isRerender, setIsRerender] = useState(false);
@@ -16,7 +16,7 @@ const ViewStatusRequest = () => {
   useEffect(() => {
     const fetchAllRequest = async () => {
       try {
-        const response = await viewRequest.viewRequestByEmpId();
+        const response = await requestApi.getAllRequestEmpId();
         console.log(response);
         const dataTable = response.allRequest.map((item, index) => {
           return {
@@ -47,7 +47,11 @@ const ViewStatusRequest = () => {
           </Link>
         </Col>
       </Row>
-      <TableCompoment data={data} />
+      <TableCompoment data={data} setIsRerender={setIsRerender} />
+      <p style={{ fontStyle: "italic", color: "grey" }}>
+        Lưu ý: Bạn chỉ có thể thay đổi / xoá đề xuất trước khi trưởng phòng phê
+        duyệt.
+      </p>
     </div>
   );
 };

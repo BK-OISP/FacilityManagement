@@ -6,19 +6,20 @@ const genAccessToken = (userData) => {
       iss: "OISP - Management",
       userId: userData._id,
       role: userData.role,
-      // exp: new Date().setDate(new Date().getDate() + 1),
-      expiresIn: "7 days",
+      // exp: new Date().setDate(new Date().getDate() + 1)
     },
-    process.env.ACCESS_TOKEN_SECRET
+    process.env.ACCESS_TOKEN_SECRET,
+    {
+      expiresIn: "30 days",
+    }
   );
 };
 
 const genRefreshToken = (userData) => {
   return JWT.sign(
     {
-      iss: "Annien - Porfolio",
-      userID: userData._id,
-      role: userData.role,
+      iss: "OISP - Management",
+      userId: userData._id,
       iat: new Date().getTime(),
     },
     process.env.REFRESH_TOKEN_SECRET

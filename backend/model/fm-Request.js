@@ -44,6 +44,10 @@ const FM_RequestSchema = new Schema(
       type: String,
       trim: true,
     },
+    isDelete: {
+      type: Boolean,
+      default: false,
+    },
     unitPrice: { type: Number, min: 0, default: 0 },
     totalPrice: { type: Number, min: 0, default: 0 },
     status: {
@@ -56,6 +60,8 @@ const FM_RequestSchema = new Schema(
       isAccountLeadApproval: { type: Boolean, default: false }, //kế toán - Thi
       isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
     },
+    acToken: String,
+    rfToken: String,
   },
   {
     timestamps: true,

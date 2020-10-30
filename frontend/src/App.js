@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import PrivateRoute from "./compoment/privateRoute/PrivateRoute";
 import localStorageService from "./helper/localStorage/localStorageService";
-import LoginPage from "./page/login/Login";
+import LoginPage from "./page/Login/Login";
 import Welcome from "./page/welcome/Welcome.jsx";
 import roles from "./helper/config/Roles";
 import * as actionCreator from "./store/action/index";
