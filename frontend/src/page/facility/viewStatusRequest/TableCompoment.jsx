@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { Button, Table, Space, Tooltip, Popconfirm } from "antd";
 import {
   DeleteOutlined,
@@ -13,6 +13,7 @@ import requestApi from "../../../helper/axios/facilityApi/requestApi";
 const TableCompoment = (props) => {
   const { data, setIsRerender } = props;
   const { Column, ColumnGroup } = Table;
+  const [showEditModal, setShowEditModal] = useState(false);
   const PAGE_SIZE = 5;
 
   const renderStatus = useCallback((checkingStatus, record, index) => {
@@ -35,13 +36,12 @@ const TableCompoment = (props) => {
     return <CloseCircleOutlined className="btn-danger ant-icon" />;
   }, []);
 
-  const handleDeleteRequest = async (record) => {
-    console.log(record);
+  const handleDeleteRequest = useCallback(async (record) => {
     try {
       await requestApi.deleteRequest(record._id);
       setIsRerender((pre) => !pre);
     } catch (error) {}
-  };
+  }, []);
 
   return useMemo(
     () => (
@@ -112,7 +112,7 @@ const TableCompoment = (props) => {
         />
       </Table>
     ),
-    [data, renderStatus]
+    [data, renderStatus, handleDeleteRequest]
   );
 };
 
