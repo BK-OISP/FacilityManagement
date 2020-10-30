@@ -2,6 +2,7 @@ const { OAuth2Client } = require("google-auth-library");
 const Employee = require("../model/employee");
 const jwtHelper = require("../helper/jwt");
 const HttpError = require("../model/http-error");
+const { genAccessToken } = require("../helper/jwt");
 
 const client = new OAuth2Client(`${process.env.OAUTH_CLIENT_ID}`);
 
@@ -36,9 +37,23 @@ const googleLogin = async (req, res, next) => {
   }
 };
 
-const refreshToken = (req, res, next) => {
+const refreshToken = async (req, res, next) => {
   const { userData } = req.body;
-  console.log(userData);
+  const { userId, acToken, rfToken } = userData;
+  const employee = await Employee.findById(userId);
+  const data = jwtHelper.verifyToken(rfToken, process.env.REFRESH_TOKEN_SECRET);
+
+  if (
+    employee.acToken === acToken &&
+    employee.rfToken === rfToken &&
+    data.userId === employee._id.toString()
+  ) {
+    const newAcToken = genAccessToken(employee);
+    employee.acToken = newAcToken;
+    await employee.save();
+    return res.json({ acToken: newAcToken });
+  }
+  return next(new HttpError("Can't create acToken"));
 };
 
 module.exports = {

@@ -9,9 +9,12 @@ const refreshAccessToken = async (userData) => {
   try {
     const response = await axios.post(
       `${process.env.REACT_APP_API_URL}/oisp/auth/refreshtoken`,
-      userData
+      { userData: userData }
     );
-  } catch (error) {}
+    return response.data.acToken;
+  } catch (error) {
+    return false;
+  }
 };
 
 axiosClient.interceptors.request.use(
@@ -44,6 +47,7 @@ axiosClient.interceptors.response.use(
         if (accessToken) {
           axios.defaults.headers.common["Authorization"] =
             "Bearer" + accessToken;
+          localStorageService.setAccessToken(accessToken);
           return axiosClient(originalRequest);
         }
       }

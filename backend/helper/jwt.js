@@ -16,9 +16,8 @@ const genAccessToken = (userData) => {
 const genRefreshToken = (userData) => {
   return JWT.sign(
     {
-      iss: "Annien - Porfolio",
-      userID: userData._id,
-      role: userData.role,
+      iss: "OISP - Management",
+      userId: userData._id,
       iat: new Date().getTime(),
     },
     process.env.REFRESH_TOKEN_SECRET
