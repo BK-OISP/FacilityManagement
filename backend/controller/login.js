@@ -36,6 +36,12 @@ const googleLogin = async (req, res, next) => {
   }
 };
 
+const refreshToken = (req, res, next) => {
+  const { userData } = req.body;
+  console.log(userData);
+};
+
 module.exports = {
   googleLogin,
+  refreshToken,
 };

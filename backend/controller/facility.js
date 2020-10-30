@@ -58,7 +58,6 @@ const getRequestByEmployeeId = async (req, res, next) => {
   const { employeeId } = req.params;
 
   if (req.userId === employeeId) {
-    console.log(employeeId);
     try {
       const allRequest = await FM_Reuqest.find({
         employeeId: employeeId,

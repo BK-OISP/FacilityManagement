@@ -5,10 +5,13 @@ const axiosClient = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 });
 
-const refreshAccessToken = async (accessToken) => {
+const refreshAccessToken = async (userData) => {
   try {
+    const response = await axios.post(
+      `${process.env.REACT_APP_API_URL}/oisp/auth/refreshtoken`,
+      userData
+    );
   } catch (error) {}
-  return true;
 };
 
 axiosClient.interceptors.request.use(
@@ -36,7 +39,8 @@ axiosClient.interceptors.response.use(
     if (err.response) {
       if (err.response.status === 403 && !originalRequest._retry) {
         originalRequest._retry = true;
-        const accessToken = await refreshAccessToken();
+        const userData = localStorageService.getUserData();
+        const accessToken = await refreshAccessToken(userData);
         if (accessToken) {
           axios.defaults.headers.common["Authorization"] =
             "Bearer" + accessToken;
