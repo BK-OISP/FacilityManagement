@@ -12,11 +12,9 @@ import { useMemo } from "react";
 const TableCompoment = (props) => {
   const { data } = props;
   const { Column, ColumnGroup } = Table;
-  const PAGE_SIZE = 6;
+  const PAGE_SIZE = 5;
 
   const renderStatus = useCallback((checkingStatus, record, index) => {
-    console.log("ck", checkingStatus);
-    console.log("record", record);
     if (record.overallStatus) {
       //true = dang chờ duyệt
       if (checkingStatus) {

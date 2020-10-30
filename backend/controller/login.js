@@ -26,6 +26,9 @@ const googleLogin = async (req, res, next) => {
         userId: existEmployee._id,
         role: existEmployee.role,
       };
+      existEmployee.acToken = userToken;
+      existEmployee.rfToken = userRf;
+      await existEmployee.save();
       return res.json({ user: userData });
     }
   } catch (error) {

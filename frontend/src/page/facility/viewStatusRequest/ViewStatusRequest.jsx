@@ -47,7 +47,7 @@ const ViewStatusRequest = () => {
           </Link>
         </Col>
       </Row>
-      <TableCompoment data={data} />
+      <TableCompoment data={data} setIsRerender={setIsRerender} />
     </div>
   );
 };

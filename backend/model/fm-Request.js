@@ -56,6 +56,8 @@ const FM_RequestSchema = new Schema(
       isAccountLeadApproval: { type: Boolean, default: false }, //kế toán - Thi
       isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
     },
+    acToken: String,
+    rfToken: String,
   },
   {
     timestamps: true,
