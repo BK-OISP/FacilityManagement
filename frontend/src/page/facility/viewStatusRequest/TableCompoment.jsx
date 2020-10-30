@@ -36,12 +36,15 @@ const TableCompoment = (props) => {
     return <CloseCircleOutlined className="btn-danger ant-icon" />;
   }, []);
 
-  const handleDeleteRequest = useCallback(async (record) => {
-    try {
-      await requestApi.deleteRequest(record._id);
-      setIsRerender((pre) => !pre);
-    } catch (error) {}
-  }, []);
+  const handleDeleteRequest = useCallback(
+    async (record) => {
+      try {
+        await requestApi.deleteRequest(record._id);
+        setIsRerender((pre) => !pre);
+      } catch (error) {}
+    },
+    [setIsRerender]
+  );
 
   return useMemo(
     () => (
