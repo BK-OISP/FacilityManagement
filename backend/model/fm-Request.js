@@ -44,6 +44,10 @@ const FM_RequestSchema = new Schema(
       type: String,
       trim: true,
     },
+    isDelete: {
+      type: Boolean,
+      default: false,
+    },
     unitPrice: { type: Number, min: 0, default: 0 },
     totalPrice: { type: Number, min: 0, default: 0 },
     status: {

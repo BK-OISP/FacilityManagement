@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { Button, Table, Space, Tooltip } from "antd";
+import { Button, Table, Space, Tooltip, Popconfirm } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -8,9 +8,10 @@ import {
   CloseCircleOutlined,
 } from "@ant-design/icons";
 import { useMemo } from "react";
+import requestApi from "../../../helper/axios/facilityApi/requestApi";
 
 const TableCompoment = (props) => {
-  const { data } = props;
+  const { data, setIsRerender } = props;
   const { Column, ColumnGroup } = Table;
   const PAGE_SIZE = 5;
 
@@ -33,6 +34,14 @@ const TableCompoment = (props) => {
     //reject rồi
     return <CloseCircleOutlined className="btn-danger ant-icon" />;
   }, []);
+
+  const handleDeleteRequest = async (record) => {
+    console.log(record);
+    try {
+      await requestApi.deleteRequest(record._id);
+      setIsRerender((pre) => !pre);
+    } catch (error) {}
+  };
 
   return useMemo(
     () => (
@@ -88,12 +97,16 @@ const TableCompoment = (props) => {
                   icon={<EditOutlined className="ant-icon btn-primary" />}
                 />
               </Tooltip>
-              <Tooltip title="Delete">
+              <Popconfirm
+                placement="topLeft"
+                title="Bạn có muốn xoá đề xuất?"
+                onConfirm={() => handleDeleteRequest(record)}
+              >
                 <Button
                   type="text"
                   icon={<DeleteOutlined className="ant-icon btn-danger" />}
                 />
-              </Tooltip>
+              </Popconfirm>
             </Space>
           )}
         />
