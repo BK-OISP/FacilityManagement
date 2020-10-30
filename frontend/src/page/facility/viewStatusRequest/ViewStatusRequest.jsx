@@ -48,6 +48,10 @@ const ViewStatusRequest = () => {
         </Col>
       </Row>
       <TableCompoment data={data} setIsRerender={setIsRerender} />
+      <p style={{ fontStyle: "italic", color: "grey" }}>
+        Lưu ý: Bạn chỉ có thể thay đổi / xoá đề xuất trước khi trưởng phòng phê
+        duyệt.
+      </p>
     </div>
   );
 };
