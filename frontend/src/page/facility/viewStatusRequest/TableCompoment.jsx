@@ -22,13 +22,13 @@ const TableCompoment = (props) => {
       if (checkingStatus) {
         return (
           <Tooltip title="Accepted!">
-            <CheckCircleOutlined className="btn-success ant-icon" />;
+            <CheckCircleOutlined className="btn-success ant-icon" />
           </Tooltip>
         );
       } else
         return (
           <Tooltip title="Pending">
-            <ExclamationCircleOutlined className="btn-warning ant-icon" />;
+            <ExclamationCircleOutlined className="btn-warning ant-icon" />
           </Tooltip>
         );
     }
