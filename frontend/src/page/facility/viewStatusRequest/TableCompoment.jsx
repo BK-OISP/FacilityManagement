@@ -49,16 +49,6 @@ const TableCompoment = (props) => {
     [setIsRerender]
   );
 
-  const handleCancel = (e) => {
-    console.log(e);
-    setShowEditModal(false);
-  };
-
-  const handleOk = (e) => {
-    console.log(e);
-    setShowEditModal(false);
-  };
-
   const handleEditModal = useCallback((record) => {
     console.log(record);
     if (
@@ -79,9 +69,8 @@ const TableCompoment = (props) => {
       <>
         {recordItem ? (
           <EditModal
-            handleOk={handleOk}
-            handleCancel={handleCancel}
             showEditModal={showEditModal}
+            setShowEditModal={setShowEditModal}
             record={recordItem}
           />
         ) : null}
@@ -154,7 +143,14 @@ const TableCompoment = (props) => {
         </Table>
       </>
     ),
-    [data, renderStatus, handleDeleteRequest, handleEditModal, showEditModal]
+    [
+      data,
+      renderStatus,
+      handleDeleteRequest,
+      handleEditModal,
+      showEditModal,
+      recordItem,
+    ]
   );
 };
 

@@ -3,10 +3,11 @@ import { Row } from "antd";
 import BtnUpload from "./BtnUpload";
 
 const ImageUpload = (props) => {
-  // eslint-disable-next-line
   const { files, setFiles, previewURLs, setPreviewURLs } = props;
 
   const fileUpload = useRef();
+
+  console.log(previewURLs);
 
   const showFileUpload = () => {
     if (fileUpload) {
@@ -43,13 +44,26 @@ const ImageUpload = (props) => {
       <Row justify="center">(Tối đa 5 hình)</Row>
       <Row justify="center">
         <Row>
-          {previewURLs.length > 0 &&
+          {files.length > 0 &&
+            previewURLs.length > 0 &&
             previewURLs.length <= 5 &&
             previewURLs.map((file) => {
               return (
                 <img
                   key={file.preview}
                   src={file.preview}
+                  alt={file.preview}
+                  className="img__preview"
+                />
+              );
+            })}
+          {files.length === 0 &&
+            previewURLs.length > 0 &&
+            previewURLs.map((file) => {
+              return (
+                <img
+                  key={file.preview}
+                  src={`${process.env.REACT_APP_API_URL}/oisp/${file}`}
                   alt={file.preview}
                   className="img__preview"
                 />
