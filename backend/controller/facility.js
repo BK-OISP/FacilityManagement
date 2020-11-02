@@ -62,7 +62,9 @@ const getRequestByEmployeeId = async (req, res, next) => {
       const allRequest = await FM_Reuqest.find({
         employeeId: employeeId,
         isDelete: false,
-      }).sort({ updatedAt: -1 });
+      })
+        .populate("fmBigGroup")
+        .sort({ updatedAt: -1 });
 
       return res.json({ allRequest });
     } catch (error) {
