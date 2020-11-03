@@ -65,9 +65,12 @@ const putAddRequestFM = async (req, res, next) => {
       label: facilityRequest.fmBigGroup,
     });
 
-    const request = await FM_Reuqest.findById(requestId);
+    if (!findFmBigGroup) return next(new HttpError("Erorr!", 501));
+
+    let request = await FM_Reuqest.findById(requestId);
 
     if (request.employeeId.toString() === req.userId) {
+      await request.save();
       console.log("check");
     } else return next(new HttpError("Error!", 501));
 
