@@ -7,8 +7,6 @@ const ImageUpload = (props) => {
 
   const fileUpload = useRef();
 
-  console.log(previewURLs);
-
   const showFileUpload = () => {
     if (fileUpload) {
       fileUpload.current.click();
@@ -63,7 +61,7 @@ const ImageUpload = (props) => {
               return (
                 <img
                   key={file.preview}
-                  src={`${process.env.REACT_APP_API_URL}/oisp/${file}`}
+                  src={`${process.env.REACT_APP_API_URL}/oisp/${file.preview}`}
                   alt={file.preview}
                   className="img__preview"
                 />

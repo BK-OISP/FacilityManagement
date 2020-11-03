@@ -1,4 +1,4 @@
-import { message, Row } from "antd";
+import { Col, message, Row } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import { Form, Formik, Field } from "formik";
 import React, { useEffect, useRef, useState } from "react";
@@ -9,7 +9,8 @@ import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
 import requestApi from "../../../helper/axios/facilityApi/requestApi";
 
 const EditModal = (props) => {
-  const { setShowEditModal, showEditModal, record, setRecordItem } = props;
+  const { setShowEditModal, showEditModal, record } = props;
+
   const initForm = {
     fmName: record.fmName,
     fmBigGroup: record.fmBigGroup.label,
@@ -18,10 +19,11 @@ const EditModal = (props) => {
     specs: record.specs,
     imgCollection: record.imgCollection,
   };
+
   const [fmBigGroupType, setFmBigGroupType] = useState();
   const [files, setFiles] = useState([]);
   const [previewURLs, setPreviewURLs] = useState(
-    record && record.imgCollection.map((item) => item)
+    record.imgCollection.map((item) => ({ key: item, preview: item }))
   );
   const formRef = useRef();
 
@@ -42,7 +44,14 @@ const EditModal = (props) => {
   };
 
   const handleOk = (ref) => {
-    console.log(ref.current.values);
+    console.log(ref.current);
+    const formData = new FormData();
+    if (files.length > 0) {
+      for (let key of Object.keys(files)) {
+        formData.append("imgCollection", files[key]);
+      }
+    }
+    formData.append("facilityRequest", JSON.stringify(ref.current.values));
   };
 
   useEffect(() => {
@@ -70,6 +79,7 @@ const EditModal = (props) => {
       maskClosable={false}
       destroyOnClose
       centered
+      className="fm-edit"
     >
       <Formik
         initialValues={initForm}
@@ -79,53 +89,62 @@ const EditModal = (props) => {
         {({ handleSubmit, submitCount, values }) => {
           return (
             <Form onSubmit={handleSubmit}>
-              <Field
-                component={CreateAntField}
-                name="fmName"
-                type="text"
-                label="Danh mục đề xuất*"
-                submitCount={submitCount}
-                hasFeedback
-              />
-
-              <Field
-                component={CreateAntField}
-                name="fmBigGroup"
-                type="select"
-                label="Loại danh mục *"
-                selectOptions={fmBigGroupType}
-                submitCount={submitCount}
-                hasFeedback
-                style={{ minWidth: 200 }}
-              />
-
-              <Field
-                component={CreateAntField}
-                name="purpose"
-                label="Mục đích sử dụng*"
-                type="textarea"
-                submitCount={submitCount}
-                hasFeedback
-              />
-
-              <Field
-                component={CreateAntField}
-                name="specs"
-                label="Quy cách cấu hình"
-                type="textarea"
-                submitCount={submitCount}
-                hasFeedback
-              />
-              <Field
-                component={CreateAntField}
-                name="quantity"
-                label="Số lượng đề xuất *"
-                type="number"
-                submitCount={submitCount}
-                hasFeedback
-                defaultValue={values.quantity}
-                style={{ width: "100%" }}
-              />
+              <Row gutter={16}>
+                <Col md={12}>
+                  <Field
+                    component={CreateAntField}
+                    name="fmName"
+                    type="text"
+                    label="Danh mục đề xuất*"
+                    submitCount={submitCount}
+                    hasFeedback
+                  />
+                </Col>
+                <Col md={12}>
+                  <Field
+                    component={CreateAntField}
+                    name="fmBigGroup"
+                    type="select"
+                    label="Loại danh mục *"
+                    selectOptions={fmBigGroupType}
+                    submitCount={submitCount}
+                    hasFeedback
+                    style={{ minWidth: 200 }}
+                  />
+                </Col>
+                <Col md={12}>
+                  <Field
+                    component={CreateAntField}
+                    name="purpose"
+                    label="Mục đích sử dụng*"
+                    type="textarea"
+                    submitCount={submitCount}
+                    hasFeedback
+                  />
+                </Col>
+                <Col md={12}>
+                  <Field
+                    component={CreateAntField}
+                    name="specs"
+                    label="Quy cách cấu hình"
+                    type="textarea"
+                    submitCount={submitCount}
+                    hasFeedback
+                  />
+                </Col>
+                <Col md={12}>
+                  <Field
+                    component={CreateAntField}
+                    name="quantity"
+                    label="Số lượng đề xuất *"
+                    type="number"
+                    submitCount={submitCount}
+                    hasFeedback
+                    defaultValue={values.quantity}
+                    style={{ width: "100%" }}
+                  />
+                </Col>
+              </Row>
               <ImageUpload
                 files={files}
                 setFiles={setFiles}
