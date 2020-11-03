@@ -43,8 +43,8 @@ const EditModal = (props) => {
     setShowEditModal(false);
   };
 
-  const handleOk = (ref) => {
-    console.log(ref.current);
+  const handleOk = async (ref) => {
+    console.log(ref.current.values);
     const formData = new FormData();
     if (files.length > 0) {
       for (let key of Object.keys(files)) {
@@ -52,6 +52,13 @@ const EditModal = (props) => {
       }
     }
     formData.append("facilityRequest", JSON.stringify(ref.current.values));
+    formData.append("idRequest", record._id);
+    try {
+      const res = await requestApi.editRequest(record._id, formData);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

@@ -50,7 +50,36 @@ const postAddRequestFM = async (req, res, next) => {
         .status(406)
         .json({ message: "Exceeds the number of files allowed to upload" });
     }
-    return new HttpError("Something went wrong", 500);
+    return next(new HttpError("Something went wrong", 501));
+  }
+};
+
+const putAddRequestFM = async (req, res, next) => {
+  try {
+    await addRequestMiddleware(req, res);
+
+    const { requestId } = req.params;
+    const facilityRequest = JSON.parse(req.body.facilityRequest);
+
+    const findFmBigGroup = await FM_BigGroup.findOne({
+      label: facilityRequest.fmBigGroup,
+    });
+
+    const request = await FM_Reuqest.findById(requestId);
+
+    if (request.employeeId.toString() === req.userId) {
+      console.log("check");
+    } else return next(new HttpError("Error!", 501));
+
+    return res.json({ mess: "ok" });
+  } catch (error) {
+    console.log(error);
+    if (error.code === "LIMIT_UNEXPECTED_FILE") {
+      return res
+        .status(406)
+        .json({ message: "Exceeds the number of files allowed to upload" });
+    }
+    return next(new HttpError("Something went wrong", 501));
   }
 };
 
@@ -96,6 +125,7 @@ const deleteRequest = async (req, res, next) => {
 module.exports = {
   getFMType,
   postAddRequestFM,
+  putAddRequestFM,
   getRequestByEmployeeId,
   deleteRequest,
 };

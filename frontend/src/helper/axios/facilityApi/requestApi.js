@@ -19,6 +19,10 @@ const requestApi = {
     const url = `/oisp/fm/request/${requestId}`;
     return axiosClient.delete(url);
   },
+  editRequest: (requestId, formData) => {
+    const url = `/oisp/fm/request/${requestId}`;
+    return axiosClient.put(url, formData);
+  },
 };
 
 export default requestApi;
