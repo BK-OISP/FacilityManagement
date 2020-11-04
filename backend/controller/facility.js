@@ -100,11 +100,11 @@ const putAddRequestFM = async (req, res, next) => {
     return res.json({ message: "ok" });
   } catch (error) {
     if (error.code === "LIMIT_UNEXPECTED_FILE") {
-      return res
-        .status(406)
-        .json({ message: "Exceeds the number of files allowed to upload" });
+      return next(
+        new HttpError("Exceeds the number of files allowed to upload", 406)
+      );
     }
-    return next(new HttpError("Something went wrong", 501));
+    return next(new HttpError("Something went wrong"));
   }
 };
 
