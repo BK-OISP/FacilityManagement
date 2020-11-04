@@ -22,9 +22,7 @@ const EditModal = (props) => {
 
   const [fmBigGroupType, setFmBigGroupType] = useState();
   const [files, setFiles] = useState([]);
-  const [previewURLs, setPreviewURLs] = useState(
-    record.imgCollection.map((item) => ({ key: item, preview: item }))
-  );
+  const [previewURLs, setPreviewURLs] = useState([]);
   const formRef = useRef();
 
   const digitsOnly = (value) => /^\d+$/.test(value);
@@ -38,6 +36,14 @@ const EditModal = (props) => {
       .required("Vui lòng nhập thông tin")
       .test("Digits only", "Vui lòng chỉ nhập số", digitsOnly),
   });
+
+  useEffect(() => {
+    const imgPreview = record.imgCollection.map((item) => ({
+      key: item,
+      preview: item,
+    }));
+    setPreviewURLs(imgPreview);
+  }, [record]);
 
   const handleCancel = (e) => {
     setShowEditModal(false);

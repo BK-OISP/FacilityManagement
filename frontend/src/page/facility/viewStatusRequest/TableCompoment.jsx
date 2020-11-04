@@ -70,14 +70,14 @@ const TableCompoment = (props) => {
   return useMemo(
     () => (
       <>
-        {recordItem ? (
+        {recordItem && (
           <EditModal
             showEditModal={showEditModal}
             setShowEditModal={setShowEditModal}
             record={recordItem}
             setIsRerender={setIsRerender}
           />
-        ) : null}
+        )}
         <Table dataSource={data} bordered pagination={{ pageSize: PAGE_SIZE }}>
           <Column title="#" dataIndex="number" key="number" width="4%" />
           <Column
