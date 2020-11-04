@@ -17,7 +17,6 @@ const ViewStatusRequest = () => {
     const fetchAllRequest = async () => {
       try {
         const response = await requestApi.getAllRequestEmpId();
-        console.log(response);
         const dataTable = response.allRequest.map((item, index) => {
           return {
             ...item,

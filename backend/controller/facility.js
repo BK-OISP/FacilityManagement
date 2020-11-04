@@ -82,23 +82,23 @@ const putAddRequestFM = async (req, res, next) => {
       delete convertRequest.imgCollection;
     }
 
-    await FM_Reuqest.findOneAndUpdate(
+    const doc = await FM_Reuqest.findOneAndUpdate(
       {
         _id: requestId,
         employeeId: req.userId,
-        overallStatus: true,
-        isDeputyHeadApproval: false,
-        isFMTeamLeadApproval: false,
-        isAdminLeadApproval: false,
-        isAccountLeadApproval: false,
-        isDirectorApproval: false,
+        "status.overallStatus": true,
+        "status.isDeputyHeadApproval": false,
+        "status.isFMTeamLeadApproval": false,
+        "status.isAdminLeadApproval": false,
+        "status.isAccountLeadApproval": false,
+        "status.isDirectorApproval": false,
       },
       convertRequest
     );
 
+    if (!doc) return next(new HttpError("Error"));
     return res.json({ message: "ok" });
   } catch (error) {
-    console.log(error);
     if (error.code === "LIMIT_UNEXPECTED_FILE") {
       return res
         .status(406)

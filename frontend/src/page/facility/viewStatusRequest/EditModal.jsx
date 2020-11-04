@@ -50,7 +50,6 @@ const EditModal = (props) => {
   };
 
   const handleOk = async (ref) => {
-    console.log(ref.current.values);
     const formData = new FormData();
     if (files.length > 0) {
       for (let key of Object.keys(files)) {

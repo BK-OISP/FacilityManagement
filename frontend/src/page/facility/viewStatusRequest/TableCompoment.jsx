@@ -10,6 +10,7 @@ import {
 import { useMemo } from "react";
 import requestApi from "../../../helper/axios/facilityApi/requestApi";
 import EditModal from "./EditModal";
+import showTime from "../../../helper/other/ConvertDate";
 
 const TableCompoment = (props) => {
   const { data, setIsRerender } = props;
@@ -53,7 +54,6 @@ const TableCompoment = (props) => {
   );
 
   const handleEditModal = useCallback((record) => {
-    console.log(record);
     if (
       record.overallStatus &&
       !record.isDeputyHeadApproval &&
@@ -85,6 +85,20 @@ const TableCompoment = (props) => {
             dataIndex="fmName"
             key="fmName"
             width="25%"
+            render={(text, record) => (
+              <>
+                {text}
+                <span
+                  style={{
+                    fontStyle: "italic",
+                    color: "gray",
+                    fontSize: "12px",
+                  }}
+                >
+                  --Cập nhật {showTime(record.updatedAt)}
+                </span>
+              </>
+            )}
           />
           <ColumnGroup title="Tiến độ phê duyệt" width="58%">
             <Column
