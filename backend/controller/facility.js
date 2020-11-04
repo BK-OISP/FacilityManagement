@@ -55,6 +55,7 @@ const postAddRequestFM = async (req, res, next) => {
 };
 
 const putAddRequestFM = async (req, res, next) => {
+  let imgCollection = [];
   try {
     await addRequestMiddleware(req, res);
 
@@ -67,14 +68,35 @@ const putAddRequestFM = async (req, res, next) => {
 
     if (!findFmBigGroup) return next(new HttpError("Erorr!", 501));
 
-    let request = await FM_Reuqest.findById(requestId);
+    if (req.files && req.files.length > 0) {
+      imgCollection = req.files.map((item) => item.path);
+    }
 
-    if (request.employeeId.toString() === req.userId) {
-      await request.save();
-      console.log("check");
-    } else return next(new HttpError("Error!", 501));
+    const convertRequest = {
+      ...facilityRequest,
+      imgCollection: imgCollection,
+      fmBigGroup: findFmBigGroup._id,
+    };
 
-    return res.json({ mess: "ok" });
+    if (imgCollection.length === 0) {
+      delete convertRequest.imgCollection;
+    }
+
+    await FM_Reuqest.findOneAndUpdate(
+      {
+        _id: requestId,
+        employeeId: req.userId,
+        overallStatus: true,
+        isDeputyHeadApproval: false,
+        isFMTeamLeadApproval: false,
+        isAdminLeadApproval: false,
+        isAccountLeadApproval: false,
+        isDirectorApproval: false,
+      },
+      convertRequest
+    );
+
+    return res.json({ message: "ok" });
   } catch (error) {
     console.log(error);
     if (error.code === "LIMIT_UNEXPECTED_FILE") {

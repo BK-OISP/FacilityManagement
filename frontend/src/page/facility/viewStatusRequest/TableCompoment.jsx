@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Button, Table, Space, Tooltip, Popconfirm } from "antd";
+import { Button, Table, Space, Tooltip, Popconfirm, message } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -43,8 +43,11 @@ const TableCompoment = (props) => {
     async (record) => {
       try {
         await requestApi.deleteRequest(record._id);
+        message.success("The information was deleted successfully.");
         setIsRerender((pre) => !pre);
-      } catch (error) {}
+      } catch (error) {
+        message.error("Something went wrong.");
+      }
     },
     [setIsRerender]
   );
@@ -72,6 +75,7 @@ const TableCompoment = (props) => {
             showEditModal={showEditModal}
             setShowEditModal={setShowEditModal}
             record={recordItem}
+            setIsRerender={setIsRerender}
           />
         ) : null}
         <Table dataSource={data} bordered pagination={{ pageSize: PAGE_SIZE }}>
@@ -81,7 +85,9 @@ const TableCompoment = (props) => {
             dataIndex="fmName"
             key="fmName"
             width="25%"
-          />
+          >
+            aaa
+          </Column>
           <ColumnGroup title="Tiến độ phê duyệt" width="58%">
             <Column
               title="Trưởng bộ phận"
@@ -150,6 +156,7 @@ const TableCompoment = (props) => {
       handleEditModal,
       showEditModal,
       recordItem,
+      setIsRerender,
     ]
   );
 };

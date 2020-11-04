@@ -9,7 +9,7 @@ import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
 import requestApi from "../../../helper/axios/facilityApi/requestApi";
 
 const EditModal = (props) => {
-  const { setShowEditModal, showEditModal, record } = props;
+  const { setShowEditModal, showEditModal, record, setIsRerender } = props;
 
   const initForm = {
     fmName: record.fmName,
@@ -52,12 +52,13 @@ const EditModal = (props) => {
       }
     }
     formData.append("facilityRequest", JSON.stringify(ref.current.values));
-    formData.append("idRequest", record._id);
     try {
-      const res = await requestApi.editRequest(record._id, formData);
-      console.log(res);
+      await requestApi.editRequest(record._id, formData);
+      message.success("The information was updated successfully.");
+      setIsRerender((pre) => !pre);
+      setShowEditModal(false);
     } catch (error) {
-      console.log(error);
+      message.error("Something went wrong.");
     }
   };
 
