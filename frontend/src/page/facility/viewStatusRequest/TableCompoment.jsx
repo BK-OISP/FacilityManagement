@@ -85,9 +85,7 @@ const TableCompoment = (props) => {
             dataIndex="fmName"
             key="fmName"
             width="25%"
-          >
-            aaa
-          </Column>
+          />
           <ColumnGroup title="Tiến độ phê duyệt" width="58%">
             <Column
               title="Trưởng bộ phận"
