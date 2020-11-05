@@ -8,4 +8,6 @@ router.post("/fmadd", prepare.addFMType);
 
 router.post("/addfmbiggroup", prepare.addFMBigGroup);
 
+router.post("/fmunit", prepare.addUnitGroup);
+
 module.exports = router;
