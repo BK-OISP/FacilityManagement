@@ -1,6 +1,6 @@
-import { Col, message, Row } from "antd";
+import { Col, message, Row, Form as AntForm } from "antd";
 import Modal from "antd/lib/modal/Modal";
-import { Form, Formik, Field } from "formik";
+import { Formik, Field } from "formik";
 import React, { useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 
@@ -11,6 +11,11 @@ import requestApi from "../../../helper/axios/facilityApi/requestApi";
 const EditModal = (props) => {
   const { setShowEditModal, showEditModal, record, setIsRerender } = props;
 
+  const layout = {
+    labelCol: { span: 8 },
+    wrapperCol: { span: 15 },
+  };
+
   const initForm = {
     fmName: record.fmName,
     fmBigGroup: record.fmBigGroup.label,
@@ -18,9 +23,11 @@ const EditModal = (props) => {
     quantity: record.quantity,
     specs: record.specs,
     imgCollection: record.imgCollection,
+    unit: record.unit.label,
   };
 
   const [fmBigGroupType, setFmBigGroupType] = useState();
+  const [fmUnit, setFmUnit] = useState([]);
   const [files, setFiles] = useState([]);
   const [previewURLs, setPreviewURLs] = useState([]);
   const formRef = useRef();
@@ -35,6 +42,7 @@ const EditModal = (props) => {
       .min(1)
       .required("Vui lòng nhập thông tin")
       .test("Digits only", "Vui lòng chỉ nhập số", digitsOnly),
+    unit: Yup.string().required("Vui lòng nhập thông tin"),
   });
 
   useEffect(() => {
@@ -72,6 +80,7 @@ const EditModal = (props) => {
       try {
         const data = await requestApi.getAllFMType();
         setFmBigGroupType(data.allType);
+        setFmUnit(data.unitType);
       } catch (error) {
         message.error(
           "Something went wrong! Please contact IT Support or try again",
@@ -101,9 +110,9 @@ const EditModal = (props) => {
       >
         {({ handleSubmit, submitCount, values }) => {
           return (
-            <Form onSubmit={handleSubmit}>
-              <Row gutter={16}>
-                <Col md={12}>
+            <AntForm onFinish={handleSubmit} {...layout}>
+              <Row gutter={[48, 16]}>
+                <Col xs={24} lg={12}>
                   <Field
                     component={CreateAntField}
                     name="fmName"
@@ -113,7 +122,7 @@ const EditModal = (props) => {
                     hasFeedback
                   />
                 </Col>
-                <Col md={12}>
+                <Col xs={24} lg={12}>
                   <Field
                     component={CreateAntField}
                     name="fmBigGroup"
@@ -125,7 +134,7 @@ const EditModal = (props) => {
                     style={{ minWidth: 200 }}
                   />
                 </Col>
-                <Col md={12}>
+                <Col xs={24} lg={12}>
                   <Field
                     component={CreateAntField}
                     name="purpose"
@@ -135,7 +144,7 @@ const EditModal = (props) => {
                     hasFeedback
                   />
                 </Col>
-                <Col md={12}>
+                <Col xs={24} lg={12}>
                   <Field
                     component={CreateAntField}
                     name="specs"
@@ -145,7 +154,7 @@ const EditModal = (props) => {
                     hasFeedback
                   />
                 </Col>
-                <Col md={12}>
+                <Col xs={24} lg={12}>
                   <Field
                     component={CreateAntField}
                     name="quantity"
@@ -157,6 +166,18 @@ const EditModal = (props) => {
                     style={{ width: "100%" }}
                   />
                 </Col>
+                <Col xs={24} lg={12}>
+                  <Field
+                    component={CreateAntField}
+                    name="unit"
+                    label="Đơn vị tính *"
+                    type="select"
+                    selectOptions={fmUnit}
+                    submitCount={submitCount}
+                    hasFeedback
+                    style={{ width: "100%" }}
+                  />
+                </Col>
               </Row>
               <ImageUpload
                 files={files}
@@ -164,7 +185,7 @@ const EditModal = (props) => {
                 previewURLs={previewURLs}
                 setPreviewURLs={setPreviewURLs}
               />
-            </Form>
+            </AntForm>
           );
         }}
       </Formik>

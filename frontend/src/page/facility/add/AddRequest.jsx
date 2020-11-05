@@ -49,7 +49,6 @@ const AddRequest = () => {
         const data = await requestApi.getAllFMType();
         setFmBigGroupType(data.allType);
         setFmUnit(data.unitType);
-        console.log(data);
       } catch (error) {
         message.error(
           "Something went wrong! Please contact IT Support or try again",
@@ -156,7 +155,6 @@ const AddRequest = () => {
                       type="number"
                       submitCount={submitCount}
                       hasFeedback
-                      defaultValue={values.quantity}
                       style={{ width: "100%" }}
                     />
                   </Col>
@@ -169,7 +167,6 @@ const AddRequest = () => {
                       selectOptions={fmUnit}
                       submitCount={submitCount}
                       hasFeedback
-                      defaultValue={values.quantity}
                       style={{ width: "100%" }}
                     />
                   </Col>

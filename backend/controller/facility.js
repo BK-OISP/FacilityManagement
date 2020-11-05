@@ -126,7 +126,7 @@ const getRequestByEmployeeId = async (req, res, next) => {
         employeeId: employeeId,
         isDelete: false,
       })
-        .populate("fmBigGroup")
+        .populate(["fmBigGroup", "unit"])
         .sort({ updatedAt: -1 });
 
       return res.json({ allRequest });
