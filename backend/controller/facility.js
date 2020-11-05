@@ -25,6 +25,10 @@ const postAddRequestFM = async (req, res, next) => {
       label: facilityRequest.fmBigGroup,
     });
 
+    const findUnit = await FM_Unit.findOne({
+      label: facilityRequest.unit,
+    });
+
     if (findFmBigGroup) {
       let imgCollection = [];
       if (req.files && req.files.length > 0) {
@@ -36,6 +40,7 @@ const postAddRequestFM = async (req, res, next) => {
         fmBigGroup: findFmBigGroup._id,
         imgCollection: imgCollection,
         employeeId: req.userId,
+        unit: findUnit._id,
         // fmType: facilityRequest.fmType !== "" ? facilityRequest.fmType : null,
       };
 

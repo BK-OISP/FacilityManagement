@@ -25,6 +25,11 @@ const AddRequest = () => {
     unit: "",
   };
 
+  const layout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+  };
+
   const digitsOnly = (value) => /^\d+$/.test(value);
 
   const validationForm = Yup.object().shape({
@@ -35,6 +40,7 @@ const AddRequest = () => {
       .min(1)
       .required("Vui lòng nhập thông tin")
       .test("Digits only", "Vui lòng chỉ nhập số", digitsOnly),
+    unit: Yup.string().required("Vui lòng nhập thông tin"),
   });
 
   useEffect(() => {
@@ -74,11 +80,6 @@ const AddRequest = () => {
         10
       );
     }
-  };
-
-  const layout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
   };
 
   return (

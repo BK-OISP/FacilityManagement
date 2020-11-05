@@ -48,6 +48,10 @@ const FM_RequestSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    unit: {
+      type: Schema.Types.ObjectId,
+      ref: "FM_Unit",
+    },
     unitPrice: { type: Number, min: 0, default: 0 },
     totalPrice: { type: Number, min: 0, default: 0 },
     status: {
