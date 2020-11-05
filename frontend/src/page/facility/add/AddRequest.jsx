@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Formik, Form, Field } from "formik";
+import { Formik, Field } from "formik";
 import * as Yup from "yup";
-import { Row, Col, message, Button } from "antd";
+import { Row, Col, message, Button, Form as AntdForm } from "antd";
 
 import Heading from "../../../compoment/Heading/Heading";
 import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
@@ -11,6 +11,7 @@ import requestApi from "../../../helper/axios/facilityApi/requestApi";
 
 const AddRequest = () => {
   const [fmBigGroupType, setFmBigGroupType] = useState();
+  const [fmUnit, setFmUnit] = useState([]);
   const [files, setFiles] = useState([]);
   const [previewURLs, setPreviewURLs] = useState([]);
 
@@ -21,6 +22,7 @@ const AddRequest = () => {
     quantity: 1,
     specs: "",
     imgUpload: "",
+    unit: "",
   };
 
   const digitsOnly = (value) => /^\d+$/.test(value);
@@ -40,6 +42,8 @@ const AddRequest = () => {
       try {
         const data = await requestApi.getAllFMType();
         setFmBigGroupType(data.allType);
+        setFmUnit(data.unitType);
+        console.log(data);
       } catch (error) {
         message.error(
           "Something went wrong! Please contact IT Support or try again",
@@ -72,6 +76,11 @@ const AddRequest = () => {
     }
   };
 
+  const layout = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+  };
+
   return (
     <>
       <div className="px-1 py-1 fm-rq">
@@ -86,9 +95,13 @@ const AddRequest = () => {
         >
           {({ handleSubmit, submitCount, values }) => {
             return (
-              <Form onSubmit={handleSubmit} className="fm-rq__wrapper">
+              <AntdForm
+                {...layout}
+                onFinish={handleSubmit}
+                className="fm-rq__wrapper"
+              >
                 <Row gutter={[48, 16]}>
-                  <Col md={9}>
+                  <Col xs={24} lg={12}>
                     <Field
                       component={CreateAntField}
                       name="fmName"
@@ -98,7 +111,7 @@ const AddRequest = () => {
                       hasFeedback
                     />
                   </Col>
-                  <Col md={9}>
+                  <Col xs={24} lg={12}>
                     <Field
                       component={CreateAntField}
                       name="fmBigGroup"
@@ -112,7 +125,7 @@ const AddRequest = () => {
                   </Col>
                 </Row>
                 <Row gutter={[48, 16]}>
-                  <Col md={9}>
+                  <Col xs={24} lg={12}>
                     <Field
                       component={CreateAntField}
                       name="purpose"
@@ -122,7 +135,7 @@ const AddRequest = () => {
                       hasFeedback
                     />
                   </Col>
-                  <Col md={9}>
+                  <Col xs={24} lg={12}>
                     <Field
                       component={CreateAntField}
                       name="specs"
@@ -134,7 +147,7 @@ const AddRequest = () => {
                   </Col>
                 </Row>
                 <Row gutter={[48, 16]}>
-                  <Col md={9}>
+                  <Col xs={24} lg={12}>
                     <Field
                       component={CreateAntField}
                       name="quantity"
@@ -146,8 +159,20 @@ const AddRequest = () => {
                       style={{ width: "100%" }}
                     />
                   </Col>
+                  <Col xs={24} lg={12}>
+                    <Field
+                      component={CreateAntField}
+                      name="unit"
+                      label="Đơn vị tính *"
+                      type="select"
+                      selectOptions={fmUnit}
+                      submitCount={submitCount}
+                      hasFeedback
+                      defaultValue={values.quantity}
+                      style={{ width: "100%" }}
+                    />
+                  </Col>
                 </Row>
-
                 <ImageUpload
                   files={files}
                   setFiles={setFiles}
@@ -160,7 +185,7 @@ const AddRequest = () => {
                     Gửi thông tin
                   </Button>
                 </Row>
-              </Form>
+              </AntdForm>
             );
           }}
         </Formik>

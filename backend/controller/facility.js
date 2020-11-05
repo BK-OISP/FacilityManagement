@@ -4,11 +4,13 @@ const FM_Type = require("../model/fm-Type");
 const HttpError = require("../model/http-error");
 const FM_BigGroup = require("../model/fm-BigGroup");
 const FM_Reuqest = require("../model/fm-Request");
+const FM_Unit = require("../model/fm-Unit");
 
 const getFMType = async (req, res, next) => {
   try {
     const allType = await FM_BigGroup.find({});
-    return res.json({ allType });
+    const unitType = await FM_Unit.find();
+    return res.json({ allType, unitType });
   } catch (error) {
     return next(new HttpError("Can't find all FM Types", 500));
   }
