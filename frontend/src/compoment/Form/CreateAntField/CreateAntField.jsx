@@ -28,6 +28,10 @@ const CreateAntField = ({
 
   const onBlur = () => form.setFieldTouched(field.name, true);
 
+  const tailLayout = {
+    wrapperCol: { offset: 0, span: 16 },
+  };
+
   const AntStyle = (type) => {
     switch (type) {
       case "textarea":
@@ -62,7 +66,13 @@ const CreateAntField = ({
         );
       case "select":
         return (
-          <Select {...field} {...props} onBlur={onBlur} onChange={onChange}>
+          <Select
+            {...field}
+            {...props}
+            onBlur={onBlur}
+            onChange={onChange}
+            // defaultValue={selectOptions.length > 0 && selectOptions[0]}
+          >
             {selectOptions &&
               selectOptions.map((name) => (
                 <Option key={name.label}>{name.label}</Option>
@@ -86,6 +96,7 @@ const CreateAntField = ({
 
   return (
     <FormItem
+      {...tailLayout}
       label={label}
       hasFeedback={
         (hasFeedback && submitted) || (hasFeedback && touched) ? true : false

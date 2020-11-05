@@ -4,11 +4,13 @@ const FM_Type = require("../model/fm-Type");
 const HttpError = require("../model/http-error");
 const FM_BigGroup = require("../model/fm-BigGroup");
 const FM_Reuqest = require("../model/fm-Request");
+const FM_Unit = require("../model/fm-Unit");
 
 const getFMType = async (req, res, next) => {
   try {
     const allType = await FM_BigGroup.find({});
-    return res.json({ allType });
+    const unitType = await FM_Unit.find();
+    return res.json({ allType, unitType });
   } catch (error) {
     return next(new HttpError("Can't find all FM Types", 500));
   }
@@ -16,31 +18,33 @@ const getFMType = async (req, res, next) => {
 
 const postAddRequestFM = async (req, res, next) => {
   try {
+    let imgCollection = [];
     await addRequestMiddleware(req, res);
     const facilityRequest = JSON.parse(req.body.facilityRequest);
-
     const findFmBigGroup = await FM_BigGroup.findOne({
       label: facilityRequest.fmBigGroup,
     });
+    const findUnit = await FM_Unit.findOne({
+      label: facilityRequest.unit,
+    });
 
-    if (findFmBigGroup) {
-      let imgCollection = [];
-      if (req.files && req.files.length > 0) {
-        imgCollection = req.files.map((item) => item.path);
-      }
+    if (!findFmBigGroup || !findUnit) return next(new HttpError("Erorr!", 501));
 
-      const convertRequest = {
-        ...facilityRequest,
-        fmBigGroup: findFmBigGroup._id,
-        imgCollection: imgCollection,
-        employeeId: req.userId,
-        // fmType: facilityRequest.fmType !== "" ? facilityRequest.fmType : null,
-      };
-
-      const saveRequest = new FM_Reuqest(convertRequest);
-
-      await saveRequest.save();
+    if (req.files && req.files.length > 0) {
+      imgCollection = req.files.map((item) => item.path);
     }
+
+    const convertRequest = {
+      ...facilityRequest,
+      fmBigGroup: findFmBigGroup._id,
+      imgCollection: imgCollection,
+      employeeId: req.userId,
+      unit: findUnit._id,
+      // fmType: facilityRequest.fmType !== "" ? facilityRequest.fmType : null,
+    };
+
+    const saveRequest = new FM_Reuqest(convertRequest);
+    await saveRequest.save();
 
     return res.json({ mess: "ok" });
   } catch (error) {
@@ -66,7 +70,11 @@ const putAddRequestFM = async (req, res, next) => {
       label: facilityRequest.fmBigGroup,
     });
 
-    if (!findFmBigGroup) return next(new HttpError("Erorr!", 501));
+    const findUnit = await FM_Unit.findOne({
+      label: facilityRequest.unit,
+    });
+
+    if (!findFmBigGroup || !findUnit) return next(new HttpError("Erorr!", 501));
 
     if (req.files && req.files.length > 0) {
       imgCollection = req.files.map((item) => item.path);
@@ -76,6 +84,7 @@ const putAddRequestFM = async (req, res, next) => {
       ...facilityRequest,
       imgCollection: imgCollection,
       fmBigGroup: findFmBigGroup._id,
+      unit: findUnit._id,
     };
 
     if (imgCollection.length === 0) {
@@ -117,7 +126,7 @@ const getRequestByEmployeeId = async (req, res, next) => {
         employeeId: employeeId,
         isDelete: false,
       })
-        .populate("fmBigGroup")
+        .populate(["fmBigGroup", "unit"])
         .sort({ updatedAt: -1 });
 
       return res.json({ allRequest });

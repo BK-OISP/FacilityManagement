@@ -11,8 +11,11 @@ router.get(
   facilityController.getRequestByEmployeeId
 );
 
+//employee request
 router.post("/request/add", facilityController.postAddRequestFM);
 router.put("/request/:requestId", facilityController.putAddRequestFM);
 router.delete("/request/:requestId", facilityController.deleteRequest);
+
+//management
 
 module.exports = router;
