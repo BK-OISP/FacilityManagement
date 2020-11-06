@@ -4,12 +4,11 @@ const HttpError = require("../model/http-error");
 const checkRole = (...approles) => async (req, res, next) => {
   const currentEmployee = await Employee.findById(req.userId);
 
-  if (currentEmployee) {
-    for (eachRole of currentEmployee.role) {
-      if (approles.includes(eachRole)) {
-        console.log("true");
-        return next();
-      }
+  if (!currentEmployee) return next(new HttpError("Unauthorization!", 401));
+
+  for (eachRole of currentEmployee.role) {
+    if (approles.includes(eachRole)) {
+      return next();
     }
   }
   return next(new HttpError("Unauthorization!", 401));
