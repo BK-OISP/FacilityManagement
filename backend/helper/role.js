@@ -8,4 +8,4 @@ const Roles = {
   ACCOUNTANT_LEAD: "ACCOUNTANT_LEAD",
 };
 
-export default Roles;
+module.exports = Roles;

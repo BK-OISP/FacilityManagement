@@ -6,6 +6,7 @@ const FM_BigGroup = require("../model/fm-BigGroup");
 const FM_Reuqest = require("../model/fm-Request");
 const FM_Unit = require("../model/fm-Unit");
 
+//employee request
 const getFMType = async (req, res, next) => {
   try {
     const allType = await FM_BigGroup.find({});
@@ -156,10 +157,16 @@ const deleteRequest = async (req, res, next) => {
   return next(new HttpError("Can't delete", 501));
 };
 
+//manage request
+const getAllRequest = async (req, res, next) => {
+  console.log("check");
+};
+
 module.exports = {
   getFMType,
   postAddRequestFM,
   putAddRequestFM,
   getRequestByEmployeeId,
   deleteRequest,
+  getAllRequest,
 };

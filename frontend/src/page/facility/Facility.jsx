@@ -26,7 +26,7 @@ const Facility = (props) => {
       />
 
       <PrivateRoute
-        path={`${match.path}`}
+        path={`${match.path}/manage`}
         roles={[Roles.FM_DEPUTY_HEAD]}
         component={MangeRequest}
       />
