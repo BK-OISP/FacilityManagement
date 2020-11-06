@@ -21,6 +21,7 @@ const Sidebar = (props) => {
         }
       }
     }
+    return false;
   }, []);
 
   return (
