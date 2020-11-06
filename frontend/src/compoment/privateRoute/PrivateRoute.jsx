@@ -19,6 +19,7 @@ const PrivateRoute = ({ component: Component, roles, ...rest }) => {
         }
       }
     }
+    return false;
   }, []);
 
   return (
