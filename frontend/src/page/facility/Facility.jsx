@@ -4,6 +4,7 @@ import { Redirect, Switch, useRouteMatch } from "react-router-dom";
 import PrivateRoute from "../../compoment/privateRoute/PrivateRoute";
 import Roles from "../../helper/config/Roles";
 import AddRequest from "./add/AddRequest";
+import MangeRequest from "./manageRequest/MangeRequest";
 import ViewStatusRequest from "./viewStatusRequest/ViewStatusRequest";
 
 const Facility = (props) => {
@@ -13,7 +14,7 @@ const Facility = (props) => {
   routes = (
     <Switch>
       <PrivateRoute
-        path={`${match.path}/manage`}
+        path={`${match.path}/status`}
         roles={[Roles.FULLTIME]}
         component={ViewStatusRequest}
       />
@@ -22,6 +23,12 @@ const Facility = (props) => {
         path={`${match.path}/add`}
         roles={[Roles.FULLTIME]}
         component={AddRequest}
+      />
+
+      <PrivateRoute
+        path={`${match.path}`}
+        roles={[Roles.FM_DEPUTY_HEAD]}
+        component={MangeRequest}
       />
 
       <Redirect to="/error" />

@@ -31,6 +31,28 @@ const googleLogin = async (req, res, next) => {
       existEmployee.rfToken = userRf;
       await existEmployee.save();
       return res.json({ user: userData });
+    } else {
+      const newEmployee = new Employee({
+        email: email,
+        fullName: `${family_name} ${given_name}`,
+        picture: picture,
+      });
+      const saveEmployee = await newEmployee.save();
+
+      const userToken = jwtHelper.genAccessToken(saveEmployee);
+      const userRf = jwtHelper.genRefreshToken(saveEmployee);
+      const newUserData = {
+        acToken: userToken,
+        rfToken: userRf,
+        fullName: saveEmployee.fullName,
+        userId: saveEmployee._id,
+        role: saveEmployee.role,
+      };
+      saveEmployee.acToken = userToken;
+      saveEmployee.rfToken = userRf;
+      await saveEmployee.save();
+
+      return res.json({ user: newUserData });
     }
   } catch (error) {
     return new HttpError("Can't log you in. Please try again!");
