@@ -34,7 +34,7 @@ const ViewStatusRequest = () => {
   }, [isRerender]);
 
   return (
-    <div className="ad-tab px-1 py-1 table fm-viewall">
+    <div className="px-1 py-1 table fm-viewall">
       <Row className="mb-1">
         <Heading title="Các đề xuất của bạn" />
 

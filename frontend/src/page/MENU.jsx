@@ -17,7 +17,7 @@ const MENU = [
       {
         key: "viewRequest",
         title: "Theo dõi đề xuất",
-        link: "/facility/manage",
+        link: "/facility/status",
         role: [roles.FULLTIME],
       },
       {
@@ -25,6 +25,12 @@ const MENU = [
         title: "Thêm đề xuất",
         link: "/facility/add",
         role: [roles.FULLTIME],
+      },
+      {
+        key: "manageRequest",
+        title: "Quản lý đề xuất",
+        link: "/facility/manage",
+        role: [roles.FM_DEPUTY_HEAD],
       },
     ],
   },
