@@ -6,8 +6,9 @@ const checkRole = (...approles) => async (req, res, next) => {
 
   if (!currentEmployee) return next(new HttpError("Unauthorization!", 401));
 
-  for (eachRole of currentEmployee.role) {
+  for (const eachRole of currentEmployee.role) {
     if (approles.includes(eachRole)) {
+      req.curEmployee = currentEmployee;
       return next();
     }
   }
