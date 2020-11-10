@@ -171,14 +171,9 @@ const getAllRequest = async (req, res, next) => {
           department: currentEmp.department,
         },
       },
-      {
-        path: "unit",
-      },
-      {
-        path: "fmBigGroup",
-      },
+      "unit",
+      "fmBigGroup",
     ])
-    .populate(["unit", "fmBigGroup"])
     .sort({ updatedAt: -1 })
     .exec();
 
