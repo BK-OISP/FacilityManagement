@@ -166,6 +166,7 @@ const getAllRequest = async (req, res, next) => {
     Roles.ACCOUNTANT_LEAD,
     Roles.DIRECTOR,
     Roles.FM_FACILITY_TEAM_LEAD,
+    Roles.FM_ADMIN_LEAD,
   ];
   const isHead = currentEmp.role.some((role) => headRole.includes(role));
   console.log(isHead);

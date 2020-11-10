@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useMemo } from "react";
 import { Button, Table, Space, Tooltip, Popconfirm, message } from "antd";
 import {
   DeleteOutlined,
@@ -7,7 +7,7 @@ import {
   ExclamationCircleOutlined,
   CloseCircleOutlined,
 } from "@ant-design/icons";
-import { useMemo } from "react";
+
 import requestApi from "../../../helper/axios/facilityApi/requestApi";
 import EditModal from "./EditModal";
 import showTime from "../../../helper/other/ConvertDate";
