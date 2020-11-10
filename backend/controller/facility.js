@@ -5,6 +5,7 @@ const HttpError = require("../model/http-error");
 const FM_BigGroup = require("../model/fm-BigGroup");
 const FM_Reuqest = require("../model/fm-Request");
 const FM_Unit = require("../model/fm-Unit");
+const { all } = require("../route/facilityRoute");
 
 //employee request
 const getFMType = async (req, res, next) => {
@@ -160,6 +161,29 @@ const deleteRequest = async (req, res, next) => {
 //manage request
 const getAllRequest = async (req, res, next) => {
   console.log("check");
+  const currentEmp = req.curEmployee;
+  const allRequest = await FM_Reuqest.find({})
+    .populate([
+      {
+        path: "employeeId",
+        select: ["department", "fullName"],
+        match: {
+          department: currentEmp.department,
+        },
+      },
+      {
+        path: "unit",
+      },
+      {
+        path: "fmBigGroup",
+      },
+    ])
+    .populate(["unit", "fmBigGroup"])
+    .sort({ updatedAt: -1 })
+    .exec();
+
+  console.log(allRequest);
+  return res.json({ allRequest });
 };
 
 module.exports = {

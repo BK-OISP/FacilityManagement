@@ -8,6 +8,7 @@ const MangeRequest = () => {
   useEffect(() => {
     const getAllRequest = async () => {
       const response = await manageRequest.getAllRequest();
+      console.log(response);
     };
     getAllRequest();
   }, []);
