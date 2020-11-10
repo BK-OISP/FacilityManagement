@@ -5,7 +5,7 @@ const HttpError = require("../model/http-error");
 const FM_BigGroup = require("../model/fm-BigGroup");
 const FM_Reuqest = require("../model/fm-Request");
 const FM_Unit = require("../model/fm-Unit");
-const { all } = require("../route/facilityRoute");
+const Roles = require("../helper/role");
 
 //employee request
 const getFMType = async (req, res, next) => {
@@ -160,24 +160,43 @@ const deleteRequest = async (req, res, next) => {
 
 //manage request
 const getAllRequest = async (req, res, next) => {
-  console.log("check");
   const currentEmp = req.curEmployee;
-  const allRequest = await FM_Reuqest.find({})
-    .populate([
-      {
-        path: "employeeId",
-        select: ["department", "fullName"],
-        match: {
-          department: currentEmp.department,
+  let allRequest;
+  const headRole = [
+    Roles.ACCOUNTANT_LEAD,
+    Roles.DIRECTOR,
+    Roles.FM_FACILITY_TEAM_LEAD,
+  ];
+  const isHead = currentEmp.role.some((role) => headRole.includes(role));
+  console.log(isHead);
+  if (isHead) {
+    allRequest = await FM_Reuqest.find({})
+      .populate([
+        {
+          path: "employeeId",
+          select: ["department", "fullName"],
         },
-      },
-      "unit",
-      "fmBigGroup",
-    ])
-    .sort({ updatedAt: -1 })
-    .exec();
+        "unit",
+        "fmBigGroup",
+      ])
+      .sort({ updatedAt: -1 })
+      .exec();
+  } else
+    allRequest = await FM_Reuqest.find({})
+      .populate([
+        {
+          path: "employeeId",
+          select: ["department", "fullName"],
+          match: {
+            department: currentEmp.department,
+          },
+        },
+        "unit",
+        "fmBigGroup",
+      ])
+      .sort({ updatedAt: -1 })
+      .exec();
 
-  console.log(allRequest);
   return res.json({ allRequest });
 };
 
