@@ -11,7 +11,7 @@ import requestApi from "../../../helper/axios/facilityApi/requestApi";
 
 const AddRequest = () => {
   const [fmBigGroupType, setFmBigGroupType] = useState();
-  const [fmUnit, setFmUnit] = useState([]);
+  const [fmUnit, setFmUnit] = useState(null);
   const [files, setFiles] = useState([]);
   const [previewURLs, setPreviewURLs] = useState([]);
 
@@ -22,7 +22,7 @@ const AddRequest = () => {
     quantity: 1,
     specs: "",
     imgUpload: "",
-    unit: "",
+    unit: Array.isArray(fmUnit) ? fmUnit[0].label : "",
   };
 
   const layout = {
@@ -92,6 +92,7 @@ const AddRequest = () => {
           initialValues={initForm}
           validationSchema={validationForm}
           onSubmit={handleSubmitForm}
+          enableReinitialize={true}
         >
           {({ handleSubmit, submitCount, values }) => {
             return (
@@ -167,6 +168,7 @@ const AddRequest = () => {
                       selectOptions={fmUnit}
                       submitCount={submitCount}
                       hasFeedback
+                      defaultValue={values.unit}
                       style={{ width: "100%" }}
                     />
                   </Col>
