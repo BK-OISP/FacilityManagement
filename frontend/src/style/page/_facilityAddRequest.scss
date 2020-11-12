@@ -1,9 +1,9 @@
 .fm-rq {
-  @extend .border-radius;
+  // @extend .border-radius;
   background-color: $main-bg-color;
 
   &__wrapper {
-    margin: 30px auto;
+    margin: 10px auto;
   }
 
   .img {
@@ -13,12 +13,14 @@
       margin: 1rem;
     }
   }
-}
 
-// @media only screen and (min-width: 768px) {
-//   .fm-rq {
-//     &__wrapper {
-//       padding-left: 100px;
-//     }
-//   }
-// }
+  .panel {
+    background-color: green;
+    .ant-collapse-header {
+      border-bottom: 1px solid #d9d9d9;
+    }
+    &__content {
+      background-color: red;
+    }
+  }
+}

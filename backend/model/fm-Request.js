@@ -52,8 +52,8 @@ const FM_RequestSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "FM_Unit",
     },
-    unitPrice: { type: Number, min: 0, default: 0 },
-    totalPrice: { type: Number, min: 0, default: 0 },
+    unitPricePredict: { type: Number, min: 0, default: 0 },
+    totalPricePredict: { type: Number, min: 0, default: 0 },
     status: {
       overallStatus: { type: Boolean, default: true },
       //overallStatus: true - dang duyệt - false : reject

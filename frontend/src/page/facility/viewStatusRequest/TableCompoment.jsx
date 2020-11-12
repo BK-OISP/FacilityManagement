@@ -95,7 +95,8 @@ const TableCompoment = (props) => {
                     fontSize: "12px",
                   }}
                 >
-                  --Cập nhật {showTime(record.updatedAt)}
+                  {" "}
+                  -- Cập nhật {showTime(record.updatedAt)}
                 </span>
               </>
             )}

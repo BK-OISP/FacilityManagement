@@ -29,7 +29,7 @@ const ImageUpload = (props) => {
 
   return (
     <>
-      <Row justify="center">
+      <Row justify="center" className="mt-1">
         <input
           type="file"
           multiple

@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import { Row, Col, message, Button, Form as AntdForm } from "antd";
-
-import Heading from "../../../compoment/Heading/Heading";
 import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
 import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
 import requestApi from "../../../helper/axios/facilityApi/requestApi";
-// import SelectComponent from "../../../compoment/Form/SelectCompoment/SelectComponent";
+import Modal from "antd/lib/modal/Modal";
 
-const AddRequest = () => {
+const AddRequest = (props) => {
+  const { isAddRequestOpen, setIsAddRequestOpen } = props;
   const [fmBigGroupType, setFmBigGroupType] = useState();
   const [fmUnit, setFmUnit] = useState(null);
   const [files, setFiles] = useState([]);
@@ -26,8 +25,8 @@ const AddRequest = () => {
   };
 
   const layout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
   };
 
   const digitsOnly = (value) => /^\d+$/.test(value);
@@ -82,12 +81,16 @@ const AddRequest = () => {
   };
 
   return (
-    <>
-      <div className="px-1 py-1 fm-rq">
-        <Row className="mb-1">
-          <Heading title="Thêm đề xuất" />
-        </Row>
-
+    <Modal
+      title="Thêm đề xuất"
+      visible={isAddRequestOpen}
+      footer={null}
+      centered
+      width={960}
+      onCancel={() => setIsAddRequestOpen(false)}
+      maskClosable={false}
+    >
+      <div className="fm-rq">
         <Formik
           initialValues={initForm}
           validationSchema={validationForm}
@@ -173,6 +176,26 @@ const AddRequest = () => {
                     />
                   </Col>
                 </Row>
+                {/* <Row>
+                  <Col xs={24}>
+                    <Collapse
+                      // bordered={false}
+                      defaultActiveKey={null}
+                      expandIcon={({ isActive }) => (
+                        <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                      )}
+                    >
+                      <Panel
+                        header="Thông tin bổ sung (nếu có)"
+                        key="1"
+                        className="panel"
+                      >
+                        <div className="panel__content">aa</div>
+                      </Panel>
+                    </Collapse>
+                  </Col>
+                </Row> */}
+
                 <ImageUpload
                   files={files}
                   setFiles={setFiles}
@@ -190,7 +213,7 @@ const AddRequest = () => {
           }}
         </Formik>
       </div>
-    </>
+    </Modal>
   );
 };
 
