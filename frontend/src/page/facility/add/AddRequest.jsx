@@ -89,6 +89,7 @@ const AddRequest = (props) => {
       width={960}
       onCancel={() => setIsAddRequestOpen(false)}
       maskClosable={false}
+      destroyOnClose={true}
     >
       <div className="fm-rq">
         <Formik

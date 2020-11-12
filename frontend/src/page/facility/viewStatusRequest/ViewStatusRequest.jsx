@@ -36,7 +36,6 @@ const ViewStatusRequest = () => {
 
   const handleOpenRequest = () => {
     setIsAddRequestOpen(true);
-    console.log(isAddRequestOpen);
   };
 
   return (
