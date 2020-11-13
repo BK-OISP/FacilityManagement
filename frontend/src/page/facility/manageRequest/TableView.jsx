@@ -11,6 +11,7 @@ const TableView = (props) => {
       <Column title="#" dataIndex="fmNumber" key="fmNumber" />
       <Column title="Danh mục đề xuất" dataIndex="fmName" key="fmName" />
       <Column title="Nhân viên" dataIndex="fmEmployee" key="fmEmployee" />
+      <Column title="Bộ phận" dataIndex="fmDepartment" key="fmDepartment" />
       <Column title="Ngày đề xuất" dataIndex="fmDate" key="fmDate" />
       <Column title="Tình trạng" dataIndex="fmStatus" key="fmStatus" />
       <Column title="Thao tác" key="fmAction" />
