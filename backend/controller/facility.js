@@ -182,7 +182,8 @@ const getAllRequest = async (req, res, next) => {
       ])
       .sort({ updatedAt: -1 })
       .exec();
-  } else
+  } else {
+    console.log(currentEmp.department);
     allRequest = await FM_Reuqest.find({})
       .populate([
         {
@@ -197,6 +198,8 @@ const getAllRequest = async (req, res, next) => {
       ])
       .sort({ updatedAt: -1 })
       .exec();
+    console.log(allRequest);
+  }
 
   return res.json({ allRequest });
 };

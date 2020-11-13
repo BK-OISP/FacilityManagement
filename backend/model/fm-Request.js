@@ -64,6 +64,14 @@ const FM_RequestSchema = new Schema(
       isAccountLeadApproval: { type: Boolean, default: false }, //kế toán - Thi
       isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
     },
+    isRead: {
+      isDeputyHeadApproval: { type: Boolean, default: false },
+      //trưởng bộ phận
+      isFMTeamLeadApproval: { type: Boolean, default: false }, //anh Hải - facility teamlead
+      isAdminLeadApproval: { type: Boolean, default: false }, //HCTH - Thanh Trang
+      isAccountLeadApproval: { type: Boolean, default: false }, //kế toán - Thi
+      isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
+    },
     acToken: String,
     rfToken: String,
   },

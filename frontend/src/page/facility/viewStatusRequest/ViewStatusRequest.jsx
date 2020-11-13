@@ -43,6 +43,7 @@ const ViewStatusRequest = () => {
       <AddRequest
         setIsAddRequestOpen={setIsAddRequestOpen}
         isAddRequestOpen={isAddRequestOpen}
+        setIsRerender={setIsRerender}
       />
       <div className="px-1 py-1 table fm-viewall">
         <Row className="mb-1">

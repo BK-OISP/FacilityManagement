@@ -8,7 +8,7 @@ import requestApi from "../../../helper/axios/facilityApi/requestApi";
 import Modal from "antd/lib/modal/Modal";
 
 const AddRequest = (props) => {
-  const { isAddRequestOpen, setIsAddRequestOpen } = props;
+  const { isAddRequestOpen, setIsAddRequestOpen, setIsRerender } = props;
   const [fmBigGroupType, setFmBigGroupType] = useState();
   const [fmUnit, setFmUnit] = useState(null);
   const [files, setFiles] = useState([]);
@@ -69,9 +69,9 @@ const AddRequest = (props) => {
       await requestApi.postRequest(formData);
       actions.resetForm();
       actions.setSubmitting(false);
-      setPreviewURLs([]);
-      setFiles([]);
-      message.success("Upload Completed", 10);
+      setIsAddRequestOpen(false);
+      setIsRerender((pre) => !pre);
+      message.success("Upload Completed", 5);
     } catch (error) {
       message.error(
         "Something went wrong! Please contact IT Support or try again",
