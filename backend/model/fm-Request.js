@@ -52,11 +52,19 @@ const FM_RequestSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "FM_Unit",
     },
-    unitPrice: { type: Number, min: 0, default: 0 },
-    totalPrice: { type: Number, min: 0, default: 0 },
+    unitPricePredict: { type: Number, min: 0, default: 0 },
+    totalPricePredict: { type: Number, min: 0, default: 0 },
     status: {
       overallStatus: { type: Boolean, default: true },
       //overallStatus: true - dang duyệt - false : reject
+      isDeputyHeadApproval: { type: Boolean, default: false },
+      //trưởng bộ phận
+      isFMTeamLeadApproval: { type: Boolean, default: false }, //anh Hải - facility teamlead
+      isAdminLeadApproval: { type: Boolean, default: false }, //HCTH - Thanh Trang
+      isAccountLeadApproval: { type: Boolean, default: false }, //kế toán - Thi
+      isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
+    },
+    isRead: {
       isDeputyHeadApproval: { type: Boolean, default: false },
       //trưởng bộ phận
       isFMTeamLeadApproval: { type: Boolean, default: false }, //anh Hải - facility teamlead

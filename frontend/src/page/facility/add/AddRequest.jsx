@@ -2,16 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 import { Row, Col, message, Button, Form as AntdForm } from "antd";
-
-import Heading from "../../../compoment/Heading/Heading";
 import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
 import ImageUpload from "../../../compoment/ImageMultipleUpload/ImageUpload";
 import requestApi from "../../../helper/axios/facilityApi/requestApi";
-// import SelectComponent from "../../../compoment/Form/SelectCompoment/SelectComponent";
+import Modal from "antd/lib/modal/Modal";
 
-const AddRequest = () => {
+const AddRequest = (props) => {
+  const { isAddRequestOpen, setIsAddRequestOpen, setIsRerender } = props;
   const [fmBigGroupType, setFmBigGroupType] = useState();
-  const [fmUnit, setFmUnit] = useState([]);
+  const [fmUnit, setFmUnit] = useState(null);
   const [files, setFiles] = useState([]);
   const [previewURLs, setPreviewURLs] = useState([]);
 
@@ -22,12 +21,12 @@ const AddRequest = () => {
     quantity: 1,
     specs: "",
     imgUpload: "",
-    unit: "",
+    unit: Array.isArray(fmUnit) ? fmUnit[0].label : "",
   };
 
   const layout = {
-    labelCol: { span: 6 },
-    wrapperCol: { span: 18 },
+    labelCol: { span: 8 },
+    wrapperCol: { span: 16 },
   };
 
   const digitsOnly = (value) => /^\d+$/.test(value);
@@ -70,9 +69,9 @@ const AddRequest = () => {
       await requestApi.postRequest(formData);
       actions.resetForm();
       actions.setSubmitting(false);
-      setPreviewURLs([]);
-      setFiles([]);
-      message.success("Upload Completed", 10);
+      setIsAddRequestOpen(false);
+      setIsRerender((pre) => !pre);
+      message.success("Upload Completed", 5);
     } catch (error) {
       message.error(
         "Something went wrong! Please contact IT Support or try again",
@@ -82,16 +81,22 @@ const AddRequest = () => {
   };
 
   return (
-    <>
-      <div className="px-1 py-1 fm-rq">
-        <Row className="mb-1">
-          <Heading title="Thêm đề xuất" />
-        </Row>
-
+    <Modal
+      title="Thêm đề xuất"
+      visible={isAddRequestOpen}
+      footer={null}
+      centered
+      width={960}
+      onCancel={() => setIsAddRequestOpen(false)}
+      maskClosable={false}
+      destroyOnClose={true}
+    >
+      <div className="fm-rq">
         <Formik
           initialValues={initForm}
           validationSchema={validationForm}
           onSubmit={handleSubmitForm}
+          enableReinitialize={true}
         >
           {({ handleSubmit, submitCount, values }) => {
             return (
@@ -167,10 +172,31 @@ const AddRequest = () => {
                       selectOptions={fmUnit}
                       submitCount={submitCount}
                       hasFeedback
+                      defaultValue={values.unit}
                       style={{ width: "100%" }}
                     />
                   </Col>
                 </Row>
+                {/* <Row>
+                  <Col xs={24}>
+                    <Collapse
+                      // bordered={false}
+                      defaultActiveKey={null}
+                      expandIcon={({ isActive }) => (
+                        <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                      )}
+                    >
+                      <Panel
+                        header="Thông tin bổ sung (nếu có)"
+                        key="1"
+                        className="panel"
+                      >
+                        <div className="panel__content">aa</div>
+                      </Panel>
+                    </Collapse>
+                  </Col>
+                </Row> */}
+
                 <ImageUpload
                   files={files}
                   setFiles={setFiles}
@@ -188,7 +214,7 @@ const AddRequest = () => {
           }}
         </Formik>
       </div>
-    </>
+    </Modal>
   );
 };
 

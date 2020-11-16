@@ -32,12 +32,6 @@ const MENU = [
         link: "/facility/status",
         role: [roles.FULLTIME],
       },
-      {
-        key: "addRequest",
-        title: "Thêm đề xuất",
-        link: "/facility/add",
-        role: [roles.FULLTIME],
-      },
     ],
   },
 ];

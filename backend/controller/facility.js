@@ -169,7 +169,6 @@ const getAllRequest = async (req, res, next) => {
     Roles.FM_ADMIN_LEAD,
   ];
   const isHead = currentEmp.role.some((role) => headRole.includes(role));
-  console.log(isHead);
   if (isHead) {
     allRequest = await FM_Reuqest.find({})
       .populate([
@@ -182,23 +181,28 @@ const getAllRequest = async (req, res, next) => {
       ])
       .sort({ updatedAt: -1 })
       .exec();
-  } else
-    allRequest = await FM_Reuqest.find({})
+    return res.json({ allRequest });
+  } else {
+    allRequest = await FM_Reuqest.find({
+      // "employeeId.department": currentEmp.department,
+    })
       .populate([
         {
           path: "employeeId",
           select: ["department", "fullName"],
-          match: {
-            department: currentEmp.department,
-          },
+          match: { department: currentEmp.department },
         },
         "unit",
         "fmBigGroup",
       ])
-      .sort({ updatedAt: -1 })
-      .exec();
+      .sort({ updatedAt: -1 });
 
-  return res.json({ allRequest });
+    const filterArray = allRequest.filter(
+      (item) =>
+        item.employeeId && item.employeeId.department === currentEmp.department
+    );
+    return res.json({ allRequest: [...filterArray] });
+  }
 };
 
 module.exports = {

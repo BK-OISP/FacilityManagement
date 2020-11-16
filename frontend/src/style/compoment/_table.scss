@@ -3,6 +3,7 @@
   color: $main-color;
   margin-bottom: 10px;
   @extend .border-radius;
+  overflow: auto;
 
   .table {
     thead {

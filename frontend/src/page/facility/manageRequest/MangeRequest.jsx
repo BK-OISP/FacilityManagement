@@ -15,7 +15,7 @@ const MangeRequest = () => {
     const getAllRequest = async () => {
       try {
         const response = await manageRequest.getAllRequest();
-        console.log(response);
+        console.log(response.allRequest);
         const convertedData = response.allRequest.map((item, index) => ({
           ...item,
           key: item._id,
@@ -27,6 +27,7 @@ const MangeRequest = () => {
         }));
         setDataTable(convertedData);
       } catch (error) {
+        console.log(error);
         message.error(error.message, 5);
       }
     };
@@ -38,7 +39,7 @@ const MangeRequest = () => {
       <Row className="mb-1">
         <Heading title="Quản lý đề xuất" />
       </Row>
-      <TableView data={dataTable} />
+      <TableView data={dataTable} setIsRerender={setIsRerender} />
     </div>
   );
 };
