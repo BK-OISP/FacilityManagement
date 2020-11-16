@@ -78,7 +78,12 @@ const TableCompoment = (props) => {
             setIsRerender={setIsRerender}
           />
         )}
-        <Table dataSource={data} bordered pagination={{ pageSize: PAGE_SIZE }}>
+        <Table
+          dataSource={data}
+          bordered
+          pagination={{ pageSize: PAGE_SIZE }}
+          scroll={{ x: 600, y: 600 }}
+        >
           <Column title="#" dataIndex="number" key="number" width="4%" />
           <Column
             title="Danh mục đề xuất"
