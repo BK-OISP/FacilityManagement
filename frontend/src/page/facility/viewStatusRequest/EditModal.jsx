@@ -70,6 +70,8 @@ const EditModal = (props) => {
       message.success("The information was updated successfully.");
       setIsRerender((pre) => !pre);
       setShowEditModal(false);
+      setPreviewURLs([]);
+      setFiles([]);
     } catch (error) {
       message.error("Something went wrong.");
     }

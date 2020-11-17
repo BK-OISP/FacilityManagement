@@ -6,10 +6,11 @@ import localStorageService from "../../../helper/localStorage/localStorageServic
 import Roles from "../../../helper/config/Roles";
 import { useState } from "react";
 import manageRequest from "../../../helper/axios/facilityApi/manageApi";
+import EditModal from "./EditModal";
 
 const TableView = (props) => {
-  const { data, setDataTable } = props;
-  const PAGE_SIZE = 5;
+  const { data, setDataTable, setIsRerender } = props;
+  const PAGE_SIZE = 8;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [recordItem, setRecordItem] = useState(null);
@@ -103,74 +104,81 @@ const TableView = (props) => {
   };
 
   return (
-    <Table
-      dataSource={data}
-      bordered
-      pagination={{ pageSize: PAGE_SIZE }}
-      scroll={{ x: 600, y: 600 }}
-    >
-      <Column title="#" dataIndex="fmNumber" key="fmNumber" width="4%" />
-      <Column
-        title="Danh mục đề xuất"
-        dataIndex="fmName"
-        key="fmName"
-        width="20"
-        render={(text, record) => {
-          const roleKey = getCurrentRoleKey(getCurrentRole());
-          if (!record.isRead[roleKey]) {
+    <>
+      <EditModal
+        setIsRerender={setIsRerender}
+        recordItem={recordItem}
+        isModalOpen={isModalOpen}
+      />
+      <Table
+        dataSource={data}
+        bordered
+        pagination={{ pageSize: PAGE_SIZE }}
+        scroll={{ x: 600, y: 600 }}
+      >
+        <Column title="#" dataIndex="fmNumber" key="fmNumber" width="4%" />
+        <Column
+          title="Danh mục đề xuất"
+          dataIndex="fmName"
+          key="fmName"
+          width="20"
+          render={(text, record) => {
+            const roleKey = getCurrentRoleKey(getCurrentRole());
+            if (!record.isRead[roleKey]) {
+              return (
+                <div
+                  onClick={() => openModalHandler(true, record)}
+                  className="manage-fm__name"
+                >
+                  <b>{text}</b>
+                </div>
+              );
+            }
             return (
               <div
                 onClick={() => openModalHandler(true, record)}
                 className="manage-fm__name"
               >
-                <b>{text}</b>
+                {text}
               </div>
             );
-          }
-          return (
-            <div
-              onClick={() => openModalHandler(true, record)}
-              className="manage-fm__name"
-            >
-              {text}
-            </div>
-          );
-        }}
-        sorter={(a, b) => {
-          if (typeof a.fmName === "string" && typeof b.fmName === "string") {
-            return a.fmName.localeCompare(b.fmName);
-          }
-        }}
-      />
-      <Column
-        title="Nhân viên"
-        dataIndex="fmEmployee"
-        key="fmEmployee"
-        width="20"
-      />
-      <Column
-        title="Bộ phận"
-        dataIndex="fmDepartment"
-        key="fmDepartment"
-        width="20"
-      />
-      <Column
-        title="Ngày đề xuất"
-        dataIndex="fmDate"
-        key="fmDate"
-        width="20"
-        sorter={(a, b) => new Date(a.updatedAt) - new Date(b.updatedAt)}
-      />
-      <Column
-        title="Tình trạng"
-        dataIndex="fmStatus"
-        key="fmStatus"
-        width="20"
-        render={renderStatus}
-        sorter={sortHandler}
-      />
-      <Column title="Thao tác" key="fmAction" />
-    </Table>
+          }}
+          sorter={(a, b) => {
+            if (typeof a.fmName === "string" && typeof b.fmName === "string") {
+              return a.fmName.localeCompare(b.fmName);
+            }
+          }}
+        />
+        <Column
+          title="Nhân viên"
+          dataIndex="fmEmployee"
+          key="fmEmployee"
+          width="20"
+        />
+        <Column
+          title="Bộ phận"
+          dataIndex="fmDepartment"
+          key="fmDepartment"
+          width="20"
+        />
+        <Column
+          title="Ngày đề xuất"
+          dataIndex="fmDate"
+          key="fmDate"
+          width="20"
+          sorter={(a, b) => new Date(a.updatedAt) - new Date(b.updatedAt)}
+        />
+        <Column
+          title="Tình trạng"
+          dataIndex="fmStatus"
+          key="fmStatus"
+          width="20"
+          render={renderStatus}
+          sorter={sortHandler}
+        />
+        <Column title="Thao tác" key="fmAction" />
+      </Table>
+    </>
   );
 };
 
