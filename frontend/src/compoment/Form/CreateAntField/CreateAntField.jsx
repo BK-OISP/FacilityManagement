@@ -66,10 +66,16 @@ const CreateAntField = ({
         );
       case "select":
         return (
-          <Select {...field} {...props} onBlur={onBlur} onChange={onChange}>
+          <Select
+            {...field}
+            {...props}
+            onBlur={onBlur}
+            onChange={onChange}
+            showSearch
+          >
             {selectOptions &&
               selectOptions.map((name) => (
-                <Option key={name.label} value={name.label}>
+                <Option key={name.label} value={name.value}>
                   {name.label}
                 </Option>
               ))}
