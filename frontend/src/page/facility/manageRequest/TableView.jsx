@@ -4,10 +4,14 @@ import React from "react";
 
 import localStorageService from "../../../helper/localStorage/localStorageService";
 import Roles from "../../../helper/config/Roles";
+import { useState } from "react";
 
 const TableView = (props) => {
   const { data } = props;
   const PAGE_SIZE = 5;
+
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [recordItem, setRecordItem] = useState(null);
 
   const getCurrentRole = () => {
     const userRole = localStorageService.getRole();
@@ -73,6 +77,11 @@ const TableView = (props) => {
     }
   };
 
+  const openModalHandler = (isOpen, record) => {
+    setIsEditOpen(isOpen);
+    setRecordItem(record);
+  };
+
   return (
     <Table
       dataSource={data}
@@ -86,6 +95,27 @@ const TableView = (props) => {
         dataIndex="fmName"
         key="fmName"
         width="20"
+        render={(text, record) => {
+          const roleKey = getCurrentRoleKey(getCurrentRole());
+          if (!record.isRead[roleKey]) {
+            return (
+              <div
+                onClick={() => setIsEditOpen(true)}
+                className="manage-fm__name"
+              >
+                <b>{text}</b>
+              </div>
+            );
+          }
+          return (
+            <div
+              onClick={() => setIsEditOpen(true)}
+              className="manage-fm__name"
+            >
+              {text}
+            </div>
+          );
+        }}
         sorter={(a, b) => {
           if (typeof a.fmName === "string" && typeof b.fmName === "string") {
             return a.fmName.localeCompare(b.fmName);

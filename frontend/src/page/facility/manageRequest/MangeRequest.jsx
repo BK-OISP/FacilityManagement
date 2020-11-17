@@ -35,7 +35,7 @@ const MangeRequest = () => {
   }, [isRerender]);
 
   return (
-    <div className="px-1 py-1 table">
+    <div className="px-1 py-1 table manage-fm">
       <Row className="mb-1">
         <Heading title="Quản lý đề xuất" />
       </Row>

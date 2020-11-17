@@ -18,8 +18,7 @@ router.post("/request/add", facilityController.postAddRequestFM);
 router.put("/request/:requestId", facilityController.putAddRequestFM);
 router.delete("/request/:requestId", facilityController.deleteRequest);
 
-//management
-
+//MANAGEMENT
 router.get(
   "/manage/all/:employeeId",
   checkRole(
@@ -31,5 +30,8 @@ router.get(
   ),
   facilityController.getAllRequest
 );
+
+//seen request
+router.put("/manage/view/:requestId", facilityController.putSeenRequest);
 
 module.exports = router;

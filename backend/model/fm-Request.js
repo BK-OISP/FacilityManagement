@@ -74,6 +74,9 @@ const FM_RequestSchema = new Schema(
     },
     acToken: String,
     rfToken: String,
+    notes: {
+      type: [String],
+    },
   },
   {
     timestamps: true,
