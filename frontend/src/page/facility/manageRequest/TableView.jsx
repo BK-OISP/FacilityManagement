@@ -12,7 +12,7 @@ const TableView = (props) => {
   const { data, setDataTable, setIsRerender } = props;
   const PAGE_SIZE = 8;
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(true);
   const [recordItem, setRecordItem] = useState(null);
 
   const getCurrentRole = () => {
