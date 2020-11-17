@@ -68,8 +68,10 @@ const EditModal = (props) => {
     try {
       await requestApi.editRequest(record._id, formData);
       message.success("The information was updated successfully.");
-      setIsRerender((pre) => !pre);
+      setPreviewURLs([]);
+      setFiles([]);
       setShowEditModal(false);
+      setIsRerender((pre) => !pre);
     } catch (error) {
       message.error("Something went wrong.");
     }

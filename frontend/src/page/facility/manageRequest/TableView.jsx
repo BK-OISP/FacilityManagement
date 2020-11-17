@@ -1,13 +1,19 @@
-import { Table } from "antd";
+import { message, Table } from "antd";
 import Column from "antd/lib/table/Column";
 import React from "react";
 
 import localStorageService from "../../../helper/localStorage/localStorageService";
 import Roles from "../../../helper/config/Roles";
+import { useState } from "react";
+import manageRequest from "../../../helper/axios/facilityApi/manageApi";
+import EditModal from "./EditModal";
 
 const TableView = (props) => {
-  const { data } = props;
-  const PAGE_SIZE = 5;
+  const { data, setDataTable, setIsRerender } = props;
+  const PAGE_SIZE = 8;
+
+  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [recordItem, setRecordItem] = useState(null);
 
   const getCurrentRole = () => {
     const userRole = localStorageService.getRole();
@@ -42,6 +48,14 @@ const TableView = (props) => {
     }
   };
 
+  const seenRequest = async (requestId) => {
+    try {
+      await manageRequest.seenRequest(requestId);
+    } catch (error) {
+      message.error("Something went wrong! Please try again", 5);
+    }
+  };
+
   const renderStatus = (text, record, index) => {
     const roleKey = getCurrentRoleKey(getCurrentRole());
     if (record.status.overallStatus === false) {
@@ -73,54 +87,98 @@ const TableView = (props) => {
     }
   };
 
+  const openModalHandler = async (isOpen, record) => {
+    const roleKey = getCurrentRoleKey(getCurrentRole());
+    setIsModalOpen(isOpen);
+    setRecordItem(record);
+    setDataTable((pre) => {
+      const data = pre;
+      for (const item of data) {
+        if (item._id === record._id) {
+          item.isRead[roleKey] = true;
+        }
+      }
+      return [...data];
+    });
+    await seenRequest(record._id);
+  };
+
   return (
-    <Table
-      dataSource={data}
-      bordered
-      pagination={{ pageSize: PAGE_SIZE }}
-      scroll={{ x: 600, y: 600 }}
-    >
-      <Column title="#" dataIndex="fmNumber" key="fmNumber" width="4%" />
-      <Column
-        title="Danh mục đề xuất"
-        dataIndex="fmName"
-        key="fmName"
-        width="20"
-        sorter={(a, b) => {
-          if (typeof a.fmName === "string" && typeof b.fmName === "string") {
-            return a.fmName.localeCompare(b.fmName);
-          }
-        }}
+    <>
+      <EditModal
+        setIsRerender={setIsRerender}
+        recordItem={recordItem}
+        isModalOpen={isModalOpen}
       />
-      <Column
-        title="Nhân viên"
-        dataIndex="fmEmployee"
-        key="fmEmployee"
-        width="20"
-      />
-      <Column
-        title="Bộ phận"
-        dataIndex="fmDepartment"
-        key="fmDepartment"
-        width="20"
-      />
-      <Column
-        title="Ngày đề xuất"
-        dataIndex="fmDate"
-        key="fmDate"
-        width="20"
-        sorter={(a, b) => new Date(a.updatedAt) - new Date(b.updatedAt)}
-      />
-      <Column
-        title="Tình trạng"
-        dataIndex="fmStatus"
-        key="fmStatus"
-        width="20"
-        render={renderStatus}
-        sorter={sortHandler}
-      />
-      <Column title="Thao tác" key="fmAction" />
-    </Table>
+      <Table
+        dataSource={data}
+        bordered
+        pagination={{ pageSize: PAGE_SIZE }}
+        scroll={{ x: 600, y: 600 }}
+      >
+        <Column title="#" dataIndex="fmNumber" key="fmNumber" width="4%" />
+        <Column
+          title="Danh mục đề xuất"
+          dataIndex="fmName"
+          key="fmName"
+          width="20"
+          render={(text, record) => {
+            const roleKey = getCurrentRoleKey(getCurrentRole());
+            if (!record.isRead[roleKey]) {
+              return (
+                <div
+                  onClick={() => openModalHandler(true, record)}
+                  className="manage-fm__name"
+                >
+                  <b>{text}</b>
+                </div>
+              );
+            }
+            return (
+              <div
+                onClick={() => openModalHandler(true, record)}
+                className="manage-fm__name"
+              >
+                {text}
+              </div>
+            );
+          }}
+          sorter={(a, b) => {
+            if (typeof a.fmName === "string" && typeof b.fmName === "string") {
+              return a.fmName.localeCompare(b.fmName);
+            }
+          }}
+        />
+        <Column
+          title="Nhân viên"
+          dataIndex="fmEmployee"
+          key="fmEmployee"
+          width="20"
+        />
+        <Column
+          title="Bộ phận"
+          dataIndex="fmDepartment"
+          key="fmDepartment"
+          width="20"
+        />
+        <Column
+          title="Ngày đề xuất"
+          dataIndex="fmDate"
+          key="fmDate"
+          width="20"
+          sorter={(a, b) => new Date(a.updatedAt) - new Date(b.updatedAt)}
+        />
+        <Column
+          title="Tình trạng"
+          dataIndex="fmStatus"
+          key="fmStatus"
+          width="20"
+          render={renderStatus}
+          sorter={sortHandler}
+        />
+        <Column title="Thao tác" key="fmAction" />
+      </Table>
+    </>
   );
 };
 

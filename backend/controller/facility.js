@@ -7,6 +7,39 @@ const FM_Reuqest = require("../model/fm-Request");
 const FM_Unit = require("../model/fm-Unit");
 const Roles = require("../helper/role");
 
+const HEAD_ROLE = [
+  Roles.FM_FACILITY_TEAM_LEAD,
+  Roles.FM_DEPUTY_HEAD,
+  Roles.FM_ADMIN_LEAD,
+  Roles.DIRECTOR,
+  Roles.ACCOUNTANT_LEAD,
+];
+
+const getCurrentRole = (userRole) => {
+  for (const role of userRole) {
+    if (HEAD_ROLE.includes(role)) {
+      return role;
+    }
+  }
+};
+
+const getCurrentRoleKey = (role) => {
+  switch (role) {
+    case Roles.FM_DEPUTY_HEAD:
+      return "isDeputyHeadApproval";
+    case Roles.FM_FACILITY_TEAM_LEAD:
+      return "isFMTeamLeadApproval";
+    case Roles.FM_ADMIN_LEAD:
+      return "isAccountLeadApproval";
+    case Roles.ACCOUNTANT_LEAD:
+      return "isAdminLeadApproval";
+    case Roles.DIRECTOR:
+      return "isDirectorApproval";
+    default:
+      break;
+  }
+};
+
 //employee request
 const getFMType = async (req, res, next) => {
   try {
@@ -24,7 +57,7 @@ const postAddRequestFM = async (req, res, next) => {
     await addRequestMiddleware(req, res);
     const facilityRequest = JSON.parse(req.body.facilityRequest);
     const findFmBigGroup = await FM_BigGroup.findOne({
-      label: facilityRequest.fmBigGroup,
+      value: facilityRequest.fmBigGroup,
     });
     const findUnit = await FM_Unit.findOne({
       label: facilityRequest.unit,
@@ -50,7 +83,6 @@ const postAddRequestFM = async (req, res, next) => {
 
     return res.json({ mess: "ok" });
   } catch (error) {
-    console.log(error);
     if (error.code === "LIMIT_UNEXPECTED_FILE") {
       return res
         .status(406)
@@ -205,6 +237,21 @@ const getAllRequest = async (req, res, next) => {
   }
 };
 
+const putSeenRequest = async (req, res, next) => {
+  const { requestId } = req.params;
+
+  try {
+    const request = await FM_Reuqest.findById(requestId);
+    const roleKey = getCurrentRoleKey(getCurrentRole(req.role));
+    request.isRead[roleKey] = true;
+    await request.save();
+    return res.json({ message: "done" });
+  } catch (error) {
+    console.log(error);
+    return next(new HttpError("Error!"));
+  }
+};
+
 module.exports = {
   getFMType,
   postAddRequestFM,
@@ -212,4 +259,5 @@ module.exports = {
   getRequestByEmployeeId,
   deleteRequest,
   getAllRequest,
+  putSeenRequest,
 };
