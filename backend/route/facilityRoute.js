@@ -31,7 +31,7 @@ router.get(
   facilityController.getAllRequest
 );
 
-//seen request
+//View request
 router.put("/manage/view/:requestId", facilityController.putSeenRequest);
 
 module.exports = router;

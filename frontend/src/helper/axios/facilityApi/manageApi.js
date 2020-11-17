@@ -8,6 +8,10 @@ const manageRequest = {
     const url = `/oisp/fm/manage/all/${employeeId}`;
     return axiosClient.get(url);
   },
+  seenRequest: (requestId) => {
+    const url = `/oisp/fm/manage/view/${requestId}`;
+    return axiosClient.put(url);
+  },
 };
 
 export default manageRequest;

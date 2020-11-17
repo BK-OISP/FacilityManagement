@@ -39,7 +39,11 @@ const MangeRequest = () => {
       <Row className="mb-1">
         <Heading title="Quản lý đề xuất" />
       </Row>
-      <TableView data={dataTable} setIsRerender={setIsRerender} />
+      <TableView
+        data={dataTable}
+        setDataTable={setDataTable}
+        setIsRerender={setIsRerender}
+      />
     </div>
   );
 };

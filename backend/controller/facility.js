@@ -239,15 +239,13 @@ const getAllRequest = async (req, res, next) => {
 
 const putSeenRequest = async (req, res, next) => {
   const { requestId } = req.params;
-  const userId = req.userId;
+
   try {
     const request = await FM_Reuqest.findById(requestId);
-    if (userId === request.employeeId.toString()) {
-      const roleKey = getCurrentRoleKey(getCurrentRole(req.role));
-      request.isRead[roleKey] = true;
-      await request.save();
-      return res.json({ message: "done" });
-    } else return next(new HttpError("Not authorized!"));
+    const roleKey = getCurrentRoleKey(getCurrentRole(req.role));
+    request.isRead[roleKey] = true;
+    await request.save();
+    return res.json({ message: "done" });
   } catch (error) {
     console.log(error);
     return next(new HttpError("Error!"));

@@ -1,16 +1,17 @@
-import { Table } from "antd";
+import { message, Table } from "antd";
 import Column from "antd/lib/table/Column";
 import React from "react";
 
 import localStorageService from "../../../helper/localStorage/localStorageService";
 import Roles from "../../../helper/config/Roles";
 import { useState } from "react";
+import manageRequest from "../../../helper/axios/facilityApi/manageApi";
 
 const TableView = (props) => {
-  const { data } = props;
+  const { data, setDataTable } = props;
   const PAGE_SIZE = 5;
 
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [recordItem, setRecordItem] = useState(null);
 
   const getCurrentRole = () => {
@@ -46,6 +47,14 @@ const TableView = (props) => {
     }
   };
 
+  const seenRequest = async (requestId) => {
+    try {
+      await manageRequest.seenRequest(requestId);
+    } catch (error) {
+      message.error("Something went wrong! Please try again", 5);
+    }
+  };
+
   const renderStatus = (text, record, index) => {
     const roleKey = getCurrentRoleKey(getCurrentRole());
     if (record.status.overallStatus === false) {
@@ -77,9 +86,20 @@ const TableView = (props) => {
     }
   };
 
-  const openModalHandler = (isOpen, record) => {
-    setIsEditOpen(isOpen);
+  const openModalHandler = async (isOpen, record) => {
+    const roleKey = getCurrentRoleKey(getCurrentRole());
+    setIsModalOpen(isOpen);
     setRecordItem(record);
+    setDataTable((pre) => {
+      const data = pre;
+      for (const item of data) {
+        if (item._id === record._id) {
+          item.isRead[roleKey] = true;
+        }
+      }
+      return [...data];
+    });
+    await seenRequest(record._id);
   };
 
   return (
@@ -100,7 +120,7 @@ const TableView = (props) => {
           if (!record.isRead[roleKey]) {
             return (
               <div
-                onClick={() => setIsEditOpen(true)}
+                onClick={() => openModalHandler(true, record)}
                 className="manage-fm__name"
               >
                 <b>{text}</b>
@@ -109,7 +129,7 @@ const TableView = (props) => {
           }
           return (
             <div
-              onClick={() => setIsEditOpen(true)}
+              onClick={() => openModalHandler(true, record)}
               className="manage-fm__name"
             >
               {text}
