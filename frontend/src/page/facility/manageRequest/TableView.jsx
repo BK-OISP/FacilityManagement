@@ -107,7 +107,7 @@ const TableView = (props) => {
     <>
       <EditModal
         setIsRerender={setIsRerender}
-        recordItem={recordItem}
+        record={recordItem}
         isModalOpen={isModalOpen}
       />
       <Table
