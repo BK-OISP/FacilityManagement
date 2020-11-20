@@ -25,20 +25,30 @@
   background: $danger-color !important;
 }
 
-.btn-primary {
+.icon-primary {
   color: $primary-color !important;
 }
 
-.btn-success {
+.icon-success {
   color: $success-color !important;
 }
 
-.btn-warning {
+.icon-warning {
   color: $warning-color !important;
 }
 
-.btn-danger {
+.icon-danger {
   color: $danger-color !important;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: $success-color !important;
+  border: $success-color !important;
+  &:hover {
+    background-color: #6ab04cb0 !important;
+    border-color: #6ab04cb0 !important;
+  }
 }
 
 .form-control:focus {

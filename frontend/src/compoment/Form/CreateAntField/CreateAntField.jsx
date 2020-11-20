@@ -12,6 +12,7 @@ const CreateAntField = ({
   selectOptions,
   submitCount,
   type,
+  setOtherValue,
   ...props
 }) => {
   const touched = form.touched[field.name];
@@ -24,7 +25,10 @@ const CreateAntField = ({
     form.setFieldValue(field.name, value);
   };
 
-  const onChange = (value) => form.setFieldValue(field.name, value);
+  const onChange = (value) => {
+    form.setFieldValue(field.name, value);
+    setOtherValue && setOtherValue(value);
+  };
 
   const onBlur = () => form.setFieldTouched(field.name, true);
 
@@ -53,6 +57,10 @@ const CreateAntField = ({
             onBlur={onBlur}
             onChange={onChange}
             min={0}
+            formatter={(value) =>
+              `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+            }
+            parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
           />
         );
       case "text":

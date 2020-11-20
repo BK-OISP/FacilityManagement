@@ -12,7 +12,7 @@ const TableView = (props) => {
   const { data, setDataTable, setIsRerender } = props;
   const PAGE_SIZE = 8;
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [recordItem, setRecordItem] = useState(null);
 
   const getCurrentRole = () => {
@@ -89,7 +89,6 @@ const TableView = (props) => {
 
   const openModalHandler = async (isOpen, record) => {
     const roleKey = getCurrentRoleKey(getCurrentRole());
-    setIsModalOpen(isOpen);
     setRecordItem(record);
     setDataTable((pre) => {
       const data = pre;
@@ -101,15 +100,19 @@ const TableView = (props) => {
       return [...data];
     });
     await seenRequest(record._id);
+    setIsModalOpen(isOpen);
   };
 
   return (
     <>
-      <EditModal
-        setIsRerender={setIsRerender}
-        record={recordItem}
-        isModalOpen={isModalOpen}
-      />
+      {recordItem && (
+        <EditModal
+          setIsRerender={setIsRerender}
+          record={recordItem}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
       <Table
         dataSource={data}
         bordered

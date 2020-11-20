@@ -26,18 +26,18 @@ const TableCompoment = (props) => {
       if (checkingStatus) {
         return (
           <Tooltip title="Accepted!">
-            <CheckCircleOutlined className="btn-success ant-icon" />
+            <CheckCircleOutlined className="icon-success ant-icon" />
           </Tooltip>
         );
       } else
         return (
           <Tooltip title="Pending">
-            <ExclamationCircleOutlined className="btn-warning ant-icon" />
+            <ExclamationCircleOutlined className="icon-warning ant-icon" />
           </Tooltip>
         );
     }
     //reject rồi
-    return <CloseCircleOutlined className="btn-danger ant-icon" />;
+    return <CloseCircleOutlined className="icon-danger ant-icon" />;
   }, []);
 
   const handleDeleteRequest = useCallback(
@@ -147,7 +147,7 @@ const TableCompoment = (props) => {
                 <Tooltip title="View/Edit">
                   <Button
                     type="text"
-                    icon={<EditOutlined className="ant-icon btn-primary" />}
+                    icon={<EditOutlined className="ant-icon icon-primary" />}
                     onClick={() => handleEditModal(record)}
                   />
                 </Tooltip>
@@ -158,7 +158,7 @@ const TableCompoment = (props) => {
                 >
                   <Button
                     type="text"
-                    icon={<DeleteOutlined className="ant-icon btn-danger" />}
+                    icon={<DeleteOutlined className="ant-icon icon-danger" />}
                   />
                 </Popconfirm>
               </Space>
