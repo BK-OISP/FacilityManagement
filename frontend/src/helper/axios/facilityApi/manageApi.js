@@ -12,6 +12,10 @@ const manageRequest = {
     const url = `/oisp/fm/manage/view/${requestId}`;
     return axiosClient.put(url);
   },
+  putFMTeamLeadEditRequest: (requestId, facilityRequest) => {
+    const url = `/oisp/fm/manage/fmTeamLeadEdit/${requestId}`;
+    return axiosClient.put(url, facilityRequest);
+  },
 };
 
 export default manageRequest;

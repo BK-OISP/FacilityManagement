@@ -194,15 +194,24 @@ const deleteRequest = async (req, res, next) => {
 const getAllRequest = async (req, res, next) => {
   const currentEmp = req.curEmployee;
   let allRequest;
-  const headRole = [
-    Roles.ACCOUNTANT_LEAD,
-    Roles.DIRECTOR,
-    Roles.FM_FACILITY_TEAM_LEAD,
-    Roles.FM_ADMIN_LEAD,
-  ];
+  const headRole = [Roles.ACCOUNTANT_LEAD, Roles.DIRECTOR];
+  const middleRole = [Roles.FM_FACILITY_TEAM_LEAD, Roles.FM_ADMIN_LEAD];
+  const teamLeadRole = [Roles.FM_FACILITY_TEAM_LEAD];
+
   const isHead = currentEmp.role.some((role) => headRole.includes(role));
+  const isMiddle = currentEmp.role.some((role) => middleRole.includes(role));
+  const isTeamLead = currentEmp.role.some((role) =>
+    teamLeadRole.includes(role)
+  );
+
   if (isHead) {
-    allRequest = await FM_Reuqest.find({})
+    allRequest = await FM_Reuqest.find({
+      status: {
+        isDeputyHeadApproval: true,
+        isFMTeamLeadApproval: true,
+        isAdminLeadApproval: true,
+      },
+    })
       .populate([
         {
           path: "employeeId",
@@ -214,7 +223,22 @@ const getAllRequest = async (req, res, next) => {
       .sort({ updatedAt: -1 })
       .exec();
     return res.json({ allRequest });
-  } else {
+  }
+  if (isMiddle) {
+    allRequest = await FM_Reuqest.find()
+      .populate([
+        {
+          path: "employeeId",
+          select: ["department", "fullName"],
+        },
+        "unit",
+        "fmBigGroup",
+      ])
+      .sort({ updatedAt: -1 })
+      .exec();
+    return res.json({ allRequest });
+  }
+  if (isTeamLead) {
     allRequest = await FM_Reuqest.find({
       // "employeeId.department": currentEmp.department,
     })
@@ -227,7 +251,8 @@ const getAllRequest = async (req, res, next) => {
         "unit",
         "fmBigGroup",
       ])
-      .sort({ updatedAt: -1 });
+      .sort({ updatedAt: -1 })
+      .exec();
 
     const filterArray = allRequest.filter(
       (item) =>
@@ -252,6 +277,22 @@ const putSeenRequest = async (req, res, next) => {
   }
 };
 
+const putFMTeamLeaddEditRequest = async (req, res, next) => {
+  const { requestId } = req.params;
+  const { unitPricePredict, specs, note } = req.body;
+  const teamLead = Roles.FM_FACILITY_TEAM_LEAD;
+  console.log(teamLead);
+  try {
+    const request = await FM_Reuqest.findByIdAndUpdate(requestId, {
+      specs: specs,
+      unitPricePredict: unitPricePredict,
+    });
+    console.log(request);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getFMType,
   postAddRequestFM,
@@ -260,4 +301,5 @@ module.exports = {
   deleteRequest,
   getAllRequest,
   putSeenRequest,
+  putFMTeamLeaddEditRequest,
 };

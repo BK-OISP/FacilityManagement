@@ -9,12 +9,15 @@ import {
   Space,
   Image,
   Divider,
+  message,
 } from "antd";
 import { Field, Formik } from "formik";
 
 import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
 import Roles from "../../../helper/config/Roles";
 import localStorageService from "../../../helper/localStorage/localStorageService";
+import convertMoney from "../../../helper/other/ConvertMoney";
+import manageRequest from "../../../helper/axios/facilityApi/manageApi";
 
 const HEAD_ROLE = [
   Roles.FM_FACILITY_TEAM_LEAD,
@@ -51,7 +54,10 @@ const getCurrentRoleKey = (role) => {
 
 const EditModal = (props) => {
   const { setIsRerender, record, isModalOpen, setIsModalOpen } = props;
-  const [totalPrice, setTotalPrice] = useState(0);
+  const [totalPrice, setTotalPrice] = useState({
+    label: 0,
+    value: 0,
+  });
   const formRef = useRef();
   const roleKey = getCurrentRoleKey(
     getCurrentRole(localStorageService.getRole())
@@ -71,14 +77,26 @@ const EditModal = (props) => {
 
   const handleTotalPrice = (value) => {
     const total = value * record.quantity;
-    setTotalPrice(`${total}`.replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    setTotalPrice((pre) => ({
+      label: convertMoney(value),
+      value: total,
+    }));
   };
 
-  const handleSubmitForm = () => {
+  const handleSubmitForm = async () => {
     console.log(formRef.current.values);
-    const check = parseInt(totalPrice);
-    console.log(typeof check);
-    console.log(check);
+    console.log(totalPrice.value);
+    const facilityRequest = {
+      ...formRef.current.values,
+    };
+    console.log(facilityRequest);
+    try {
+      await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
+      message.success("Edit success", 5);
+    } catch (error) {
+      console.log(error);
+      message.error("Something went wrong!", 5);
+    }
   };
 
   const handleClose = () => {
@@ -165,7 +183,7 @@ const EditModal = (props) => {
                       <strong>Thành tiền:</strong>
                     </Col>
                     <Col offset={1}>
-                      <strong>{totalPrice} VND</strong>
+                      <strong>{totalPrice.label} VND</strong>
                     </Col>
                   </Row>
                 </Col>

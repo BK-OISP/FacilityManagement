@@ -32,6 +32,21 @@ router.get(
 );
 
 //View request
-router.put("/manage/view/:requestId", facilityController.putSeenRequest);
+router.put(
+  "/manage/view/:requestId",
+  checkRole(
+    Roles.FM_DEPUTY_HEAD,
+    Roles.ACCOUNTANT_LEAD,
+    Roles.DIRECTOR,
+    Roles.FM_ADMIN_LEAD,
+    Roles.FM_FACILITY_TEAM_LEAD
+  ),
+  facilityController.putSeenRequest
+);
+
+router.put(
+  "/manage/fmTeamLeadEdit/:requestId",
+  facilityController.putFMTeamLeaddEditRequest
+);
 
 module.exports = router;
