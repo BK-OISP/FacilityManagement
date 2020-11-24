@@ -22,7 +22,7 @@ const AddRequest = (props) => {
     quantity: 1,
     specs: "",
     imgUpload: "",
-    unit: Array.isArray(fmUnit) ? fmUnit[0].label : "",
+    unit: Array.isArray(fmUnit) ? fmUnit[0].value : "",
   };
 
   const layout = {
@@ -61,6 +61,7 @@ const AddRequest = (props) => {
 
   const handleSubmitForm = async (values, actions) => {
     actions.setSubmitting(false);
+    console.log(values);
     const formData = new FormData();
     for (let key of Object.keys(files)) {
       formData.append("imgCollection", files[key]);
@@ -71,9 +72,12 @@ const AddRequest = (props) => {
       actions.resetForm();
       actions.setSubmitting(false);
       setIsAddRequestOpen(false);
+      setPreviewURLs([]);
+      setFiles([]);
       setIsRerender((pre) => !pre);
       message.success("Upload Completed", 5);
     } catch (error) {
+      console.log(error);
       message.error(
         "Something went wrong! Please contact IT Support or try again",
         10
@@ -88,7 +92,11 @@ const AddRequest = (props) => {
       footer={null}
       centered
       width={960}
-      onCancel={() => setIsAddRequestOpen(false)}
+      onCancel={() => {
+        setPreviewURLs([]);
+        setFiles([]);
+        setIsAddRequestOpen(false);
+      }}
       maskClosable={false}
       destroyOnClose={true}
     >

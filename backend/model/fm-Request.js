@@ -72,7 +72,7 @@ const FM_RequestSchema = new Schema(
       isAccountLeadApproval: { type: Boolean, default: false }, //kế toán - Thi
       isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
     },
-    note: {
+    notes: {
       isDeputyHeadApproval: { type: String },
       //trưởng bộ phận
       isFMTeamLeadApproval: { type: String }, //anh Hải - facility teamlead

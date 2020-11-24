@@ -72,7 +72,10 @@ const EditModal = (props) => {
   const initForm = {
     specs: record ? record.specs : "",
     unitPricePredict: record ? record.unitPricePredict : "",
-    note: record && record.notes[roleKey] ? record.notes[roleKey] : "",
+    note:
+      record && record.note && record.note[roleKey]
+        ? record.notes[roleKey]
+        : "",
   };
 
   const handleTotalPrice = (value) => {

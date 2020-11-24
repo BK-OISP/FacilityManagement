@@ -60,9 +60,8 @@ const postAddRequestFM = async (req, res, next) => {
       value: facilityRequest.fmBigGroup,
     });
     const findUnit = await FM_Unit.findOne({
-      label: facilityRequest.unit,
+      value: facilityRequest.unit,
     });
-
     if (!findFmBigGroup || !findUnit) return next(new HttpError("Erorr!", 501));
 
     if (req.files && req.files.length > 0) {
@@ -77,12 +76,12 @@ const postAddRequestFM = async (req, res, next) => {
       unit: findUnit._id,
       // fmType: facilityRequest.fmType !== "" ? facilityRequest.fmType : null,
     };
-
     const saveRequest = new FM_Reuqest(convertRequest);
     await saveRequest.save();
 
     return res.json({ mess: "ok" });
   } catch (error) {
+    console.log(error);
     if (error.code === "LIMIT_UNEXPECTED_FILE") {
       return res
         .status(406)
@@ -283,10 +282,17 @@ const putFMTeamLeaddEditRequest = async (req, res, next) => {
   const teamLead = Roles.FM_FACILITY_TEAM_LEAD;
   console.log(teamLead);
   try {
-    const request = await FM_Reuqest.findByIdAndUpdate(requestId, {
-      specs: specs,
-      unitPricePredict: unitPricePredict,
-    });
+    const request = await FM_Reuqest.findByIdAndUpdate(
+      requestId,
+      {
+        specs: specs,
+        unitPricePredict: unitPricePredict,
+        notes: {
+          isFMTeamLeadApproval: note,
+        },
+      },
+      { multi: true }
+    );
     console.log(request);
   } catch (error) {
     console.log(error);
