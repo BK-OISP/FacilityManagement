@@ -46,7 +46,7 @@ router.put(
 
 router.put(
   "/manage/fmTeamLeadEdit/:requestId",
-  facilityController.putFMTeamLeaddEditRequest
+  facilityController.putFMTeamLeadEditRequest
 );
 
 module.exports = router;

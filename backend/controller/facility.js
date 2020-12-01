@@ -276,26 +276,59 @@ const putSeenRequest = async (req, res, next) => {
   }
 };
 
-const putFMTeamLeaddEditRequest = async (req, res, next) => {
+const putFMTeamLeadEditRequest = async (req, res, next) => {
   const { requestId } = req.params;
-  const { unitPricePredict, specs, note } = req.body;
-  const teamLead = Roles.FM_FACILITY_TEAM_LEAD;
-  console.log(teamLead);
+  const { unitPricePredict, specs, note, isFMLeadApprove, isDraft } = req.body;
   try {
-    const request = await FM_Reuqest.findByIdAndUpdate(
-      requestId,
-      {
-        specs: specs,
-        unitPricePredict: unitPricePredict,
-        notes: {
-          isFMTeamLeadApproval: note,
-        },
-      },
-      { multi: true }
-    );
-    console.log(request);
+    const request = await FM_Reuqest.findById(requestId);
+    if (request) {
+      if (request.status.overallStatus) {
+        // Save as draft
+        if (isDraft) {
+          await FM_Reuqest.findByIdAndUpdate(requestId, {
+            unitPricePredict: unitPricePredict,
+            specs: specs,
+            notes: {
+              isFMTeamLeadApproval: note,
+            },
+          });
+          return res.json({ message: "Save complete" });
+        } else {
+          if (isFMLeadApprove) {
+            if (!request.status.isFMTeamLeadApproval) {
+              await FM_Reuqest.findByIdAndUpdate(requestId, {
+                status: {
+                  overallStatus: true,
+                  isFMTeamLeadApproval: true,
+                },
+                unitPricePredict: unitPricePredict,
+                specs: specs,
+                notes: {
+                  isFMTeamLeadApproval: note,
+                },
+              });
+              return res.json({ message: "Save complete" });
+            }
+          } else {
+            await FM_Reuqest.findByIdAndUpdate(requestId, {
+              status: {
+                overallStatus: false,
+                isFMTeamLeadApproval: false,
+              },
+              unitPricePredict: unitPricePredict,
+              specs: specs,
+              notes: {
+                isFMTeamLeadApproval: note,
+              },
+            });
+            return res.json({ message: "Save complete" });
+          }
+        }
+      }
+      return next(new HttpError("Can't save request", 501));
+    }
   } catch (error) {
-    console.log(error);
+    return next(new HttpError("Can't save request", 501));
   }
 };
 
@@ -307,5 +340,5 @@ module.exports = {
   deleteRequest,
   getAllRequest,
   putSeenRequest,
-  putFMTeamLeaddEditRequest,
+  putFMTeamLeadEditRequest,
 };

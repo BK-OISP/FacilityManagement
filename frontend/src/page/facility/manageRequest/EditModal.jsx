@@ -73,7 +73,7 @@ const EditModal = (props) => {
     specs: record ? record.specs : "",
     unitPricePredict: record ? record.unitPricePredict : "",
     note:
-      record && record.note && record.note[roleKey]
+      record && record.notes && record.notes[roleKey]
         ? record.notes[roleKey]
         : "",
   };
@@ -86,16 +86,20 @@ const EditModal = (props) => {
     }));
   };
 
-  const handleSubmitForm = async () => {
+  const handleSubmitForm = async (isFMLeadApprove, isDraft = false) => {
     console.log(formRef.current.values);
     console.log(totalPrice.value);
     const facilityRequest = {
       ...formRef.current.values,
+      isFMLeadApprove: isFMLeadApprove,
+      isDraft: isDraft,
     };
     console.log(facilityRequest);
     try {
       await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
       message.success("Edit success", 5);
+      setIsModalOpen(false);
+      setIsRerender((pre) => !pre);
     } catch (error) {
       console.log(error);
       message.error("Something went wrong!", 5);
@@ -215,20 +219,28 @@ const EditModal = (props) => {
               </Row>
               <Row justify="center" className="mb-1">
                 <Space>
-                  <Button type="primary" htmlType="submit">
+                  <Button type="primary" onClick={() => handleSubmitForm(true)}>
                     Duyệt đề xuất
                   </Button>
-                  <Button type="primary" danger>
+                  <Button
+                    type="primary"
+                    danger
+                    onClick={() => handleSubmitForm(false)}
+                  >
                     Huỷ đề xuất
                   </Button>
                 </Space>
               </Row>
               <Row justify="end" className="justify-content-sm-center">
                 <Space>
-                  <Button type="primary" className="btn-success">
+                  <Button
+                    type="primary"
+                    className="btn-success"
+                    onClick={() => handleSubmitForm(false, true)}
+                  >
                     Lưu tạm
                   </Button>
-                  <Button>Đóng</Button>
+                  <Button onClick={handleClose}>Đóng</Button>
                 </Space>
               </Row>
             </AntdForm>
@@ -240,118 +252,3 @@ const EditModal = (props) => {
 };
 
 export default EditModal;
-{
-  /* <Descriptions title="Thông tin người đề xuất">
-        <Descriptions.Item label="Tên nhân viên">
-          {record.employeeId.fullName}
-        </Descriptions.Item>
-        <Descriptions.Item label="Bộ phận">
-          {record.employeeId.department}
-        </Descriptions.Item>
-      </Descriptions>
-
-      <Descriptions title="Nội dung đề xuất" className="mt-1">
-        <Descriptions.Item label="Tên danh mục">
-          {record.fmName}
-        </Descriptions.Item>
-        <Descriptions.Item label="Loại">
-          {record.fmBigGroup.label}
-        </Descriptions.Item>
-        <Descriptions.Item label="Số lượng">
-          {record.quantity}
-        </Descriptions.Item>
-        <Descriptions.Item label="Đơn vị tính">
-          {record.unit.label}
-        </Descriptions.Item>
-        <Descriptions.Item label="Mục đích">{record.purpose}</Descriptions.Item>
-        <Descriptions.Item label="Hình ảnh (nếu có)">
-          {record.imgCollection.map((item) => (
-            <Image
-              key={item}
-              width={150}
-              height={150}
-              src={`${process.env.REACT_APP_API_URL}/oisp/${item}`}
-            />
-          ))}
-        </Descriptions.Item>
-      </Descriptions>
-      <Row style={{ fontSize: "16px", fontWeight: "bold" }} className="my-1">
-        Phần thông tin bổ sung
-      </Row>
-
-      <Formik
-        initialValues={initForm}
-        onSubmit={handleSubmitForm}
-        // enableReinitialize={true}
-        // innerRef={formRef}
-      >
-        {(handleSubmit, submitCount, values) => {
-          return (
-            <AntdForm onFinish={handleSubmit} {...layout}>
-              <Row gutter={[48, 16]}>
-                <Col xs={24} lg={12}>
-                  <Field
-                    component={CreateAntField}
-                    name="unitPricePredict"
-                    type="number"
-                    label="Đơn giá (dự kiến)*"
-                    submitCount={submitCount}
-                    hasFeedback
-                    setOtherValue={handleTotalPrice}
-                    style={{ width: "100%" }}
-                  />
-                </Col>
-                <Col xs={24} lg={12}>
-                  <Row>
-                    <Col span={8} style={{ textAlign: "right" }}>
-                      Thành tiền:
-                    </Col>
-                    <Col offset={1}>
-                      <strong>{totalPrice}</strong>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-              <Row gutter={[48, 16]}>
-                <Col xs={24} lg={12}>
-                  <Field
-                    component={CreateAntField}
-                    name="specs"
-                    type="textarea"
-                    label="Quy cách*"
-                    submitCount={submitCount}
-                    hasFeedback
-                  />
-                </Col>
-                <Col xs={24} lg={12}>
-                  <Field
-                    component={CreateAntField}
-                    name="note"
-                    type="textarea"
-                    label="Ghi chú"
-                    submitCount={submitCount}
-                    hasFeedback
-                  />
-                </Col>
-              </Row>
-              <Row justify="center" className="mb-1">
-                <Space>
-                  <Button type="primary">Duyệt đề xuất</Button>
-                  <Button type="primary" danger>
-                    Huỷ đề xuất
-                  </Button>
-                </Space>
-              </Row>
-              <Row justify="end" className="justify-content-sm-center">
-                <Space>
-                  <Button type="primary" className="btn-success">
-                    Lưu tạm
-                  </Button>
-                  <Button>Đóng</Button>
-                </Space>
-              </Row>
-            </AntdForm>
-          );
-        }}
-      </Formik> */
-}
