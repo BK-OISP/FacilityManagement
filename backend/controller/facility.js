@@ -285,17 +285,24 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
       if (request.status.overallStatus) {
         // Save as draft
         if (isDraft) {
-          await FM_Reuqest.findByIdAndUpdate(requestId, {
-            unitPricePredict: unitPricePredict,
-            specs: specs,
-            notes: {
-              isFMTeamLeadApproval: note,
-            },
-          });
-          return res.json({ message: "Save complete" });
+          if (
+            !request.status.overallStatus ||
+            (request.status.overallStatus &&
+              !!request.status.isFMTeamLeadApproval === false)
+          ) {
+            await FM_Reuqest.findByIdAndUpdate(requestId, {
+              unitPricePredict: unitPricePredict,
+              specs: specs,
+              notes: {
+                isFMTeamLeadApproval: note,
+              },
+            });
+            return res.json({ message: "Save complete" });
+          }
+          return next(new HttpError("Can't save request", 501));
         } else {
           if (isFMLeadApprove) {
-            if (!request.status.isFMTeamLeadApproval) {
+            if (!!request.status.isFMTeamLeadApproval === false) {
               await FM_Reuqest.findByIdAndUpdate(requestId, {
                 status: {
                   overallStatus: true,
@@ -309,19 +316,23 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
               });
               return res.json({ message: "Save complete" });
             }
+            return next(new HttpError("Can't save request", 501));
           } else {
-            await FM_Reuqest.findByIdAndUpdate(requestId, {
-              status: {
-                overallStatus: false,
-                isFMTeamLeadApproval: false,
-              },
-              unitPricePredict: unitPricePredict,
-              specs: specs,
-              notes: {
-                isFMTeamLeadApproval: note,
-              },
-            });
-            return res.json({ message: "Save complete" });
+            if (!!request.status.isFMTeamLeadApproval === false) {
+              await FM_Reuqest.findByIdAndUpdate(requestId, {
+                status: {
+                  overallStatus: false,
+                  isFMTeamLeadApproval: false,
+                },
+                unitPricePredict: unitPricePredict,
+                specs: specs,
+                notes: {
+                  isFMTeamLeadApproval: note,
+                },
+              });
+              return res.json({ message: "Save complete" });
+            }
+            return next(new HttpError("Can't save request", 501));
           }
         }
       }
