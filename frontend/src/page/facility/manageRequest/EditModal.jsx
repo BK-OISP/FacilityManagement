@@ -12,6 +12,7 @@ import {
   message,
 } from "antd";
 import { Field, Formik } from "formik";
+import * as Yup from "yup";
 
 import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
 import Roles from "../../../helper/config/Roles";
@@ -102,7 +103,7 @@ const EditModal = (props) => {
       setIsRerender((pre) => !pre);
     } catch (error) {
       console.log(error);
-      message.error("Something went wrong!", 5);
+      message.error("Something went wrong! Can't save your request!", 5);
     }
   };
 
@@ -110,6 +111,10 @@ const EditModal = (props) => {
     setTotalPrice(0);
     setIsModalOpen(false);
   };
+
+  const validationForm = Yup.object().shape({
+    note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+  });
 
   return (
     <Modal
@@ -164,13 +169,13 @@ const EditModal = (props) => {
 
       <Formik
         initialValues={initForm}
-        onSubmit={handleSubmitForm}
-        // enableReinitialize={true}
+        onSubmit={() => handleSubmitForm(false)}
         innerRef={formRef}
+        validationSchema={validationForm}
       >
-        {(handleSubmit, submitCount, values) => {
+        {({ handleSubmit, submitCount, values }) => {
           return (
-            <AntdForm onFinish={handleSubmitForm} {...layout}>
+            <AntdForm onFinish={handleSubmit} {...layout}>
               <Row gutter={[48, 16]}>
                 <Col xs={24} lg={12}>
                   <Field
@@ -222,11 +227,7 @@ const EditModal = (props) => {
                   <Button type="primary" onClick={() => handleSubmitForm(true)}>
                     Duyệt đề xuất
                   </Button>
-                  <Button
-                    type="primary"
-                    danger
-                    onClick={() => handleSubmitForm(false)}
-                  >
+                  <Button type="primary" danger htmlType="submit">
                     Huỷ đề xuất
                   </Button>
                 </Space>

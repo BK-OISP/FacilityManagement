@@ -195,7 +195,7 @@ const getAllRequest = async (req, res, next) => {
   let allRequest;
   const headRole = [Roles.ACCOUNTANT_LEAD, Roles.DIRECTOR];
   const middleRole = [Roles.FM_FACILITY_TEAM_LEAD, Roles.FM_ADMIN_LEAD];
-  const teamLeadRole = [Roles.FM_FACILITY_TEAM_LEAD];
+  const teamLeadRole = [Roles.FM_DEPUTY_HEAD];
 
   const isHead = currentEmp.role.some((role) => headRole.includes(role));
   const isMiddle = currentEmp.role.some((role) => middleRole.includes(role));

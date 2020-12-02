@@ -1,10 +1,10 @@
-import { message, Table } from "antd";
+import { message, Table, Tooltip } from "antd";
 import Column from "antd/lib/table/Column";
-import React from "react";
+import React, { useState } from "react";
+import { ExportOutlined } from "@ant-design/icons";
 
 import localStorageService from "../../../helper/localStorage/localStorageService";
 import Roles from "../../../helper/config/Roles";
-import { useState } from "react";
 import manageRequest from "../../../helper/axios/facilityApi/manageApi";
 import EditModal from "./EditModal";
 
@@ -59,8 +59,8 @@ const TableView = (props) => {
   const renderStatus = (text, record, index) => {
     const roleKey = getCurrentRoleKey(getCurrentRole());
     if (record.status.overallStatus === false) {
-      record.status.check = "Đã huỷ";
-      return "Đã huỷ";
+      record.status.check = "Đã huỷ đề xuất";
+      return "Đã huỷ đề xuất";
     }
     if (
       record.status.overallStatus === true &&
@@ -181,7 +181,22 @@ const TableView = (props) => {
           render={renderStatus}
           sorter={sortHandler}
         />
-        <Column title="Thao tác" key="fmAction" />
+        <Column
+          title="Thao tác"
+          key="fmAction"
+          render={(_, record) => {
+            return (
+              <div
+                className="manage-fm__name"
+                onClick={() => openModalHandler(true, record)}
+              >
+                <Tooltip title="Xem">
+                  <ExportOutlined className="ant-icon icon-primary" />
+                </Tooltip>
+              </div>
+            );
+          }}
+        />
       </Table>
     </>
   );
