@@ -54,13 +54,15 @@ const TableCompoment = (props) => {
   );
 
   const handleEditModal = useCallback((record) => {
+    console.log(!!record.isDeputyHeadApproval);
+    console.log(record);
     if (
       record.overallStatus &&
-      !record.isDeputyHeadApproval &&
-      !record.isFMTeamLeadApproval &&
-      !record.isAdminLeadApproval &&
-      !record.isAccountLeadApproval &&
-      !record.isDirectorApproval
+      !!record.isDeputyHeadApproval === false &&
+      !!record.isFMTeamLeadApproval === false &&
+      !!record.isAdminLeadApproval === false &&
+      !!record.isAccountLeadApproval === false &&
+      !!record.isDirectorApproval === false
     ) {
       setRecordItem(record);
       setShowEditModal(true);

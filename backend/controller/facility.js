@@ -129,11 +129,11 @@ const putAddRequestFM = async (req, res, next) => {
         _id: requestId,
         employeeId: req.userId,
         "status.overallStatus": true,
-        "status.isDeputyHeadApproval": false,
-        "status.isFMTeamLeadApproval": false,
-        "status.isAdminLeadApproval": false,
-        "status.isAccountLeadApproval": false,
-        "status.isDirectorApproval": false,
+        "status.isDeputyHeadApproval": null,
+        "status.isFMTeamLeadApproval": null,
+        "status.isAdminLeadApproval": null,
+        "status.isAccountLeadApproval": null,
+        "status.isDirectorApproval": null,
       },
       convertRequest
     );
