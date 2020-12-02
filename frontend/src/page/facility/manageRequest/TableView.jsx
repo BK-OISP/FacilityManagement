@@ -76,6 +76,8 @@ const TableView = (props) => {
       record.status.check = "Đã duyệt";
       return "Đã duyệt";
     }
+    record.status.check = "Chưa duyệt";
+    return "Chưa duyệt";
   };
 
   const sortHandler = (a, b) => {
