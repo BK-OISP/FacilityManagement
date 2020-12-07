@@ -71,7 +71,6 @@ const TableCompoment = (props) => {
   );
 
   const handleModal = useCallback((record) => {
-    console.log(record);
     if (
       record.overallStatus &&
       !!record.isDeputyHeadApproval === false &&

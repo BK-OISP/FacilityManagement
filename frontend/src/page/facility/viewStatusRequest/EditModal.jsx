@@ -67,7 +67,7 @@ const EditModal = (props) => {
     formData.append("facilityRequest", JSON.stringify(ref.current.values));
     try {
       await requestApi.editRequest(record._id, formData);
-      message.success("The information was updated successfully.");
+      message.success("This information was updated successfully.");
       setPreviewURLs([]);
       setFiles([]);
       setShowEditModal(false);
