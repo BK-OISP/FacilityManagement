@@ -10,7 +10,6 @@ const UserMenu = (props) => {
   const dispatch = useDispatch();
 
   const handleUserMenuClick = (item) => {
-    console.log(item);
     switch (item.key) {
       case "clear":
         localStorageService.clearAll();
