@@ -1,12 +1,9 @@
-@media screen and (min-width: 768px) {
+@media only screen and (min-width: 768px) {
   .login-wrapper {
     .login {
       width: 640px;
     }
   }
-}
-
-@media only screen and (min-width: 768px) {
   .wrapper {
     .ant-col-md-6 {
       max-width: 24%;
@@ -49,5 +46,9 @@
         padding: 10px;
       }
     }
+  }
+  .justify-content-sm-center {
+    -ms-flex-pack: center !important;
+    justify-content: center !important;
   }
 }

@@ -21,23 +21,38 @@ const TableCompoment = (props) => {
   const PAGE_SIZE = 5;
 
   const renderStatus = useCallback((checkingStatus, record, index) => {
+    // console.log(record);
     if (record.overallStatus) {
       //true = dang chờ duyệt
       if (checkingStatus) {
         return (
           <Tooltip title="Accepted!">
-            <CheckCircleOutlined className="btn-success ant-icon" />
+            <CheckCircleOutlined className="icon-success ant-icon" />
           </Tooltip>
         );
       } else
         return (
           <Tooltip title="Pending">
-            <ExclamationCircleOutlined className="btn-warning ant-icon" />
+            <ExclamationCircleOutlined className="icon-warning ant-icon" />
           </Tooltip>
         );
+    } else {
+      if (checkingStatus === false) {
+        return (
+          <Tooltip title="Reject">
+            <CloseCircleOutlined className="icon-danger ant-icon" />{" "}
+          </Tooltip>
+        );
+      }
+      if (checkingStatus === null) {
+        return (
+          <Tooltip title="Pending">
+            <ExclamationCircleOutlined className="icon-warning ant-icon" />
+          </Tooltip>
+        );
+      }
     }
     //reject rồi
-    return <CloseCircleOutlined className="btn-danger ant-icon" />;
   }, []);
 
   const handleDeleteRequest = useCallback(
@@ -54,13 +69,14 @@ const TableCompoment = (props) => {
   );
 
   const handleEditModal = useCallback((record) => {
+    console.log(record);
     if (
       record.overallStatus &&
-      !record.isDeputyHeadApproval &&
-      !record.isFMTeamLeadApproval &&
-      !record.isAdminLeadApproval &&
-      !record.isAccountLeadApproval &&
-      !record.isDirectorApproval
+      !!record.isDeputyHeadApproval === false &&
+      !!record.isFMTeamLeadApproval === false &&
+      !!record.isAdminLeadApproval === false &&
+      !!record.isAccountLeadApproval === false &&
+      !!record.isDirectorApproval === false
     ) {
       setRecordItem(record);
       setShowEditModal(true);
@@ -109,33 +125,33 @@ const TableCompoment = (props) => {
           <ColumnGroup title="Tiến độ phê duyệt" width="58%">
             <Column
               title="Trưởng bộ phận"
-              dataIndex="deputyHead"
-              key="deputyHead"
+              dataIndex="isDeputyHeadApproval"
+              key="isDeputyHeadApproval"
               render={renderStatus}
             />
             <Column
               title="Cơ sở vật chất"
-              dataIndex="facility"
-              key="facility"
+              dataIndex="isFMTeamLeadApproval"
+              key="isFMTeamLeadApproval"
               render={renderStatus}
               c
             />
             <Column
               title="Hành chính tổng hợp"
-              dataIndex="admin"
-              key="admin"
+              dataIndex="isAdminLeadApproval"
+              key="isAdminLeadApproval"
               render={renderStatus}
             />
             <Column
               title="Kế toán"
-              dataIndex="accountant"
-              key="accountant"
+              dataIndex="isAccountLeadApproval"
+              key="isAccountLeadApproval"
               render={renderStatus}
             />
             <Column
               title="Ban Giám đốc"
-              dataIndex="director"
-              key="director"
+              dataIndex="isDirectorApproval"
+              key="isDirectorApproval"
               render={renderStatus}
             />
           </ColumnGroup>
@@ -147,7 +163,7 @@ const TableCompoment = (props) => {
                 <Tooltip title="View/Edit">
                   <Button
                     type="text"
-                    icon={<EditOutlined className="ant-icon btn-primary" />}
+                    icon={<EditOutlined className="ant-icon icon-primary" />}
                     onClick={() => handleEditModal(record)}
                   />
                 </Tooltip>
@@ -158,7 +174,7 @@ const TableCompoment = (props) => {
                 >
                   <Button
                     type="text"
-                    icon={<DeleteOutlined className="ant-icon btn-danger" />}
+                    icon={<DeleteOutlined className="ant-icon icon-danger" />}
                   />
                 </Popconfirm>
               </Space>

@@ -60,9 +60,8 @@ const postAddRequestFM = async (req, res, next) => {
       value: facilityRequest.fmBigGroup,
     });
     const findUnit = await FM_Unit.findOne({
-      label: facilityRequest.unit,
+      value: facilityRequest.unit,
     });
-
     if (!findFmBigGroup || !findUnit) return next(new HttpError("Erorr!", 501));
 
     if (req.files && req.files.length > 0) {
@@ -77,12 +76,12 @@ const postAddRequestFM = async (req, res, next) => {
       unit: findUnit._id,
       // fmType: facilityRequest.fmType !== "" ? facilityRequest.fmType : null,
     };
-
     const saveRequest = new FM_Reuqest(convertRequest);
     await saveRequest.save();
 
     return res.json({ mess: "ok" });
   } catch (error) {
+    console.log(error);
     if (error.code === "LIMIT_UNEXPECTED_FILE") {
       return res
         .status(406)
@@ -130,11 +129,11 @@ const putAddRequestFM = async (req, res, next) => {
         _id: requestId,
         employeeId: req.userId,
         "status.overallStatus": true,
-        "status.isDeputyHeadApproval": false,
-        "status.isFMTeamLeadApproval": false,
-        "status.isAdminLeadApproval": false,
-        "status.isAccountLeadApproval": false,
-        "status.isDirectorApproval": false,
+        "status.isDeputyHeadApproval": null,
+        "status.isFMTeamLeadApproval": null,
+        "status.isAdminLeadApproval": null,
+        "status.isAccountLeadApproval": null,
+        "status.isDirectorApproval": null,
       },
       convertRequest
     );
@@ -194,15 +193,29 @@ const deleteRequest = async (req, res, next) => {
 const getAllRequest = async (req, res, next) => {
   const currentEmp = req.curEmployee;
   let allRequest;
-  const headRole = [
-    Roles.ACCOUNTANT_LEAD,
-    Roles.DIRECTOR,
-    Roles.FM_FACILITY_TEAM_LEAD,
-    Roles.FM_ADMIN_LEAD,
-  ];
-  const isHead = currentEmp.role.some((role) => headRole.includes(role));
-  if (isHead) {
-    allRequest = await FM_Reuqest.find({})
+  const director = [Roles.DIRECTOR];
+  const accountant = [Roles.ACCOUNTANT_LEAD];
+  const middleRole = [Roles.FM_FACILITY_TEAM_LEAD, Roles.FM_ADMIN_LEAD];
+  const teamLeadRole = [Roles.FM_DEPUTY_HEAD];
+
+  const isDirector = currentEmp.role.some((role) => director.includes(role));
+  const isAccountant = currentEmp.role.some((role) =>
+    accountant.includes(role)
+  );
+  const isMiddle = currentEmp.role.some((role) => middleRole.includes(role));
+  const isTeamLead = currentEmp.role.some((role) =>
+    teamLeadRole.includes(role)
+  );
+
+  if (isDirector) {
+    allRequest = await FM_Reuqest.find({
+      status: {
+        isDeputyHeadApproval: true,
+        isFMTeamLeadApproval: true,
+        isAdminLeadApproval: true,
+        isAccountLeadApproval: true,
+      },
+    })
       .populate([
         {
           path: "employeeId",
@@ -214,7 +227,43 @@ const getAllRequest = async (req, res, next) => {
       .sort({ updatedAt: -1 })
       .exec();
     return res.json({ allRequest });
-  } else {
+  }
+
+  if (isAccountant) {
+    allRequest = await FM_Reuqest.find({
+      status: {
+        isDeputyHeadApproval: true,
+        isFMTeamLeadApproval: true,
+        isAdminLeadApproval: true,
+      },
+    })
+      .populate([
+        {
+          path: "employeeId",
+          select: ["department", "fullName"],
+        },
+        "unit",
+        "fmBigGroup",
+      ])
+      .sort({ updatedAt: -1 })
+      .exec();
+    return res.json({ allRequest });
+  }
+  if (isMiddle) {
+    allRequest = await FM_Reuqest.find()
+      .populate([
+        {
+          path: "employeeId",
+          select: ["department", "fullName"],
+        },
+        "unit",
+        "fmBigGroup",
+      ])
+      .sort({ updatedAt: -1 })
+      .exec();
+    return res.json({ allRequest });
+  }
+  if (isTeamLead) {
     allRequest = await FM_Reuqest.find({
       // "employeeId.department": currentEmp.department,
     })
@@ -227,7 +276,8 @@ const getAllRequest = async (req, res, next) => {
         "unit",
         "fmBigGroup",
       ])
-      .sort({ updatedAt: -1 });
+      .sort({ updatedAt: -1 })
+      .exec();
 
     const filterArray = allRequest.filter(
       (item) =>
@@ -252,6 +302,73 @@ const putSeenRequest = async (req, res, next) => {
   }
 };
 
+const putFMTeamLeadEditRequest = async (req, res, next) => {
+  const { requestId } = req.params;
+  const { unitPricePredict, specs, note, isFMLeadApprove, isDraft } = req.body;
+  try {
+    const request = await FM_Reuqest.findById(requestId);
+    if (request) {
+      if (request.status.overallStatus) {
+        // Save as draft
+        if (isDraft) {
+          if (
+            !request.status.overallStatus ||
+            (request.status.overallStatus &&
+              !!request.status.isFMTeamLeadApproval === false)
+          ) {
+            await FM_Reuqest.findByIdAndUpdate(requestId, {
+              unitPricePredict: unitPricePredict,
+              specs: specs,
+              notes: {
+                isFMTeamLeadApproval: note,
+              },
+            });
+            return res.json({ message: "Save complete" });
+          }
+          return next(new HttpError("Can't save request", 501));
+        } else {
+          if (isFMLeadApprove) {
+            if (!!request.status.isFMTeamLeadApproval === false) {
+              await FM_Reuqest.findByIdAndUpdate(requestId, {
+                status: {
+                  overallStatus: true,
+                  isFMTeamLeadApproval: true,
+                },
+                unitPricePredict: unitPricePredict,
+                specs: specs,
+                notes: {
+                  isFMTeamLeadApproval: note,
+                },
+              });
+              return res.json({ message: "Save complete" });
+            }
+            return next(new HttpError("Can't save request", 501));
+          } else {
+            if (!!request.status.isFMTeamLeadApproval === false) {
+              await FM_Reuqest.findByIdAndUpdate(requestId, {
+                status: {
+                  overallStatus: false,
+                  isFMTeamLeadApproval: false,
+                },
+                unitPricePredict: unitPricePredict,
+                specs: specs,
+                notes: {
+                  isFMTeamLeadApproval: note,
+                },
+              });
+              return res.json({ message: "Save complete" });
+            }
+            return next(new HttpError("Can't save request", 501));
+          }
+        }
+      }
+      return next(new HttpError("Can't save request", 501));
+    }
+  } catch (error) {
+    return next(new HttpError("Can't save request", 501));
+  }
+};
+
 module.exports = {
   getFMType,
   postAddRequestFM,
@@ -260,4 +377,5 @@ module.exports = {
   deleteRequest,
   getAllRequest,
   putSeenRequest,
+  putFMTeamLeadEditRequest,
 };

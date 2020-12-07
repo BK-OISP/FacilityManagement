@@ -57,12 +57,12 @@ const FM_RequestSchema = new Schema(
     status: {
       overallStatus: { type: Boolean, default: true },
       //overallStatus: true - dang duyệt - false : reject
-      isDeputyHeadApproval: { type: Boolean, default: false },
+      isDeputyHeadApproval: { type: Boolean, default: null },
       //trưởng bộ phận
-      isFMTeamLeadApproval: { type: Boolean, default: false }, //anh Hải - facility teamlead
-      isAdminLeadApproval: { type: Boolean, default: false }, //HCTH - Thanh Trang
-      isAccountLeadApproval: { type: Boolean, default: false }, //kế toán - Thi
-      isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
+      isFMTeamLeadApproval: { type: Boolean, default: null }, //anh Hải - facility teamlead
+      isAdminLeadApproval: { type: Boolean, default: null }, //HCTH - Thanh Trang
+      isAccountLeadApproval: { type: Boolean, default: null }, //kế toán - Thi
+      isDirectorApproval: { type: Boolean, default: null }, // thầy Tùng
     },
     isRead: {
       isDeputyHeadApproval: { type: Boolean, default: false },
@@ -73,7 +73,12 @@ const FM_RequestSchema = new Schema(
       isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
     },
     notes: {
-      type: [String],
+      isDeputyHeadApproval: { type: String },
+      //trưởng bộ phận
+      isFMTeamLeadApproval: { type: String }, //anh Hải - facility teamlead
+      isAdminLeadApproval: { type: String }, //HCTH - Thanh Trang
+      isAccountLeadApproval: { type: String }, //kế toán - Thi
+      isDirectorApproval: { type: String }, // thầy Tùng
     },
   },
   {

@@ -1,10 +1,10 @@
-import { message, Table } from "antd";
+import { message, Table, Tooltip } from "antd";
 import Column from "antd/lib/table/Column";
-import React from "react";
+import React, { useState } from "react";
+import { ExportOutlined } from "@ant-design/icons";
 
 import localStorageService from "../../../helper/localStorage/localStorageService";
 import Roles from "../../../helper/config/Roles";
-import { useState } from "react";
 import manageRequest from "../../../helper/axios/facilityApi/manageApi";
 import EditModal from "./EditModal";
 
@@ -12,7 +12,7 @@ const TableView = (props) => {
   const { data, setDataTable, setIsRerender } = props;
   const PAGE_SIZE = 8;
 
-  const [isModalOpen, setIsModalOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [recordItem, setRecordItem] = useState(null);
 
   const getCurrentRole = () => {
@@ -59,8 +59,8 @@ const TableView = (props) => {
   const renderStatus = (text, record, index) => {
     const roleKey = getCurrentRoleKey(getCurrentRole());
     if (record.status.overallStatus === false) {
-      record.status.check = "Đã huỷ";
-      return "Đã huỷ";
+      record.status.check = "Đã huỷ đề xuất";
+      return "Đã huỷ đề xuất";
     }
     if (
       record.status.overallStatus === true &&
@@ -76,6 +76,8 @@ const TableView = (props) => {
       record.status.check = "Đã duyệt";
       return "Đã duyệt";
     }
+    record.status.check = "Chưa duyệt";
+    return "Chưa duyệt";
   };
 
   const sortHandler = (a, b) => {
@@ -89,7 +91,6 @@ const TableView = (props) => {
 
   const openModalHandler = async (isOpen, record) => {
     const roleKey = getCurrentRoleKey(getCurrentRole());
-    setIsModalOpen(isOpen);
     setRecordItem(record);
     setDataTable((pre) => {
       const data = pre;
@@ -101,15 +102,19 @@ const TableView = (props) => {
       return [...data];
     });
     await seenRequest(record._id);
+    setIsModalOpen(isOpen);
   };
 
   return (
     <>
-      <EditModal
-        setIsRerender={setIsRerender}
-        recordItem={recordItem}
-        isModalOpen={isModalOpen}
-      />
+      {recordItem && (
+        <EditModal
+          setIsRerender={setIsRerender}
+          record={recordItem}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
+      )}
       <Table
         dataSource={data}
         bordered
@@ -176,7 +181,22 @@ const TableView = (props) => {
           render={renderStatus}
           sorter={sortHandler}
         />
-        <Column title="Thao tác" key="fmAction" />
+        <Column
+          title="Thao tác"
+          key="fmAction"
+          render={(_, record) => {
+            return (
+              <div
+                className="manage-fm__name"
+                onClick={() => openModalHandler(true, record)}
+              >
+                <Tooltip title="Xem">
+                  <ExportOutlined className="ant-icon icon-primary" />
+                </Tooltip>
+              </div>
+            );
+          }}
+        />
       </Table>
     </>
   );
