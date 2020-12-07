@@ -11,11 +11,13 @@ import {
 import requestApi from "../../../helper/axios/facilityApi/requestApi";
 import EditModal from "./EditModal";
 import showTime from "../../../helper/other/ConvertDate";
+import ViewModal from "./ViewModal";
 
 const TableCompoment = (props) => {
   const { data, setIsRerender } = props;
   const { Column, ColumnGroup } = Table;
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
   const [recordItem, setRecordItem] = useState(null);
 
   const PAGE_SIZE = 5;
@@ -68,7 +70,7 @@ const TableCompoment = (props) => {
     [setIsRerender]
   );
 
-  const handleEditModal = useCallback((record) => {
+  const handleModal = useCallback((record) => {
     console.log(record);
     if (
       record.overallStatus &&
@@ -80,18 +82,28 @@ const TableCompoment = (props) => {
     ) {
       setRecordItem(record);
       setShowEditModal(true);
+    } else {
+      setRecordItem(record);
+      setShowViewModal(true);
     }
   }, []);
 
   return useMemo(
     () => (
       <>
-        {recordItem && (
+        {recordItem && showEditModal && (
           <EditModal
             showEditModal={showEditModal}
             setShowEditModal={setShowEditModal}
             record={recordItem}
             setIsRerender={setIsRerender}
+          />
+        )}
+        {recordItem && showViewModal && (
+          <ViewModal
+            showViewModal={showViewModal}
+            setShowViewModal={setShowViewModal}
+            record={recordItem}
           />
         )}
         <Table
@@ -164,7 +176,7 @@ const TableCompoment = (props) => {
                   <Button
                     type="text"
                     icon={<EditOutlined className="ant-icon icon-primary" />}
-                    onClick={() => handleEditModal(record)}
+                    onClick={() => handleModal(record)}
                   />
                 </Tooltip>
                 <Popconfirm
@@ -187,10 +199,12 @@ const TableCompoment = (props) => {
       data,
       renderStatus,
       handleDeleteRequest,
-      handleEditModal,
+      handleModal,
       showEditModal,
       recordItem,
       setIsRerender,
+      setShowViewModal,
+      showViewModal,
     ]
   );
 };
