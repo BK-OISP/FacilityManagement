@@ -193,17 +193,43 @@ const deleteRequest = async (req, res, next) => {
 const getAllRequest = async (req, res, next) => {
   const currentEmp = req.curEmployee;
   let allRequest;
-  const headRole = [Roles.ACCOUNTANT_LEAD, Roles.DIRECTOR];
+  const director = [Roles.DIRECTOR];
+  const accountant = [Roles.ACCOUNTANT_LEAD];
   const middleRole = [Roles.FM_FACILITY_TEAM_LEAD, Roles.FM_ADMIN_LEAD];
   const teamLeadRole = [Roles.FM_DEPUTY_HEAD];
 
-  const isHead = currentEmp.role.some((role) => headRole.includes(role));
+  const isDirector = currentEmp.role.some((role) => director.includes(role));
+  const isAccountant = currentEmp.role.some((role) =>
+    accountant.includes(role)
+  );
   const isMiddle = currentEmp.role.some((role) => middleRole.includes(role));
   const isTeamLead = currentEmp.role.some((role) =>
     teamLeadRole.includes(role)
   );
 
-  if (isHead) {
+  if (isDirector) {
+    allRequest = await FM_Reuqest.find({
+      status: {
+        isDeputyHeadApproval: true,
+        isFMTeamLeadApproval: true,
+        isAdminLeadApproval: true,
+        isAccountLeadApproval: true,
+      },
+    })
+      .populate([
+        {
+          path: "employeeId",
+          select: ["department", "fullName"],
+        },
+        "unit",
+        "fmBigGroup",
+      ])
+      .sort({ updatedAt: -1 })
+      .exec();
+    return res.json({ allRequest });
+  }
+
+  if (isAccountant) {
     allRequest = await FM_Reuqest.find({
       status: {
         isDeputyHeadApproval: true,

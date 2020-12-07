@@ -21,6 +21,7 @@ const TableCompoment = (props) => {
   const PAGE_SIZE = 5;
 
   const renderStatus = useCallback((checkingStatus, record, index) => {
+    // console.log(record);
     if (record.overallStatus) {
       //true = dang chờ duyệt
       if (checkingStatus) {
@@ -35,9 +36,23 @@ const TableCompoment = (props) => {
             <ExclamationCircleOutlined className="icon-warning ant-icon" />
           </Tooltip>
         );
+    } else {
+      if (checkingStatus === false) {
+        return (
+          <Tooltip title="Reject">
+            <CloseCircleOutlined className="icon-danger ant-icon" />{" "}
+          </Tooltip>
+        );
+      }
+      if (checkingStatus === null) {
+        return (
+          <Tooltip title="Pending">
+            <ExclamationCircleOutlined className="icon-warning ant-icon" />
+          </Tooltip>
+        );
+      }
     }
     //reject rồi
-    return <CloseCircleOutlined className="icon-danger ant-icon" />;
   }, []);
 
   const handleDeleteRequest = useCallback(
@@ -54,7 +69,6 @@ const TableCompoment = (props) => {
   );
 
   const handleEditModal = useCallback((record) => {
-    console.log(!!record.isDeputyHeadApproval);
     console.log(record);
     if (
       record.overallStatus &&
@@ -111,33 +125,33 @@ const TableCompoment = (props) => {
           <ColumnGroup title="Tiến độ phê duyệt" width="58%">
             <Column
               title="Trưởng bộ phận"
-              dataIndex="deputyHead"
-              key="deputyHead"
+              dataIndex="isDeputyHeadApproval"
+              key="isDeputyHeadApproval"
               render={renderStatus}
             />
             <Column
               title="Cơ sở vật chất"
-              dataIndex="facility"
-              key="facility"
+              dataIndex="isFMTeamLeadApproval"
+              key="isFMTeamLeadApproval"
               render={renderStatus}
               c
             />
             <Column
               title="Hành chính tổng hợp"
-              dataIndex="admin"
-              key="admin"
+              dataIndex="isAdminLeadApproval"
+              key="isAdminLeadApproval"
               render={renderStatus}
             />
             <Column
               title="Kế toán"
-              dataIndex="accountant"
-              key="accountant"
+              dataIndex="isAccountLeadApproval"
+              key="isAccountLeadApproval"
               render={renderStatus}
             />
             <Column
               title="Ban Giám đốc"
-              dataIndex="director"
-              key="director"
+              dataIndex="isDirectorApproval"
+              key="isDirectorApproval"
               render={renderStatus}
             />
           </ColumnGroup>

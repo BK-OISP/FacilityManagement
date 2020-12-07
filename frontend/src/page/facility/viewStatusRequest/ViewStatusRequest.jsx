@@ -26,7 +26,6 @@ const ViewStatusRequest = () => {
             ...item.status,
           };
         });
-        console.log(dataTable);
         setData(dataTable);
       } catch (err) {
         message.error(err.message, 5);
