@@ -46,7 +46,19 @@ router.put(
 
 router.put(
   "/manage/fmTeamLeadEdit/:requestId",
+  checkRole(Roles.FM_FACILITY_TEAM_LEAD),
   facilityController.putFMTeamLeadEditRequest
+);
+
+router.put(
+  "/manage/fmManage/:requestId",
+  checkRole(
+    Roles.FM_DEPUTY_HEAD,
+    Roles.ACCOUNTANT_LEAD,
+    Roles.DIRECTOR,
+    Roles.FM_ADMIN_LEAD
+  ),
+  facilityController.putOtherRoleManageRequest
 );
 
 module.exports = router;

@@ -14,6 +14,7 @@ const TableView = (props) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [recordItem, setRecordItem] = useState(null);
+  const [isOtherModalOpen, setIsOtherModalOpen] = useState(false);
 
   const getCurrentRole = () => {
     const userRole = localStorageService.getRole();
@@ -102,7 +103,11 @@ const TableView = (props) => {
       return [...data];
     });
     await seenRequest(record._id);
-    setIsModalOpen(isOpen);
+    if (roleKey === "isFMTeamLeadApproval") {
+      setIsModalOpen(isOpen);
+    } else {
+      setIsOtherModalOpen(true);
+    }
   };
 
   return (
@@ -129,6 +134,7 @@ const TableView = (props) => {
           width="20"
           render={(text, record) => {
             const roleKey = getCurrentRoleKey(getCurrentRole());
+            console.log(roleKey);
             if (!record.isRead[roleKey]) {
               return (
                 <div

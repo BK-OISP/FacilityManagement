@@ -35,8 +35,6 @@ const getCurrentRoleKey = (role) => {
       return "isAdminLeadApproval";
     case Roles.DIRECTOR:
       return "isDirectorApproval";
-    default:
-      break;
   }
 };
 
@@ -369,6 +367,8 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
   }
 };
 
+const putOtherRoleManageRequest = async (req, res, next) => {};
+
 module.exports = {
   getFMType,
   postAddRequestFM,
@@ -378,4 +378,5 @@ module.exports = {
   getAllRequest,
   putSeenRequest,
   putFMTeamLeadEditRequest,
+  putOtherRoleManageRequest,
 };
