@@ -40,15 +40,16 @@ const ViewModal = (props) => {
         </Col>
       </Row>
       <Row gutter={16} justify="center">
-        {record.imgCollection.map((item) => (
-          <Col key={item}>
-            <Image
-              width={150}
-              height={150}
-              src={`${process.env.REACT_APP_API_URL}/oisp/${item}`}
-            />
-          </Col>
-        ))}
+        {record.imgCollection.length > 0 &&
+          record.imgCollection.map((item) => (
+            <Col key={item}>
+              <Image
+                width={150}
+                height={150}
+                src={`${process.env.REACT_APP_API_URL}/oisp/${item}`}
+              />
+            </Col>
+          ))}
       </Row>
     </Modal>
   );
