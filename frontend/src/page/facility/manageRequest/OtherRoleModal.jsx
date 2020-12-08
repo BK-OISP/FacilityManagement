@@ -1,9 +1,21 @@
-import { Col, Descriptions, Divider, Image, Row } from "antd";
-import Modal from "antd/lib/modal/Modal";
 import React, { useRef } from "react";
+import {
+  Col,
+  Descriptions,
+  Divider,
+  Image,
+  Row,
+  Form as AntdForm,
+  Space,
+  Button,
+} from "antd";
+import Modal from "antd/lib/modal/Modal";
+import * as Yup from "yup";
 
 import Roles from "../../../helper/config/Roles";
 import localStorageService from "../../../helper/localStorage/localStorageService";
+import { Field, Formik } from "formik";
+import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
 
 const getCurrentRole = () => {
   const userRole = localStorageService.getRole();
@@ -45,8 +57,8 @@ const OtherRoleModal = (props) => {
     setIsOtherModalOpen,
   } = props;
   const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
+    labelCol: { span: 2 },
+    wrapperCol: { span: 22 },
   };
   let disabledButton = false;
   const formRef = useRef();
@@ -55,6 +67,20 @@ const OtherRoleModal = (props) => {
   if (record.status[roleKey] !== null) {
     disabledButton = true;
   }
+  const initForm = {
+    note: "",
+  };
+  const validationForm = Yup.object().shape({
+    note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+  });
+
+  const handleSubmitForm = (isApprove, isDraft = false) => {
+    console.log(roleKey);
+  };
+
+  const handleClose = () => {
+    setIsOtherModalOpen(false);
+  };
 
   console.log(record);
 
@@ -109,6 +135,65 @@ const OtherRoleModal = (props) => {
           ))}
       </Row>
       <Divider orientation="center">Thông tin bổ sung</Divider>
+      <Formik
+        initialValues={initForm}
+        validationSchema={validationForm}
+        innerRef={formRef}
+        onSubmit={() => handleSubmitForm}
+      >
+        {({ handleSubmit, submitCount, values }) => {
+          return (
+            <AntdForm onFinish={handleSubmit} {...layout}>
+              <Row>
+                <Col xs={24}>
+                  <Field
+                    component={CreateAntField}
+                    name="note"
+                    type="textarea"
+                    label="Ghi chú"
+                    submitCount={submitCount}
+                    hasFeedback
+                    style={{ width: "100%" }}
+                  />
+                </Col>
+              </Row>
+              <Row justify="center" className="mb-1">
+                <Space>
+                  <Button
+                    type="primary"
+                    onClick={() => handleSubmitForm(true)}
+                    disabled={disabledButton}
+                  >
+                    Duyệt đề xuất
+                  </Button>
+                  <Button
+                    type="primary"
+                    danger
+                    // htmlType="submit"
+                    onClick={() => handleSubmitForm(false, true)}
+                    disabled={disabledButton}
+                  >
+                    Huỷ đề xuất
+                  </Button>
+                </Space>
+              </Row>
+              <Row justify="end" className="justify-content-sm-center">
+                <Space>
+                  <Button
+                    type="primary"
+                    className="btn-success"
+                    onClick={() => handleSubmitForm(false, true)}
+                    disabled={disabledButton}
+                  >
+                    Lưu tạm
+                  </Button>
+                  <Button onClick={handleClose}>Đóng</Button>
+                </Space>
+              </Row>
+            </AntdForm>
+          );
+        }}
+      </Formik>
     </Modal>
   );
 };
