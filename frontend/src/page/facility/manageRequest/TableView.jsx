@@ -7,6 +7,7 @@ import localStorageService from "../../../helper/localStorage/localStorageServic
 import Roles from "../../../helper/config/Roles";
 import manageRequest from "../../../helper/axios/facilityApi/manageApi";
 import EditModal from "./EditModal";
+import OtherRoleModal from "./OtherRoleModal";
 
 const TableView = (props) => {
   const { data, setDataTable, setIsRerender } = props;
@@ -59,7 +60,11 @@ const TableView = (props) => {
 
   const renderStatus = (text, record, index) => {
     const roleKey = getCurrentRoleKey(getCurrentRole());
-    if (record.status.overallStatus === false) {
+    console.log(roleKey);
+    if (
+      record.status.overallStatus === false &&
+      record.status[roleKey] === false
+    ) {
       record.status.check = "Đã huỷ đề xuất";
       return "Đã huỷ đề xuất";
     }
@@ -112,12 +117,20 @@ const TableView = (props) => {
 
   return (
     <>
-      {recordItem && (
+      {recordItem && isModalOpen && (
         <EditModal
           setIsRerender={setIsRerender}
           record={recordItem}
           isModalOpen={isModalOpen}
           setIsModalOpen={setIsModalOpen}
+        />
+      )}
+      {recordItem && isOtherModalOpen && (
+        <OtherRoleModal
+          setIsRerender={setIsRerender}
+          record={recordItem}
+          isOtherModalOpen={isOtherModalOpen}
+          setIsOtherModalOpen={setIsOtherModalOpen}
         />
       )}
       <Table
@@ -134,7 +147,6 @@ const TableView = (props) => {
           width="20"
           render={(text, record) => {
             const roleKey = getCurrentRoleKey(getCurrentRole());
-            console.log(roleKey);
             if (!record.isRead[roleKey]) {
               return (
                 <div

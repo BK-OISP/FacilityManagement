@@ -56,14 +56,23 @@ const getCurrentRoleKey = (role) => {
 const EditModal = (props) => {
   const { setIsRerender, record, isModalOpen, setIsModalOpen } = props;
   const [totalPrice, setTotalPrice] = useState({
-    label: 0,
-    value: 0,
+    label:
+      record.unitPricePredict > 0
+        ? convertMoney(record.unitPricePredict * record.quantity)
+        : 0,
+    value:
+      record.unitPricePredict > 0
+        ? record.unitPricePredict * record.quantity
+        : 0,
   });
+  let disabledButton = false;
   const formRef = useRef();
   const roleKey = getCurrentRoleKey(
     getCurrentRole(localStorageService.getRole())
   );
-  console.log(record);
+  if (record.status.isFMTeamLeadApproval !== null) {
+    disabledButton = true;
+  }
 
   const layout = {
     labelCol: { span: 8 },
@@ -82,27 +91,23 @@ const EditModal = (props) => {
   const handleTotalPrice = (value) => {
     const total = value * record.quantity;
     setTotalPrice((pre) => ({
-      label: convertMoney(value),
+      label: convertMoney(total),
       value: total,
     }));
   };
 
   const handleSubmitForm = async (isFMLeadApprove, isDraft = false) => {
-    console.log(formRef.current.values);
-    console.log(totalPrice.value);
     const facilityRequest = {
       ...formRef.current.values,
       isFMLeadApprove: isFMLeadApprove,
       isDraft: isDraft,
     };
-    console.log(facilityRequest);
     try {
       await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
       message.success("Edit success", 5);
       setIsModalOpen(false);
       setIsRerender((pre) => !pre);
     } catch (error) {
-      console.log(error);
       message.error("Something went wrong! Can't save your request!", 5);
     }
   };
@@ -225,10 +230,19 @@ const EditModal = (props) => {
               </Row>
               <Row justify="center" className="mb-1">
                 <Space>
-                  <Button type="primary" onClick={() => handleSubmitForm(true)}>
+                  <Button
+                    type="primary"
+                    onClick={() => handleSubmitForm(true)}
+                    disabled={disabledButton}
+                  >
                     Duyệt đề xuất
                   </Button>
-                  <Button type="primary" danger htmlType="submit">
+                  <Button
+                    type="primary"
+                    danger
+                    htmlType="submit"
+                    disabled={disabledButton}
+                  >
                     Huỷ đề xuất
                   </Button>
                 </Space>
@@ -239,6 +253,7 @@ const EditModal = (props) => {
                     type="primary"
                     className="btn-success"
                     onClick={() => handleSubmitForm(false, true)}
+                    disabled={disabledButton}
                   >
                     Lưu tạm
                   </Button>
