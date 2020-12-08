@@ -94,22 +94,30 @@ const EditModal = (props) => {
       label: convertMoney(total),
       value: total,
     }));
+    console.log(formRef);
   };
 
   const handleSubmitForm = async (isFMLeadApprove, isDraft = false) => {
-    const facilityRequest = {
-      ...formRef.current.values,
-      isFMLeadApprove: isFMLeadApprove,
-      isDraft: isDraft,
-    };
-    try {
-      await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
-      message.success("Edit success", 5);
-      setIsModalOpen(false);
-      setIsRerender((pre) => !pre);
-    } catch (error) {
-      message.error("Something went wrong! Can't save your request!", 5);
-    }
+    // const facilityRequest = {
+    //   ...formRef.current.values,
+    //   isFMLeadApprove: isFMLeadApprove,
+    //   isDraft: isDraft,
+    // };
+    // try {
+    //   await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
+    //   message.success("Edit success", 5);
+    //   setIsModalOpen(false);
+    //   setIsRerender((pre) => !pre);
+    // } catch (error) {
+    //   message.error("Something went wrong! Can't save your request!", 5);
+    // }
+    formRef.current.submitForm();
+    console.log("check");
+  };
+
+  const customSubmit = () => {
+    console.log("check");
+    formRef.current.setSubmitting(false);
   };
 
   const handleClose = () => {
@@ -175,7 +183,7 @@ const EditModal = (props) => {
 
       <Formik
         initialValues={initForm}
-        onSubmit={() => handleSubmitForm(false)}
+        onSubmit={() => customSubmit(false)}
         innerRef={formRef}
         validationSchema={validationForm}
       >
@@ -228,42 +236,43 @@ const EditModal = (props) => {
                   />
                 </Col>
               </Row>
-              <Row justify="center" className="mb-1">
-                <Space>
-                  <Button
-                    type="primary"
-                    onClick={() => handleSubmitForm(true)}
-                    disabled={disabledButton}
-                  >
-                    Duyệt đề xuất
-                  </Button>
-                  <Button
-                    type="primary"
-                    danger
-                    htmlType="submit"
-                    disabled={disabledButton}
-                  >
-                    Huỷ đề xuất
-                  </Button>
-                </Space>
-              </Row>
-              <Row justify="end" className="justify-content-sm-center">
-                <Space>
-                  <Button
-                    type="primary"
-                    className="btn-success"
-                    onClick={() => handleSubmitForm(false, true)}
-                    disabled={disabledButton}
-                  >
-                    Lưu tạm
-                  </Button>
-                  <Button onClick={handleClose}>Đóng</Button>
-                </Space>
-              </Row>
             </AntdForm>
           );
         }}
       </Formik>
+      <Row justify="center" className="mb-1">
+        <Space>
+          <Button
+            type="primary"
+            onClick={() => handleSubmitForm(true)}
+            disabled={disabledButton}
+          >
+            Duyệt đề xuất
+          </Button>
+          <Button
+            type="primary"
+            danger
+            // htmlType="submit"
+            onClick={() => handleSubmitForm(false, true)}
+            disabled={disabledButton}
+          >
+            Huỷ đề xuất
+          </Button>
+        </Space>
+      </Row>
+      <Row justify="end" className="justify-content-sm-center">
+        <Space>
+          <Button
+            type="primary"
+            className="btn-success"
+            onClick={() => handleSubmitForm(false, true)}
+            disabled={disabledButton}
+          >
+            Lưu tạm
+          </Button>
+          <Button onClick={handleClose}>Đóng</Button>
+        </Space>
+      </Row>
     </Modal>
   );
 };
