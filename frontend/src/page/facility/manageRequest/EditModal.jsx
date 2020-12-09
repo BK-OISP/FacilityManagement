@@ -54,6 +54,7 @@ const getCurrentRoleKey = (role) => {
 };
 
 const EditModal = (props) => {
+  let disabledButton = false;
   const { setIsRerender, record, isModalOpen, setIsModalOpen } = props;
   const [totalPrice, setTotalPrice] = useState({
     label:
@@ -65,7 +66,10 @@ const EditModal = (props) => {
         ? record.unitPricePredict * record.quantity
         : 0,
   });
-  let disabledButton = false;
+  const [formType, setFormType] = useState({
+    isApprove: null,
+    isDraft: false,
+  });
   const formRef = useRef();
   const roleKey = getCurrentRoleKey(
     getCurrentRole(localStorageService.getRole())
@@ -97,36 +101,38 @@ const EditModal = (props) => {
     console.log(formRef);
   };
 
-  const handleSubmitForm = async (isFMLeadApprove, isDraft = false) => {
-    // const facilityRequest = {
-    //   ...formRef.current.values,
-    //   isFMLeadApprove: isFMLeadApprove,
-    //   isDraft: isDraft,
-    // };
-    // try {
-    //   await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
-    //   message.success("Edit success", 5);
-    //   setIsModalOpen(false);
-    //   setIsRerender((pre) => !pre);
-    // } catch (error) {
-    //   message.error("Something went wrong! Can't save your request!", 5);
-    // }
-    formRef.current.submitForm();
-    console.log("check");
-  };
+  const handleSubmitForm = async () => {
+    const facilityRequest = {
+      ...formRef.current.values,
+      isFMLeadApprove: formType.isApprove,
+      isDraft: formType.isDraft,
+    };
 
-  const customSubmit = () => {
-    console.log("check");
-    formRef.current.setSubmitting(false);
+    try {
+      await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
+
+      message.success("Edit success", 5);
+      setIsModalOpen(false);
+      setIsRerender((pre) => !pre);
+    } catch (error) {
+      message.error("Something went wrong! Can't save your request!", 5);
+    }
   };
 
   const handleClose = () => {
-    setTotalPrice(0);
+    setTotalPrice({ label: 0, value: 0 });
     setIsModalOpen(false);
   };
 
-  const validationForm = Yup.object().shape({
+  const validationRejectForm = Yup.object().shape({
     note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+  });
+  const validationAcceptForm = Yup.object().shape({
+    unitPricePredict: Yup.number()
+      .moreThan(0, "Vui lòng nhập số lớn hơn 0")
+      .typeError("Vui lòng chỉ nhập số")
+      .required("Vui lòng nhập thông tin"),
+    specs: Yup.string().min(1).required("Vui lòng nhập thông tin"),
   });
 
   return (
@@ -183,9 +189,11 @@ const EditModal = (props) => {
 
       <Formik
         initialValues={initForm}
-        onSubmit={() => customSubmit(false)}
+        onSubmit={handleSubmitForm}
         innerRef={formRef}
-        validationSchema={validationForm}
+        validationSchema={
+          formType.isApprove ? validationAcceptForm : validationRejectForm
+        }
       >
         {({ handleSubmit, submitCount, values }) => {
           return (
@@ -236,43 +244,60 @@ const EditModal = (props) => {
                   />
                 </Col>
               </Row>
+              <Row justify="center" className="mb-1">
+                <Space>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    onClick={() =>
+                      setFormType({
+                        isApprove: true,
+                        isDraft: false,
+                      })
+                    }
+                    disabled={disabledButton}
+                  >
+                    Duyệt đề xuất
+                  </Button>
+                  <Button
+                    type="primary"
+                    danger
+                    htmlType="submit"
+                    onClick={() =>
+                      setFormType({
+                        isApprove: false,
+                        isDraft: false,
+                      })
+                    }
+                    disabled={disabledButton}
+                  >
+                    Huỷ đề xuất
+                  </Button>
+                </Space>
+              </Row>
+              <Row justify="end" className="justify-content-sm-center">
+                <Space>
+                  <Button
+                    type="primary"
+                    className="btn-success"
+                    htmlType="submit"
+                    onClick={() => {
+                      setFormType({
+                        isApprove: null,
+                        isDraft: true,
+                      });
+                    }}
+                    disabled={disabledButton}
+                  >
+                    Lưu tạm
+                  </Button>
+                  <Button onClick={handleClose}>Đóng</Button>
+                </Space>
+              </Row>
             </AntdForm>
           );
         }}
       </Formik>
-      <Row justify="center" className="mb-1">
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSubmitForm(true)}
-            disabled={disabledButton}
-          >
-            Duyệt đề xuất
-          </Button>
-          <Button
-            type="primary"
-            danger
-            // htmlType="submit"
-            onClick={() => handleSubmitForm(false, true)}
-            disabled={disabledButton}
-          >
-            Huỷ đề xuất
-          </Button>
-        </Space>
-      </Row>
-      <Row justify="end" className="justify-content-sm-center">
-        <Space>
-          <Button
-            type="primary"
-            className="btn-success"
-            onClick={() => handleSubmitForm(false, true)}
-            disabled={disabledButton}
-          >
-            Lưu tạm
-          </Button>
-          <Button onClick={handleClose}>Đóng</Button>
-        </Space>
-      </Row>
     </Modal>
   );
 };

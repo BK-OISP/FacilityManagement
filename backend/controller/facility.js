@@ -303,6 +303,7 @@ const putSeenRequest = async (req, res, next) => {
 const putFMTeamLeadEditRequest = async (req, res, next) => {
   const { requestId } = req.params;
   const { unitPricePredict, specs, note, isFMLeadApprove, isDraft } = req.body;
+
   try {
     const request = await FM_Reuqest.findById(requestId);
     if (request) {
@@ -343,6 +344,7 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
             return next(new HttpError("Can't save request", 501));
           } else {
             if (!!request.status.isFMTeamLeadApproval === false) {
+              console.log("checkl");
               await FM_Reuqest.findByIdAndUpdate(requestId, {
                 status: {
                   overallStatus: false,

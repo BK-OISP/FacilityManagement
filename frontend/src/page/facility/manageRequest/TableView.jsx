@@ -60,7 +60,6 @@ const TableView = (props) => {
 
   const renderStatus = (text, record, index) => {
     const roleKey = getCurrentRoleKey(getCurrentRole());
-    console.log(roleKey);
     if (
       record.status.overallStatus === false &&
       record.status[roleKey] === false
