@@ -120,6 +120,20 @@ const OtherRoleModal = (props) => {
         </Col>
       </Row>
       <Row gutter={[48, 16]}>
+        <Col xs={24} sm={12}>
+          Đơn giá:{" "}
+          {record.unitPricePredict > 0
+            ? `${record.unitPricePredict} VNĐ`
+            : "Đang cập nhật"}
+        </Col>
+        <Col xs={24} sm={12}>
+          Tổng tiền:{" "}
+          {record.totalPricePredict > 0
+            ? `${record.totalPricePredict} VNĐ`
+            : "Đang cập nhật"}
+        </Col>
+      </Row>
+      <Row gutter={[48, 16]}>
         <Col xs={24}>Mục đích: {record.purpose}</Col>
       </Row>
       <Row gutter={16} justify="center">
