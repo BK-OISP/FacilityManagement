@@ -386,7 +386,21 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
   }
 };
 
-const putOtherRoleManageRequest = async (req, res, next) => {};
+const putOtherRoleManageRequest = async (req, res, next) => {
+  const { requestId } = req.params;
+  const { note, isDraft, status } = req.body;
+  console.log(req.body);
+  console.log(requestId);
+  try {
+    const request = await FM_Reuqest.findById(requestId);
+    if (request && request.status.overallStatus) {
+    }
+    return next(new HttpError("Can't save request", 501));
+  } catch (error) {
+    return next(new HttpError("Can't save request", 501));
+  }
+  return res.json({ message: "Save complete" });
+};
 
 module.exports = {
   getFMType,

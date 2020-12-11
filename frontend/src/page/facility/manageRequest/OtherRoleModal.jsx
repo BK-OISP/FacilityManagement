@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState } from "react";
 import {
   Col,
   Descriptions,
@@ -8,6 +8,7 @@ import {
   Form as AntdForm,
   Space,
   Button,
+  message,
 } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import * as Yup from "yup";
@@ -16,6 +17,7 @@ import Roles from "../../../helper/config/Roles";
 import localStorageService from "../../../helper/localStorage/localStorageService";
 import { Field, Formik } from "formik";
 import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
+import manageRequest from "../../../helper/axios/facilityApi/manageApi";
 
 const getCurrentRole = () => {
   const userRole = localStorageService.getRole();
@@ -61,8 +63,11 @@ const OtherRoleModal = (props) => {
     wrapperCol: { span: 22 },
   };
   let disabledButton = false;
-  const formRef = useRef();
   const roleKey = getCurrentRoleKey(getCurrentRole());
+  const [formType, setFormType] = useState({
+    isApprove: null,
+    isDraft: false,
+  });
 
   if (record.status[roleKey] !== null) {
     disabledButton = true;
@@ -74,8 +79,31 @@ const OtherRoleModal = (props) => {
     note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
   });
 
-  const handleSubmitForm = (isApprove, isDraft = false) => {
+  const validationRejectForm = Yup.object().shape({
+    note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+  });
+  const validationAcceptForm = Yup.object().shape({
+    note: Yup.string().min(1).notRequired("Vui lòng nhập thông tin"),
+  });
+
+  const handleSubmitForm = async (values, action) => {
     console.log(roleKey);
+    const facilityRequest = {
+      note: values.note,
+      status: {
+        [roleKey]: formType.isApprove,
+      },
+      isDraft: formType.isDraft,
+    };
+    console.log(facilityRequest);
+    try {
+      await manageRequest.putEditRequest(record._id, facilityRequest);
+      message.success("Task saved!", 5);
+    } catch (error) {
+      message.error("Something went wrong! Please try again", 5);
+    }
+    console.log("action", action);
+    console.log("value", values);
   };
 
   const handleClose = () => {
@@ -151,9 +179,10 @@ const OtherRoleModal = (props) => {
       <Divider orientation="center">Thông tin bổ sung</Divider>
       <Formik
         initialValues={initForm}
-        validationSchema={validationForm}
-        innerRef={formRef}
-        onSubmit={() => handleSubmitForm}
+        validationSchema={
+          formType.isApprove ? validationAcceptForm : validationRejectForm
+        }
+        onSubmit={handleSubmitForm}
       >
         {({ handleSubmit, submitCount, values }) => {
           return (
@@ -175,16 +204,27 @@ const OtherRoleModal = (props) => {
                 <Space>
                   <Button
                     type="primary"
-                    onClick={() => handleSubmitForm(true)}
+                    htmlType="submit"
+                    onClick={() =>
+                      setFormType({
+                        isApprove: true,
+                        isDraft: false,
+                      })
+                    }
                     disabled={disabledButton}
                   >
                     Duyệt đề xuất
                   </Button>
                   <Button
                     type="primary"
+                    htmlType="submit"
                     danger
-                    // htmlType="submit"
-                    onClick={() => handleSubmitForm(false, true)}
+                    onClick={() =>
+                      setFormType({
+                        isApprove: false,
+                        isDraft: false,
+                      })
+                    }
                     disabled={disabledButton}
                   >
                     Huỷ đề xuất
@@ -196,7 +236,13 @@ const OtherRoleModal = (props) => {
                   <Button
                     type="primary"
                     className="btn-success"
-                    onClick={() => handleSubmitForm(false, true)}
+                    htmlType="submit"
+                    onClick={() => {
+                      setFormType({
+                        isApprove: null,
+                        isDraft: true,
+                      });
+                    }}
                     disabled={disabledButton}
                   >
                     Lưu tạm

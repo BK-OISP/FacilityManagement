@@ -101,7 +101,6 @@ const EditModal = (props) => {
   };
 
   const handleSubmitForm = async () => {
-    console.log(formRef.current.values);
     const facilityRequest = {
       ...formRef.current.values,
       isFMLeadApprove: formType.isApprove,
@@ -111,7 +110,7 @@ const EditModal = (props) => {
     try {
       await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
 
-      message.success("Edit success", 5);
+      message.success("Task saved!", 5);
       setIsModalOpen(false);
       setIsRerender((pre) => !pre);
     } catch (error) {
@@ -126,6 +125,8 @@ const EditModal = (props) => {
 
   const validationRejectForm = Yup.object().shape({
     note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+    unitPricePredict: Yup.number().notRequired(),
+    specs: Yup.string().min(1).notRequired("Vui lòng nhập thông tin"),
   });
   const validationAcceptForm = Yup.object().shape({
     unitPricePredict: Yup.number()
@@ -133,6 +134,7 @@ const EditModal = (props) => {
       .typeError("Vui lòng chỉ nhập số")
       .required("Vui lòng nhập thông tin"),
     specs: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+    note: Yup.string().min(1).notRequired("Vui lòng nhập thông tin"),
   });
 
   return (
