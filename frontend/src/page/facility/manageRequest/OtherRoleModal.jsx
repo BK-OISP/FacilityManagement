@@ -1,36 +1,34 @@
-import React, { useRef, useState } from "react";
-import Modal from "antd/lib/modal/Modal";
+import React, { useState } from "react";
 import {
+  Col,
   Descriptions,
+  Divider,
+  Image,
   Row,
   Form as AntdForm,
-  Col,
-  Button,
   Space,
-  Image,
-  Divider,
+  Button,
   message,
 } from "antd";
-import { Field, Formik } from "formik";
+import Modal from "antd/lib/modal/Modal";
 import * as Yup from "yup";
 
-import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
 import Roles from "../../../helper/config/Roles";
 import localStorageService from "../../../helper/localStorage/localStorageService";
-import convertMoney from "../../../helper/other/ConvertMoney";
+import { Field, Formik } from "formik";
+import CreateAntField from "../../../compoment/Form/CreateAntField/CreateAntField";
 import manageRequest from "../../../helper/axios/facilityApi/manageApi";
 
-const HEAD_ROLE = [
-  Roles.FM_FACILITY_TEAM_LEAD,
-  Roles.FM_DEPUTY_HEAD,
-  Roles.FM_ADMIN_LEAD,
-  Roles.DIRECTOR,
-  Roles.ACCOUNTANT_LEAD,
-];
-
-const getCurrentRole = (userRole) => {
+const getCurrentRole = () => {
+  const userRole = localStorageService.getRole();
+  const designRole = [
+    Roles.ACCOUNTANT_LEAD,
+    Roles.DIRECTOR,
+    Roles.FM_ADMIN_LEAD,
+    Roles.FM_DEPUTY_HEAD,
+  ];
   for (const role of userRole) {
-    if (HEAD_ROLE.includes(role)) {
+    if (designRole.includes(role)) {
       return role;
     }
   }
@@ -53,98 +51,75 @@ const getCurrentRoleKey = (role) => {
   }
 };
 
-const EditModal = (props) => {
+const OtherRoleModal = (props) => {
+  const {
+    setIsRerender,
+    record,
+    isOtherModalOpen,
+    setIsOtherModalOpen,
+  } = props;
+  const layout = {
+    labelCol: { span: 2 },
+    wrapperCol: { span: 22 },
+  };
   let disabledButton = false;
-  const { setIsRerender, record, isModalOpen, setIsModalOpen } = props;
-  const [totalPrice, setTotalPrice] = useState({
-    label:
-      record.unitPricePredict > 0
-        ? convertMoney(record.unitPricePredict * record.quantity)
-        : 0,
-    value:
-      record.unitPricePredict > 0
-        ? record.unitPricePredict * record.quantity
-        : 0,
-  });
+  const roleKey = getCurrentRoleKey(getCurrentRole());
   const [formType, setFormType] = useState({
     isApprove: null,
     isDraft: false,
   });
-  const formRef = useRef();
-  const roleKey = getCurrentRoleKey(
-    getCurrentRole(localStorageService.getRole())
-  );
-  if (record.status.isFMTeamLeadApproval !== null) {
+
+  if (record.status[roleKey] !== null) {
     disabledButton = true;
   }
-
-  const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 16 },
-  };
-
   const initForm = {
-    specs: record ? record.specs : "",
-    unitPricePredict: record ? record.unitPricePredict : "",
-    note:
-      record && record.notes && record.notes[roleKey]
-        ? record.notes[roleKey]
-        : "",
+    note: "",
   };
-
-  const handleTotalPrice = (value) => {
-    const total = value * record.quantity;
-    setTotalPrice((pre) => ({
-      label: convertMoney(total),
-      value: total,
-    }));
-  };
-
-  const handleSubmitForm = async () => {
-    const facilityRequest = {
-      ...formRef.current.values,
-      isFMLeadApprove: formType.isApprove,
-      isDraft: formType.isDraft,
-    };
-
-    try {
-      await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
-
-      message.success("Task saved!", 5);
-      setIsModalOpen(false);
-      setIsRerender((pre) => !pre);
-    } catch (error) {
-      message.error("Something went wrong! Can't save your request!", 5);
-    }
-  };
-
-  const handleClose = () => {
-    setTotalPrice({ label: 0, value: 0 });
-    setIsModalOpen(false);
-  };
+  const validationForm = Yup.object().shape({
+    note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
+  });
 
   const validationRejectForm = Yup.object().shape({
     note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
-    unitPricePredict: Yup.number().notRequired(),
-    specs: Yup.string().min(1).notRequired("Vui lòng nhập thông tin"),
   });
   const validationAcceptForm = Yup.object().shape({
-    unitPricePredict: Yup.number()
-      .moreThan(0, "Vui lòng nhập số lớn hơn 0")
-      .typeError("Vui lòng chỉ nhập số")
-      .required("Vui lòng nhập thông tin"),
-    specs: Yup.string().min(1).required("Vui lòng nhập thông tin"),
     note: Yup.string().min(1).notRequired("Vui lòng nhập thông tin"),
   });
+
+  const handleSubmitForm = async (values, action) => {
+    console.log(roleKey);
+    const facilityRequest = {
+      note: values.note,
+      status: {
+        [roleKey]: formType.isApprove,
+      },
+      isDraft: formType.isDraft,
+    };
+    console.log(facilityRequest);
+    try {
+      await manageRequest.putEditRequest(record._id, facilityRequest);
+      message.success("Task saved!", 5);
+    } catch (error) {
+      message.error("Something went wrong! Please try again", 5);
+    }
+    console.log("action", action);
+    console.log("value", values);
+  };
+
+  const handleClose = () => {
+    setIsOtherModalOpen(false);
+  };
+
+  console.log(record);
 
   return (
     <Modal
       title="Chi tiết đề xuất"
-      visible={isModalOpen}
-      width={960}
+      visible={isOtherModalOpen}
+      onCancel={() => setIsOtherModalOpen(false)}
       centered
       footer={null}
-      onCancel={handleClose}
+      width={960}
       destroyOnClose
     >
       <Descriptions title="Thông tin người đề xuất" bordered>
@@ -173,6 +148,20 @@ const EditModal = (props) => {
         </Col>
       </Row>
       <Row gutter={[48, 16]}>
+        <Col xs={24} sm={12}>
+          Đơn giá:{" "}
+          {record.unitPricePredict > 0
+            ? `${record.unitPricePredict} VNĐ`
+            : "Đang cập nhật"}
+        </Col>
+        <Col xs={24} sm={12}>
+          Tổng tiền:{" "}
+          {record.totalPricePredict > 0
+            ? `${record.totalPricePredict} VNĐ`
+            : "Đang cập nhật"}
+        </Col>
+      </Row>
+      <Row gutter={[48, 16]}>
         <Col xs={24}>Mục đích: {record.purpose}</Col>
       </Row>
       <Row gutter={16} justify="center">
@@ -188,54 +177,18 @@ const EditModal = (props) => {
           ))}
       </Row>
       <Divider orientation="center">Thông tin bổ sung</Divider>
-
       <Formik
         initialValues={initForm}
-        onSubmit={handleSubmitForm}
-        innerRef={formRef}
         validationSchema={
           formType.isApprove ? validationAcceptForm : validationRejectForm
         }
+        onSubmit={handleSubmitForm}
       >
         {({ handleSubmit, submitCount, values }) => {
           return (
             <AntdForm onFinish={handleSubmit} {...layout}>
-              <Row gutter={[48, 16]}>
-                <Col xs={24} lg={12}>
-                  <Field
-                    component={CreateAntField}
-                    name="unitPricePredict"
-                    type="number"
-                    label="Đơn giá (dự kiến)*"
-                    submitCount={submitCount}
-                    hasFeedback
-                    setOtherValue={handleTotalPrice}
-                    style={{ width: "100%" }}
-                  />
-                </Col>
-                <Col xs={24} lg={12}>
-                  <Row>
-                    <Col span={8} style={{ textAlign: "right" }}>
-                      <strong>Thành tiền:</strong>
-                    </Col>
-                    <Col offset={1}>
-                      <strong>{totalPrice.label} VND</strong>
-                    </Col>
-                  </Row>
-                </Col>
-              </Row>
-              <Row gutter={[48, 16]}>
-                <Col xs={24} lg={12}>
-                  <Field
-                    component={CreateAntField}
-                    name="specs"
-                    type="textarea"
-                    label="Quy cách*"
-                    submitCount={submitCount}
-                    hasFeedback
-                  />
-                </Col>
-                <Col xs={24} lg={12}>
+              <Row>
+                <Col xs={24}>
                   <Field
                     component={CreateAntField}
                     name="note"
@@ -243,6 +196,7 @@ const EditModal = (props) => {
                     label="Ghi chú"
                     submitCount={submitCount}
                     hasFeedback
+                    style={{ width: "100%" }}
                   />
                 </Col>
               </Row>
@@ -263,8 +217,8 @@ const EditModal = (props) => {
                   </Button>
                   <Button
                     type="primary"
-                    danger
                     htmlType="submit"
+                    danger
                     onClick={() =>
                       setFormType({
                         isApprove: false,
@@ -304,4 +258,4 @@ const EditModal = (props) => {
   );
 };
 
-export default EditModal;
+export default OtherRoleModal;

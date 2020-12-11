@@ -32,9 +32,9 @@ const CreateAntField = ({
 
   const onBlur = () => form.setFieldTouched(field.name, true);
 
-  const tailLayout = {
-    wrapperCol: { offset: 0, span: 16 },
-  };
+  // const tailLayout = {
+  //   wrapperCol: { offset: 0, span: 16 },
+  // };
 
   const AntStyle = (type) => {
     switch (type) {
@@ -106,7 +106,7 @@ const CreateAntField = ({
 
   return (
     <FormItem
-      {...tailLayout}
+      // {...tailLayout}
       label={label}
       hasFeedback={
         (hasFeedback && submitted) || (hasFeedback && touched) ? true : false
