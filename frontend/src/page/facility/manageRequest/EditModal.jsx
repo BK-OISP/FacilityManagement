@@ -108,15 +108,15 @@ const EditModal = (props) => {
       isDraft: formType.isDraft,
     };
 
-    // try {
-    //   await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
+    try {
+      await manageRequest.putFMTeamLeadEditRequest(record._id, facilityRequest);
 
-    //   message.success("Edit success", 5);
-    //   setIsModalOpen(false);
-    //   setIsRerender((pre) => !pre);
-    // } catch (error) {
-    //   message.error("Something went wrong! Can't save your request!", 5);
-    // }
+      message.success("Edit success", 5);
+      setIsModalOpen(false);
+      setIsRerender((pre) => !pre);
+    } catch (error) {
+      message.error("Something went wrong! Can't save your request!", 5);
+    }
   };
 
   const handleClose = () => {

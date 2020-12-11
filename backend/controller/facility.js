@@ -313,48 +313,66 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
             (request.status.overallStatus &&
               !!request.status.isFMTeamLeadApproval === false)
           ) {
-            await FM_Reuqest.findByIdAndUpdate(requestId, {
-              unitPricePredict: unitPricePredict,
+            const editedRequest = await FM_Reuqest.findByIdAndUpdate(
+              requestId,
+              {
+                unitPricePredict: unitPricePredict,
 
-              specs: specs,
-              notes: {
-                isFMTeamLeadApproval: note,
-              },
-            });
+                specs: specs,
+                notes: {
+                  isFMTeamLeadApproval: note,
+                },
+              }
+            );
+            editedRequest.totalPricePredict =
+              editedRequest.quantity * editedRequest.unitPricePredict;
+            await editedRequest.save();
             return res.json({ message: "Save complete" });
           }
           return next(new HttpError("Can't save request", 501));
         } else {
           if (isFMLeadApprove) {
             if (!!request.status.isFMTeamLeadApproval === false) {
-              await FM_Reuqest.findByIdAndUpdate(requestId, {
-                status: {
-                  overallStatus: true,
-                  isFMTeamLeadApproval: true,
-                },
-                unitPricePredict: unitPricePredict,
+              const editedRequest = await FM_Reuqest.findByIdAndUpdate(
+                requestId,
+                {
+                  status: {
+                    overallStatus: true,
+                    isFMTeamLeadApproval: true,
+                  },
+                  unitPricePredict: unitPricePredict,
 
-                specs: specs,
-                notes: {
-                  isFMTeamLeadApproval: note,
-                },
-              });
+                  specs: specs,
+                  notes: {
+                    isFMTeamLeadApproval: note,
+                  },
+                }
+              );
+              editedRequest.totalPricePredict =
+                editedRequest.quantity * editedRequest.unitPricePredict;
+              await editedRequest.save();
               return res.json({ message: "Save complete" });
             }
             return next(new HttpError("Can't save request", 501));
           } else {
             if (!!request.status.isFMTeamLeadApproval === false) {
-              await FM_Reuqest.findByIdAndUpdate(requestId, {
-                status: {
-                  overallStatus: false,
-                  isFMTeamLeadApproval: false,
-                },
-                unitPricePredict: unitPricePredict,
-                specs: specs,
-                notes: {
-                  isFMTeamLeadApproval: note,
-                },
-              });
+              const editedRequest = await FM_Reuqest.findByIdAndUpdate(
+                requestId,
+                {
+                  status: {
+                    overallStatus: false,
+                    isFMTeamLeadApproval: false,
+                  },
+                  unitPricePredict: unitPricePredict,
+                  specs: specs,
+                  notes: {
+                    isFMTeamLeadApproval: note,
+                  },
+                }
+              );
+              editedRequest.totalPricePredict =
+                editedRequest.quantity * editedRequest.unitPricePredict;
+              await editedRequest.save();
               return res.json({ message: "Save complete" });
             }
             return next(new HttpError("Can't save request", 501));
