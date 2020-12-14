@@ -191,16 +191,20 @@ const deleteRequest = async (req, res, next) => {
 const getAllRequest = async (req, res, next) => {
   const currentEmp = req.curEmployee;
   let allRequest;
-  const director = [Roles.DIRECTOR];
-  const accountant = [Roles.ACCOUNTANT_LEAD];
-  const middleRole = [Roles.FM_FACILITY_TEAM_LEAD, Roles.FM_ADMIN_LEAD];
+  const directorRole = [Roles.DIRECTOR];
+  const accountantRole = [Roles.ACCOUNTANT_LEAD];
+  const facilityLeadRole = [Roles.FM_FACILITY_TEAM_LEAD];
   const teamLeadRole = [Roles.FM_DEPUTY_HEAD];
 
-  const isDirector = currentEmp.role.some((role) => director.includes(role));
-  const isAccountant = currentEmp.role.some((role) =>
-    accountant.includes(role)
+  const isDirector = currentEmp.role.some((role) =>
+    directorRole.includes(role)
   );
-  const isMiddle = currentEmp.role.some((role) => middleRole.includes(role));
+  const isAccountant = currentEmp.role.some((role) =>
+    accountantRole.includes(role)
+  );
+  const isFacilityLeadRole = currentEmp.role.some((role) =>
+    facilityLeadRole.includes(role)
+  );
   const isTeamLead = currentEmp.role.some((role) =>
     teamLeadRole.includes(role)
   );
@@ -247,8 +251,13 @@ const getAllRequest = async (req, res, next) => {
       .exec();
     return res.json({ allRequest });
   }
-  if (isMiddle) {
-    allRequest = await FM_Reuqest.find()
+
+  if (isFacilityLeadRole) {
+    allRequest = await FM_Reuqest.find({
+      status: {
+        isDeputyHeadApproval: true,
+      },
+    })
       .populate([
         {
           path: "employeeId",
@@ -279,7 +288,9 @@ const getAllRequest = async (req, res, next) => {
 
     const filterArray = allRequest.filter(
       (item) =>
-        item.employeeId && item.employeeId.department === currentEmp.department
+        item.employeeId &&
+        item.employeeId.department === currentEmp.department &&
+        item.status.overallStatus === true
     );
     return res.json({ allRequest: [...filterArray] });
   }
@@ -392,6 +403,8 @@ const putOtherRoleManageRequest = async (req, res, next) => {
   const objectKey = Object.keys(req.body);
   const statusKey = objectKey[1];
   const statusValue = req.body[statusKey];
+  const adminRole = [Roles.FM_ADMIN_LEAD];
+  const isAdminLead = currentEmp.role.some((role) => adminRole.includes(role));
   console.log(statusValue);
   console.log(statusKey);
   console.log(req.body);
@@ -418,14 +431,21 @@ const putOtherRoleManageRequest = async (req, res, next) => {
             request.status.overallStatus &&
             !!request.status[statusKey] === false
           ) {
-            await FM_Reuqest.findByIdAndUpdate(requestId, {
-              notes: {
-                [statusKey]: note,
-              },
-              status: {
-                [statusKey]: true,
-              },
-            });
+            const editedRequest = await FM_Reuqest.findByIdAndUpdate(
+              requestId,
+              {
+                notes: {
+                  [statusKey]: note,
+                },
+                status: {
+                  [statusKey]: true,
+                },
+              }
+            );
+            if (isAdminLead) {
+              editedRequest.status.isAdminLeadApproval = true;
+              await editedRequest.save();
+            }
             return res.json({ message: "Update complete" });
           }
         } else {
@@ -435,15 +455,22 @@ const putOtherRoleManageRequest = async (req, res, next) => {
             note !== ""
           ) {
             console.log("check fail");
-            await FM_Reuqest.findByIdAndUpdate(requestId, {
-              notes: {
-                [statusKey]: note,
-              },
-              status: {
-                overallStatus: false,
-                [statusKey]: false,
-              },
-            });
+            const editedRequest = await FM_Reuqest.findByIdAndUpdate(
+              requestId,
+              {
+                notes: {
+                  [statusKey]: note,
+                },
+                status: {
+                  overallStatus: false,
+                  [statusKey]: false,
+                },
+              }
+            );
+            if (isAdminLead) {
+              editedRequest.status.isAdminLeadApproval = true;
+              await editedRequest.save();
+            }
             return res.json({ message: "Update complete" });
           }
         }
