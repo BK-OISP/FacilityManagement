@@ -298,7 +298,15 @@ const getAllRequest = async (req, res, next) => {
   }
 
   if (isAdminLead) {
-    allRequest = await FM_Reuqest.find({})
+    allRequest = await FM_Reuqest.find({
+      $or: [
+        { "status.overallStatus": true },
+        {
+          "status.overallStatus": false,
+          "status.isAdminLeadApproval": false,
+        },
+      ],
+    })
       .populate([
         {
           path: "employeeId",
@@ -309,12 +317,7 @@ const getAllRequest = async (req, res, next) => {
       ])
       .sort({ updatedAt: -1 })
       .exec();
-    const filterArray = allRequest.filter(
-      (item) =>
-        item.status.overallStatus ||
-        (!item.status.overallStatus && !item.status.isAdminLeadApproval)
-    );
-    return res.json({ allRequest: [...filterArray] });
+    return res.json({ allRequest });
   }
 };
 
