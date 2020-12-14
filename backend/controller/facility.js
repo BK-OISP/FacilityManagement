@@ -6,6 +6,7 @@ const FM_BigGroup = require("../model/fm-BigGroup");
 const FM_Reuqest = require("../model/fm-Request");
 const FM_Unit = require("../model/fm-Unit");
 const Roles = require("../helper/role");
+const { json } = require("body-parser");
 
 const HEAD_ROLE = [
   Roles.FM_FACILITY_TEAM_LEAD,
@@ -309,9 +310,8 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
         // Save as draft
         if (isDraft) {
           if (
-            !request.status.overallStatus ||
-            (request.status.overallStatus &&
-              !!request.status.isFMTeamLeadApproval === false)
+            request.status.overallStatus &&
+            !!request.status.isFMTeamLeadApproval === false
           ) {
             const editedRequest = await FM_Reuqest.findByIdAndUpdate(
               requestId,
@@ -388,18 +388,71 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
 
 const putOtherRoleManageRequest = async (req, res, next) => {
   const { requestId } = req.params;
-  const { note, isDraft, status } = req.body;
+  const { note, isDraft } = req.body;
+  const objectKey = Object.keys(req.body);
+  const statusKey = objectKey[1];
+  const statusValue = req.body[statusKey];
+  console.log(statusValue);
+  console.log(statusKey);
   console.log(req.body);
   console.log(requestId);
   try {
     const request = await FM_Reuqest.findById(requestId);
     if (request && request.status.overallStatus) {
+      if (isDraft) {
+        if (
+          request.status.overallStatus &&
+          !!request.status[statusKey] === false
+        ) {
+          await FM_Reuqest.findByIdAndUpdate(requestId, {
+            notes: {
+              [statusKey]: note,
+            },
+          });
+          return res.json({ message: "Update complete" });
+        }
+      } else {
+        //duyệt
+        if (statusValue) {
+          if (
+            request.status.overallStatus &&
+            !!request.status[statusKey] === false
+          ) {
+            await FM_Reuqest.findByIdAndUpdate(requestId, {
+              notes: {
+                [statusKey]: note,
+              },
+              status: {
+                [statusKey]: true,
+              },
+            });
+            return res.json({ message: "Update complete" });
+          }
+        } else {
+          if (
+            request.status.overallStatus &&
+            !!request.status[statusKey] === false &&
+            note !== ""
+          ) {
+            console.log("check fail");
+            await FM_Reuqest.findByIdAndUpdate(requestId, {
+              notes: {
+                [statusKey]: note,
+              },
+              status: {
+                overallStatus: false,
+                [statusKey]: false,
+              },
+            });
+            return res.json({ message: "Update complete" });
+          }
+        }
+      }
     }
     return next(new HttpError("Can't save request", 501));
   } catch (error) {
     return next(new HttpError("Can't save request", 501));
   }
-  return res.json({ message: "Save complete" });
 };
 
 module.exports = {

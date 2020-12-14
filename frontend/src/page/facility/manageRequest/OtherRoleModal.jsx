@@ -75,32 +75,29 @@ const OtherRoleModal = (props) => {
   const initForm = {
     note: "",
   };
-  const validationForm = Yup.object().shape({
-    note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
-  });
 
   const validationRejectForm = Yup.object().shape({
     note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
   });
   const validationAcceptForm = Yup.object().shape({
-    note: Yup.string().min(1).notRequired("Vui lòng nhập thông tin"),
+    note: Yup.string().min(1).notRequired(),
   });
 
   const handleSubmitForm = async (values, action) => {
     console.log(roleKey);
     const facilityRequest = {
       note: values.note,
-      status: {
-        [roleKey]: formType.isApprove,
-      },
+      [roleKey]: formType.isApprove,
       isDraft: formType.isDraft,
     };
     console.log(facilityRequest);
     try {
       await manageRequest.putEditRequest(record._id, facilityRequest);
       message.success("Task saved!", 5);
+      setIsOtherModalOpen(false);
+      setIsRerender((pre) => !pre);
     } catch (error) {
-      message.error("Something went wrong! Please try again", 5);
+      message.error("Something wentwrong! Please try again", 5);
     }
     console.log("action", action);
     console.log("value", values);
