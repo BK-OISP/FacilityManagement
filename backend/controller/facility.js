@@ -195,6 +195,7 @@ const getAllRequest = async (req, res, next) => {
   const accountantRole = [Roles.ACCOUNTANT_LEAD];
   const facilityLeadRole = [Roles.FM_FACILITY_TEAM_LEAD];
   const teamLeadRole = [Roles.FM_DEPUTY_HEAD];
+  const adminRole = [Roles.FM_ADMIN_LEAD];
 
   const isDirector = currentEmp.role.some((role) =>
     directorRole.includes(role)
@@ -208,6 +209,7 @@ const getAllRequest = async (req, res, next) => {
   const isTeamLead = currentEmp.role.some((role) =>
     teamLeadRole.includes(role)
   );
+  const isAdminLead = currentEmp.role.some((role) => adminRole.includes(role));
 
   if (isDirector) {
     allRequest = await FM_Reuqest.find({
@@ -270,7 +272,7 @@ const getAllRequest = async (req, res, next) => {
       .exec();
     return res.json({ allRequest });
   }
-  if (isTeamLead) {
+  if (isTeamLead && !isAdminLead) {
     allRequest = await FM_Reuqest.find({
       // "employeeId.department": currentEmp.department,
     })
@@ -291,6 +293,26 @@ const getAllRequest = async (req, res, next) => {
         item.employeeId &&
         item.employeeId.department === currentEmp.department &&
         item.status.overallStatus === true
+    );
+    return res.json({ allRequest: [...filterArray] });
+  }
+
+  if (isAdminLead) {
+    allRequest = await FM_Reuqest.find({})
+      .populate([
+        {
+          path: "employeeId",
+          select: ["department", "fullName"],
+        },
+        "unit",
+        "fmBigGroup",
+      ])
+      .sort({ updatedAt: -1 })
+      .exec();
+    const filterArray = allRequest.filter(
+      (item) =>
+        item.status.overallStatus ||
+        (!item.status.overallStatus && !item.status.isAdminLeadApproval)
     );
     return res.json({ allRequest: [...filterArray] });
   }
