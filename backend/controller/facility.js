@@ -340,7 +340,6 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
             await editedRequest.save();
             return res.json({ message: "Save complete" });
           }
-          return next(new HttpError("Can't save request", 501));
         } else {
           if (isFMLeadApprove) {
             if (!!request.status.isFMTeamLeadApproval === false) {
@@ -364,7 +363,6 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
               await editedRequest.save();
               return res.json({ message: "Save complete" });
             }
-            return next(new HttpError("Can't save request", 501));
           } else {
             if (!!request.status.isFMTeamLeadApproval === false) {
               const editedRequest = await FM_Reuqest.findByIdAndUpdate(
@@ -386,7 +384,6 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
               await editedRequest.save();
               return res.json({ message: "Save complete" });
             }
-            return next(new HttpError("Can't save request", 501));
           }
         }
       }
@@ -400,15 +397,12 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
 const putOtherRoleManageRequest = async (req, res, next) => {
   const { requestId } = req.params;
   const { note, isDraft } = req.body;
+  const currentEmp = req.curEmployee;
   const objectKey = Object.keys(req.body);
   const statusKey = objectKey[1];
   const statusValue = req.body[statusKey];
   const adminRole = [Roles.FM_ADMIN_LEAD];
   const isAdminLead = currentEmp.role.some((role) => adminRole.includes(role));
-  console.log(statusValue);
-  console.log(statusKey);
-  console.log(req.body);
-  console.log(requestId);
   try {
     const request = await FM_Reuqest.findById(requestId);
     if (request && request.status.overallStatus) {
@@ -425,7 +419,7 @@ const putOtherRoleManageRequest = async (req, res, next) => {
           return res.json({ message: "Update complete" });
         }
       } else {
-        //duyệt
+        // duyệt
         if (statusValue) {
           if (
             request.status.overallStatus &&
@@ -449,6 +443,7 @@ const putOtherRoleManageRequest = async (req, res, next) => {
             return res.json({ message: "Update complete" });
           }
         } else {
+          // huỷ
           if (
             request.status.overallStatus &&
             !!request.status[statusKey] === false &&
