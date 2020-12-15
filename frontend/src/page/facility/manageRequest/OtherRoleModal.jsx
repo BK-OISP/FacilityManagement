@@ -41,9 +41,9 @@ const getCurrentRoleKey = (role) => {
     case Roles.FM_FACILITY_TEAM_LEAD:
       return "isFMTeamLeadApproval";
     case Roles.FM_ADMIN_LEAD:
-      return "isAccountLeadApproval";
-    case Roles.ACCOUNTANT_LEAD:
       return "isAdminLeadApproval";
+    case Roles.ACCOUNTANT_LEAD:
+      return "isAccountLeadApproval";
     case Roles.DIRECTOR:
       return "isDirectorApproval";
     default:
@@ -68,14 +68,13 @@ const OtherRoleModal = (props) => {
     isApprove: null,
     isDraft: false,
   });
-
   if (record.status[roleKey] !== null) {
     disabledButton = true;
   }
+
   const initForm = {
     note: record.notes[roleKey] ? record.notes[roleKey] : "",
   };
-
   const validationRejectForm = Yup.object().shape({
     note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
   });
@@ -90,7 +89,6 @@ const OtherRoleModal = (props) => {
       [roleKey]: formType.isApprove,
       isDraft: formType.isDraft,
     };
-    console.log(facilityRequest);
     try {
       await manageRequest.putEditRequest(record._id, facilityRequest);
       message.success("Task saved!", 5);
@@ -99,15 +97,11 @@ const OtherRoleModal = (props) => {
     } catch (error) {
       message.error("Something wentwrong! Please try again", 5);
     }
-    console.log("action", action);
-    console.log("value", values);
   };
 
   const handleClose = () => {
     setIsOtherModalOpen(false);
   };
-
-  console.log(record);
 
   return (
     <Modal

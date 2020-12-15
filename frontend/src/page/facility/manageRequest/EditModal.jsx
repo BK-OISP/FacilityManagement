@@ -43,9 +43,9 @@ const getCurrentRoleKey = (role) => {
     case Roles.FM_FACILITY_TEAM_LEAD:
       return "isFMTeamLeadApproval";
     case Roles.FM_ADMIN_LEAD:
-      return "isAccountLeadApproval";
-    case Roles.ACCOUNTANT_LEAD:
       return "isAdminLeadApproval";
+    case Roles.ACCOUNTANT_LEAD:
+      return "isAccountLeadApproval";
     case Roles.DIRECTOR:
       return "isDirectorApproval";
     default:

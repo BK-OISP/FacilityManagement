@@ -212,14 +212,15 @@ const getAllRequest = async (req, res, next) => {
   const isAdminLead = currentEmp.role.some((role) => adminRole.includes(role));
 
   if (isDirector) {
-    allRequest = await FM_Reuqest.find({
+    const params = Ultil.convertToDotNotation({
       status: {
         isDeputyHeadApproval: true,
         isFMTeamLeadApproval: true,
         isAdminLeadApproval: true,
         isAccountLeadApproval: true,
       },
-    })
+    });
+    allRequest = await FM_Reuqest.find(params)
       .populate([
         {
           path: "employeeId",
@@ -234,13 +235,16 @@ const getAllRequest = async (req, res, next) => {
   }
 
   if (isAccountant) {
-    allRequest = await FM_Reuqest.find({
+    console.log("checkl");
+    const params = Ultil.convertToDotNotation({
       status: {
         isDeputyHeadApproval: true,
         isFMTeamLeadApproval: true,
         isAdminLeadApproval: true,
+        overallStatus: true,
       },
-    })
+    });
+    allRequest = await FM_Reuqest.find(params)
       .populate([
         {
           path: "employeeId",
