@@ -9,6 +9,7 @@ import {
   Space,
   Button,
   message,
+  Popconfirm,
 } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import * as Yup from "yup";
@@ -177,7 +178,11 @@ const OtherRoleModal = (props) => {
       >
         {({ handleSubmit, submitCount, values }) => {
           return (
-            <AntdForm onFinish={handleSubmit} {...layout}>
+            <AntdForm
+              onFinish={handleSubmit}
+              {...layout}
+              id="otherManageRequestForm"
+            >
               <Row>
                 <Col xs={24}>
                   <Field
@@ -206,7 +211,7 @@ const OtherRoleModal = (props) => {
                   >
                     Duyệt đề xuất
                   </Button>
-                  <Button
+                  {/* <Button
                     type="primary"
                     htmlType="submit"
                     danger
@@ -219,7 +224,29 @@ const OtherRoleModal = (props) => {
                     disabled={disabledButton}
                   >
                     Huỷ đề xuất
-                  </Button>
+                  </Button> */}
+                  <Popconfirm
+                    title="Bạn có chắc chắn muốn huỷ đề xuất của nhân viên không?"
+                    okText="Đúng vậy"
+                    cancelText="Sai"
+                    okButtonProps={{
+                      htmlType: "submit",
+                      form: "otherManageRequestForm",
+                      type: "default",
+                    }}
+                    cancelButtonProps={{ type: "primary" }}
+                    onConfirm={() => {
+                      setFormType({
+                        isApprove: false,
+                        isDraft: false,
+                      });
+                    }}
+                    onCancel={() => {}}
+                  >
+                    <Button type="primary" danger disabled={disabledButton}>
+                      Huỷ đề xuất
+                    </Button>
+                  </Popconfirm>
                 </Space>
               </Row>
               <Row justify="end" className="justify-content-sm-center">

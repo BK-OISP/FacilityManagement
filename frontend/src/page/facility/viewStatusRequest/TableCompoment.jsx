@@ -23,6 +23,7 @@ const TableCompoment = (props) => {
   const PAGE_SIZE = 5;
 
   const renderStatus = useCallback((checkingStatus, record, index) => {
+    console.log(checkingStatus);
     // console.log(record);
     if (record.overallStatus) {
       //true = dang chờ duyệt
@@ -39,6 +40,13 @@ const TableCompoment = (props) => {
           </Tooltip>
         );
     } else {
+      if (checkingStatus) {
+        return (
+          <Tooltip title="Accepted!">
+            <CheckCircleOutlined className="icon-success ant-icon" />
+          </Tooltip>
+        );
+      }
       if (checkingStatus === false) {
         return (
           <Tooltip title="Reject">
