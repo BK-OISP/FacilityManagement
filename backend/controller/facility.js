@@ -438,7 +438,6 @@ const putOtherRoleManageRequest = async (req, res, next) => {
               [statusKey]: note,
             },
           });
-          console.log(params);
           await FM_Reuqest.findByIdAndUpdate(requestId, params);
           return res.json({ message: "Update complete" });
         }
@@ -463,6 +462,7 @@ const putOtherRoleManageRequest = async (req, res, next) => {
             );
             if (isAdminLead) {
               editedRequest.status.isAdminLeadApproval = true;
+              editedRequest.status.isDeputyHeadApproval = true;
               await editedRequest.save();
             }
             return res.json({ message: "Update complete" });
@@ -488,7 +488,8 @@ const putOtherRoleManageRequest = async (req, res, next) => {
               params
             );
             if (isAdminLead) {
-              editedRequest.status.isAdminLeadApproval = true;
+              editedRequest.status.isAdminLeadApproval = false;
+              editedRequest.status.isDeputyHeadApproval = false;
               await editedRequest.save();
             }
             return res.json({ message: "Update complete" });
@@ -498,6 +499,7 @@ const putOtherRoleManageRequest = async (req, res, next) => {
     }
     return next(new HttpError("Can't save request", 501));
   } catch (error) {
+    console.log(error);
     return next(new HttpError("Can't save request", 501));
   }
 };

@@ -73,7 +73,7 @@ const OtherRoleModal = (props) => {
     disabledButton = true;
   }
   const initForm = {
-    note: "",
+    note: record.notes[roleKey] ? record.notes[roleKey] : "",
   };
 
   const validationRejectForm = Yup.object().shape({
