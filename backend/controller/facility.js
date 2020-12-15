@@ -6,7 +6,7 @@ const FM_BigGroup = require("../model/fm-BigGroup");
 const FM_Reuqest = require("../model/fm-Request");
 const FM_Unit = require("../model/fm-Unit");
 const Roles = require("../helper/role");
-const { json } = require("body-parser");
+const Ultil = require("../helper/ultil");
 
 const HEAD_ROLE = [
   Roles.FM_FACILITY_TEAM_LEAD,
@@ -255,11 +255,7 @@ const getAllRequest = async (req, res, next) => {
   }
 
   if (isFacilityLeadRole) {
-    allRequest = await FM_Reuqest.find({
-      status: {
-        isDeputyHeadApproval: true,
-      },
-    })
+    allRequest = await FM_Reuqest.find({})
       .populate([
         {
           path: "employeeId",
@@ -349,16 +345,16 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
             request.status.overallStatus &&
             !!request.status.isFMTeamLeadApproval === false
           ) {
+            const params = Ultil.convertToDotNotation({
+              unitPricePredict: unitPricePredict,
+              specs: specs,
+              notes: {
+                isFMTeamLeadApproval: note,
+              },
+            });
             const editedRequest = await FM_Reuqest.findByIdAndUpdate(
               requestId,
-              {
-                unitPricePredict: unitPricePredict,
-
-                specs: specs,
-                notes: {
-                  isFMTeamLeadApproval: note,
-                },
-              }
+              params
             );
             editedRequest.totalPricePredict =
               editedRequest.quantity * editedRequest.unitPricePredict;
@@ -368,20 +364,20 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
         } else {
           if (isFMLeadApprove) {
             if (!!request.status.isFMTeamLeadApproval === false) {
+              const params = Ultil.convertToDotNotation({
+                status: {
+                  overallStatus: true,
+                  isFMTeamLeadApproval: true,
+                },
+                unitPricePredict: unitPricePredict,
+                specs: specs,
+                notes: {
+                  isFMTeamLeadApproval: note,
+                },
+              });
               const editedRequest = await FM_Reuqest.findByIdAndUpdate(
                 requestId,
-                {
-                  status: {
-                    overallStatus: true,
-                    isFMTeamLeadApproval: true,
-                  },
-                  unitPricePredict: unitPricePredict,
-
-                  specs: specs,
-                  notes: {
-                    isFMTeamLeadApproval: note,
-                  },
-                }
+                params
               );
               editedRequest.totalPricePredict =
                 editedRequest.quantity * editedRequest.unitPricePredict;
@@ -390,19 +386,20 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
             }
           } else {
             if (!!request.status.isFMTeamLeadApproval === false) {
+              const params = Ultil.convertToDotNotation({
+                status: {
+                  overallStatus: false,
+                  isFMTeamLeadApproval: false,
+                },
+                unitPricePredict: unitPricePredict,
+                specs: specs,
+                notes: {
+                  isFMTeamLeadApproval: note,
+                },
+              });
               const editedRequest = await FM_Reuqest.findByIdAndUpdate(
                 requestId,
-                {
-                  status: {
-                    overallStatus: false,
-                    isFMTeamLeadApproval: false,
-                  },
-                  unitPricePredict: unitPricePredict,
-                  specs: specs,
-                  notes: {
-                    isFMTeamLeadApproval: note,
-                  },
-                }
+                params
               );
               editedRequest.totalPricePredict =
                 editedRequest.quantity * editedRequest.unitPricePredict;
@@ -436,11 +433,13 @@ const putOtherRoleManageRequest = async (req, res, next) => {
           request.status.overallStatus &&
           !!request.status[statusKey] === false
         ) {
-          await FM_Reuqest.findByIdAndUpdate(requestId, {
+          const params = Ultil.convertToDotNotation({
             notes: {
               [statusKey]: note,
             },
           });
+          console.log(params);
+          await FM_Reuqest.findByIdAndUpdate(requestId, params);
           return res.json({ message: "Update complete" });
         }
       } else {
@@ -450,16 +449,17 @@ const putOtherRoleManageRequest = async (req, res, next) => {
             request.status.overallStatus &&
             !!request.status[statusKey] === false
           ) {
+            const params = Ultil.convertToDotNotation({
+              notes: {
+                [statusKey]: note,
+              },
+              status: {
+                [statusKey]: true,
+              },
+            });
             const editedRequest = await FM_Reuqest.findByIdAndUpdate(
               requestId,
-              {
-                notes: {
-                  [statusKey]: note,
-                },
-                status: {
-                  [statusKey]: true,
-                },
-              }
+              params
             );
             if (isAdminLead) {
               editedRequest.status.isAdminLeadApproval = true;
@@ -474,18 +474,18 @@ const putOtherRoleManageRequest = async (req, res, next) => {
             !!request.status[statusKey] === false &&
             note !== ""
           ) {
-            console.log("check fail");
+            const params = Ultil.convertToDotNotation({
+              notes: {
+                [statusKey]: note,
+              },
+              status: {
+                overallStatus: false,
+                [statusKey]: false,
+              },
+            });
             const editedRequest = await FM_Reuqest.findByIdAndUpdate(
               requestId,
-              {
-                notes: {
-                  [statusKey]: note,
-                },
-                status: {
-                  overallStatus: false,
-                  [statusKey]: false,
-                },
-              }
+              params
             );
             if (isAdminLead) {
               editedRequest.status.isAdminLeadApproval = true;
