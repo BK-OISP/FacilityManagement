@@ -6,6 +6,7 @@ import {
   CheckCircleOutlined,
   ExclamationCircleOutlined,
   CloseCircleOutlined,
+  DeleteRowOutlined,
 } from "@ant-design/icons";
 
 import requestApi from "../../../helper/axios/facilityApi/requestApi";
@@ -23,41 +24,40 @@ const TableCompoment = (props) => {
   const PAGE_SIZE = 5;
 
   const renderStatus = useCallback((checkingStatus, record, index) => {
-    console.log(checkingStatus);
     // console.log(record);
     if (record.overallStatus) {
-      //true = dang chờ duyệt
+      //true = dang chờ
       if (checkingStatus) {
         return (
-          <Tooltip title="Accepted!">
+          <Tooltip title="Đã duyệt!">
             <CheckCircleOutlined className="icon-success ant-icon" />
           </Tooltip>
         );
       } else
         return (
-          <Tooltip title="Pending">
+          <Tooltip title="Đang chờ">
             <ExclamationCircleOutlined className="icon-warning ant-icon" />
           </Tooltip>
         );
     } else {
       if (checkingStatus) {
         return (
-          <Tooltip title="Accepted!">
+          <Tooltip title="Đã duyệt!">
             <CheckCircleOutlined className="icon-success ant-icon" />
           </Tooltip>
         );
       }
       if (checkingStatus === false) {
         return (
-          <Tooltip title="Reject">
-            <CloseCircleOutlined className="icon-danger ant-icon" />{" "}
+          <Tooltip title="Đã huỷ">
+            <CloseCircleOutlined className="icon-danger ant-icon" />
           </Tooltip>
         );
       }
       if (checkingStatus === null) {
         return (
-          <Tooltip title="Pending">
-            <ExclamationCircleOutlined className="icon-warning ant-icon" />
+          <Tooltip title="Yêu cầu bị huỷ">
+            <DeleteRowOutlined className="icon-refuse ant-icon" />
           </Tooltip>
         );
       }
