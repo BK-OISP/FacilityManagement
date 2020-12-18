@@ -40,9 +40,9 @@ const TableView = (props) => {
       case Roles.FM_FACILITY_TEAM_LEAD:
         return "isFMTeamLeadApproval";
       case Roles.FM_ADMIN_LEAD:
-        return "isAccountLeadApproval";
-      case Roles.ACCOUNTANT_LEAD:
         return "isAdminLeadApproval";
+      case Roles.ACCOUNTANT_LEAD:
+        return "isAccountLeadApproval";
       case Roles.DIRECTOR:
         return "isDirectorApproval";
       default:
@@ -60,6 +60,7 @@ const TableView = (props) => {
 
   const renderStatus = (text, record, index) => {
     const roleKey = getCurrentRoleKey(getCurrentRole());
+    console.log("role", roleKey);
     if (
       record.status.overallStatus === false &&
       record.status[roleKey] === false

@@ -73,12 +73,12 @@ const FM_RequestSchema = new Schema(
       isDirectorApproval: { type: Boolean, default: false }, // thầy Tùng
     },
     notes: {
-      isDeputyHeadApproval: { type: String },
+      isDeputyHeadApproval: { type: String, default: "" },
       //trưởng bộ phận
-      isFMTeamLeadApproval: { type: String }, //anh Hải - facility teamlead
-      isAdminLeadApproval: { type: String }, //HCTH - Thanh Trang
-      isAccountLeadApproval: { type: String }, //kế toán - Thi
-      isDirectorApproval: { type: String }, // thầy Tùng
+      isFMTeamLeadApproval: { type: String, default: "" }, //anh Hải - facility teamlead
+      isAdminLeadApproval: { type: String, default: "" }, //HCTH - Thanh Trang
+      isAccountLeadApproval: { type: String, default: "" }, //kế toán - Thi
+      isDirectorApproval: { type: String, default: "" }, // thầy Tùng
     },
   },
   {

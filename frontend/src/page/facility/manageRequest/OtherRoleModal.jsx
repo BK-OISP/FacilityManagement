@@ -9,6 +9,7 @@ import {
   Space,
   Button,
   message,
+  Popconfirm,
 } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import * as Yup from "yup";
@@ -41,9 +42,9 @@ const getCurrentRoleKey = (role) => {
     case Roles.FM_FACILITY_TEAM_LEAD:
       return "isFMTeamLeadApproval";
     case Roles.FM_ADMIN_LEAD:
-      return "isAccountLeadApproval";
-    case Roles.ACCOUNTANT_LEAD:
       return "isAdminLeadApproval";
+    case Roles.ACCOUNTANT_LEAD:
+      return "isAccountLeadApproval";
     case Roles.DIRECTOR:
       return "isDirectorApproval";
     default:
@@ -68,49 +69,40 @@ const OtherRoleModal = (props) => {
     isApprove: null,
     isDraft: false,
   });
-
   if (record.status[roleKey] !== null) {
     disabledButton = true;
   }
-  const initForm = {
-    note: "",
-  };
-  const validationForm = Yup.object().shape({
-    note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
-  });
 
+  const initForm = {
+    note: record.notes[roleKey] ? record.notes[roleKey] : "",
+  };
   const validationRejectForm = Yup.object().shape({
     note: Yup.string().min(1).required("Vui lòng nhập thông tin"),
   });
   const validationAcceptForm = Yup.object().shape({
-    note: Yup.string().min(1).notRequired("Vui lòng nhập thông tin"),
+    note: Yup.string().min(1).notRequired(),
   });
 
   const handleSubmitForm = async (values, action) => {
     console.log(roleKey);
     const facilityRequest = {
       note: values.note,
-      status: {
-        [roleKey]: formType.isApprove,
-      },
+      [roleKey]: formType.isApprove,
       isDraft: formType.isDraft,
     };
-    console.log(facilityRequest);
     try {
       await manageRequest.putEditRequest(record._id, facilityRequest);
       message.success("Task saved!", 5);
+      setIsOtherModalOpen(false);
+      setIsRerender((pre) => !pre);
     } catch (error) {
-      message.error("Something went wrong! Please try again", 5);
+      message.error("Something wentwrong! Please try again", 5);
     }
-    console.log("action", action);
-    console.log("value", values);
   };
 
   const handleClose = () => {
     setIsOtherModalOpen(false);
   };
-
-  console.log(record);
 
   return (
     <Modal
@@ -186,7 +178,11 @@ const OtherRoleModal = (props) => {
       >
         {({ handleSubmit, submitCount, values }) => {
           return (
-            <AntdForm onFinish={handleSubmit} {...layout}>
+            <AntdForm
+              onFinish={handleSubmit}
+              {...layout}
+              id="otherManageRequestForm"
+            >
               <Row>
                 <Col xs={24}>
                   <Field
@@ -215,7 +211,7 @@ const OtherRoleModal = (props) => {
                   >
                     Duyệt đề xuất
                   </Button>
-                  <Button
+                  {/* <Button
                     type="primary"
                     htmlType="submit"
                     danger
@@ -228,7 +224,29 @@ const OtherRoleModal = (props) => {
                     disabled={disabledButton}
                   >
                     Huỷ đề xuất
-                  </Button>
+                  </Button> */}
+                  <Popconfirm
+                    title="Bạn có chắc chắn muốn huỷ đề xuất của nhân viên không?"
+                    okText="Đúng vậy"
+                    cancelText="Sai"
+                    okButtonProps={{
+                      htmlType: "submit",
+                      form: "otherManageRequestForm",
+                      type: "default",
+                    }}
+                    cancelButtonProps={{ type: "primary" }}
+                    onConfirm={() => {
+                      setFormType({
+                        isApprove: false,
+                        isDraft: false,
+                      });
+                    }}
+                    onCancel={() => {}}
+                  >
+                    <Button type="primary" danger disabled={disabledButton}>
+                      Huỷ đề xuất
+                    </Button>
+                  </Popconfirm>
                 </Space>
               </Row>
               <Row justify="end" className="justify-content-sm-center">

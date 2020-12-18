@@ -6,6 +6,7 @@ const FM_BigGroup = require("../model/fm-BigGroup");
 const FM_Reuqest = require("../model/fm-Request");
 const FM_Unit = require("../model/fm-Unit");
 const Roles = require("../helper/role");
+const Ultil = require("../helper/ultil");
 
 const HEAD_ROLE = [
   Roles.FM_FACILITY_TEAM_LEAD,
@@ -190,29 +191,36 @@ const deleteRequest = async (req, res, next) => {
 const getAllRequest = async (req, res, next) => {
   const currentEmp = req.curEmployee;
   let allRequest;
-  const director = [Roles.DIRECTOR];
-  const accountant = [Roles.ACCOUNTANT_LEAD];
-  const middleRole = [Roles.FM_FACILITY_TEAM_LEAD, Roles.FM_ADMIN_LEAD];
+  const directorRole = [Roles.DIRECTOR];
+  const accountantRole = [Roles.ACCOUNTANT_LEAD];
+  const facilityLeadRole = [Roles.FM_FACILITY_TEAM_LEAD];
   const teamLeadRole = [Roles.FM_DEPUTY_HEAD];
+  const adminRole = [Roles.FM_ADMIN_LEAD];
 
-  const isDirector = currentEmp.role.some((role) => director.includes(role));
-  const isAccountant = currentEmp.role.some((role) =>
-    accountant.includes(role)
+  const isDirector = currentEmp.role.some((role) =>
+    directorRole.includes(role)
   );
-  const isMiddle = currentEmp.role.some((role) => middleRole.includes(role));
+  const isAccountant = currentEmp.role.some((role) =>
+    accountantRole.includes(role)
+  );
+  const isFacilityLeadRole = currentEmp.role.some((role) =>
+    facilityLeadRole.includes(role)
+  );
   const isTeamLead = currentEmp.role.some((role) =>
     teamLeadRole.includes(role)
   );
+  const isAdminLead = currentEmp.role.some((role) => adminRole.includes(role));
 
   if (isDirector) {
-    allRequest = await FM_Reuqest.find({
+    const params = Ultil.convertToDotNotation({
       status: {
         isDeputyHeadApproval: true,
         isFMTeamLeadApproval: true,
         isAdminLeadApproval: true,
         isAccountLeadApproval: true,
       },
-    })
+    });
+    allRequest = await FM_Reuqest.find(params)
       .populate([
         {
           path: "employeeId",
@@ -227,13 +235,16 @@ const getAllRequest = async (req, res, next) => {
   }
 
   if (isAccountant) {
-    allRequest = await FM_Reuqest.find({
+    console.log("checkl");
+    const params = Ultil.convertToDotNotation({
       status: {
         isDeputyHeadApproval: true,
         isFMTeamLeadApproval: true,
         isAdminLeadApproval: true,
+        overallStatus: true,
       },
-    })
+    });
+    allRequest = await FM_Reuqest.find(params)
       .populate([
         {
           path: "employeeId",
@@ -246,8 +257,9 @@ const getAllRequest = async (req, res, next) => {
       .exec();
     return res.json({ allRequest });
   }
-  if (isMiddle) {
-    allRequest = await FM_Reuqest.find()
+
+  if (isFacilityLeadRole) {
+    allRequest = await FM_Reuqest.find({})
       .populate([
         {
           path: "employeeId",
@@ -260,7 +272,7 @@ const getAllRequest = async (req, res, next) => {
       .exec();
     return res.json({ allRequest });
   }
-  if (isTeamLead) {
+  if (isTeamLead && !isAdminLead) {
     allRequest = await FM_Reuqest.find({
       // "employeeId.department": currentEmp.department,
     })
@@ -278,9 +290,34 @@ const getAllRequest = async (req, res, next) => {
 
     const filterArray = allRequest.filter(
       (item) =>
-        item.employeeId && item.employeeId.department === currentEmp.department
+        item.employeeId &&
+        item.employeeId.department === currentEmp.department &&
+        item.status.overallStatus === true
     );
     return res.json({ allRequest: [...filterArray] });
+  }
+
+  if (isAdminLead) {
+    allRequest = await FM_Reuqest.find({
+      $or: [
+        { "status.overallStatus": true },
+        {
+          "status.overallStatus": false,
+          "status.isAdminLeadApproval": false,
+        },
+      ],
+    })
+      .populate([
+        {
+          path: "employeeId",
+          select: ["department", "fullName"],
+        },
+        "unit",
+        "fmBigGroup",
+      ])
+      .sort({ updatedAt: -1 })
+      .exec();
+    return res.json({ allRequest });
   }
 };
 
@@ -309,73 +346,70 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
         // Save as draft
         if (isDraft) {
           if (
-            !request.status.overallStatus ||
-            (request.status.overallStatus &&
-              !!request.status.isFMTeamLeadApproval === false)
+            request.status.overallStatus &&
+            !!request.status.isFMTeamLeadApproval === false
           ) {
+            const params = Ultil.convertToDotNotation({
+              unitPricePredict: unitPricePredict,
+              specs: specs,
+              notes: {
+                isFMTeamLeadApproval: note,
+              },
+            });
             const editedRequest = await FM_Reuqest.findByIdAndUpdate(
               requestId,
-              {
-                unitPricePredict: unitPricePredict,
-
-                specs: specs,
-                notes: {
-                  isFMTeamLeadApproval: note,
-                },
-              }
+              params
             );
             editedRequest.totalPricePredict =
               editedRequest.quantity * editedRequest.unitPricePredict;
             await editedRequest.save();
             return res.json({ message: "Save complete" });
           }
-          return next(new HttpError("Can't save request", 501));
         } else {
           if (isFMLeadApprove) {
             if (!!request.status.isFMTeamLeadApproval === false) {
+              const params = Ultil.convertToDotNotation({
+                status: {
+                  overallStatus: true,
+                  isFMTeamLeadApproval: true,
+                },
+                unitPricePredict: unitPricePredict,
+                specs: specs,
+                notes: {
+                  isFMTeamLeadApproval: note,
+                },
+              });
               const editedRequest = await FM_Reuqest.findByIdAndUpdate(
                 requestId,
-                {
-                  status: {
-                    overallStatus: true,
-                    isFMTeamLeadApproval: true,
-                  },
-                  unitPricePredict: unitPricePredict,
-
-                  specs: specs,
-                  notes: {
-                    isFMTeamLeadApproval: note,
-                  },
-                }
+                params
               );
               editedRequest.totalPricePredict =
                 editedRequest.quantity * editedRequest.unitPricePredict;
               await editedRequest.save();
               return res.json({ message: "Save complete" });
             }
-            return next(new HttpError("Can't save request", 501));
           } else {
             if (!!request.status.isFMTeamLeadApproval === false) {
+              const params = Ultil.convertToDotNotation({
+                status: {
+                  overallStatus: false,
+                  isFMTeamLeadApproval: false,
+                },
+                unitPricePredict: unitPricePredict,
+                specs: specs,
+                notes: {
+                  isFMTeamLeadApproval: note,
+                },
+              });
               const editedRequest = await FM_Reuqest.findByIdAndUpdate(
                 requestId,
-                {
-                  status: {
-                    overallStatus: false,
-                    isFMTeamLeadApproval: false,
-                  },
-                  unitPricePredict: unitPricePredict,
-                  specs: specs,
-                  notes: {
-                    isFMTeamLeadApproval: note,
-                  },
-                }
+                params
               );
               editedRequest.totalPricePredict =
                 editedRequest.quantity * editedRequest.unitPricePredict;
               await editedRequest.save();
               return res.json({ message: "Save complete" });
             }
-            return next(new HttpError("Can't save request", 501));
           }
         }
       }
@@ -388,18 +422,90 @@ const putFMTeamLeadEditRequest = async (req, res, next) => {
 
 const putOtherRoleManageRequest = async (req, res, next) => {
   const { requestId } = req.params;
-  const { note, isDraft, status } = req.body;
-  console.log(req.body);
-  console.log(requestId);
+  const { note, isDraft } = req.body;
+  const currentEmp = req.curEmployee;
+  const objectKey = Object.keys(req.body);
+  const statusKey = objectKey[1];
+  const statusValue = req.body[statusKey];
+  const adminRole = [Roles.FM_ADMIN_LEAD];
+  const isAdminLead = currentEmp.role.some((role) => adminRole.includes(role));
   try {
     const request = await FM_Reuqest.findById(requestId);
     if (request && request.status.overallStatus) {
+      if (isDraft) {
+        if (
+          request.status.overallStatus &&
+          !!request.status[statusKey] === false
+        ) {
+          const params = Ultil.convertToDotNotation({
+            notes: {
+              [statusKey]: note,
+            },
+          });
+          await FM_Reuqest.findByIdAndUpdate(requestId, params);
+          return res.json({ message: "Update complete" });
+        }
+      } else {
+        // duyệt
+        if (statusValue) {
+          if (
+            request.status.overallStatus &&
+            !!request.status[statusKey] === false
+          ) {
+            const params = Ultil.convertToDotNotation({
+              notes: {
+                [statusKey]: note,
+              },
+              status: {
+                [statusKey]: true,
+              },
+            });
+            const editedRequest = await FM_Reuqest.findByIdAndUpdate(
+              requestId,
+              params
+            );
+            if (isAdminLead) {
+              editedRequest.status.isAdminLeadApproval = true;
+              editedRequest.status.isDeputyHeadApproval = true;
+              await editedRequest.save();
+            }
+            return res.json({ message: "Update complete" });
+          }
+        } else {
+          // huỷ
+          if (
+            request.status.overallStatus &&
+            !!request.status[statusKey] === false &&
+            note !== ""
+          ) {
+            const params = Ultil.convertToDotNotation({
+              notes: {
+                [statusKey]: note,
+              },
+              status: {
+                overallStatus: false,
+                [statusKey]: false,
+              },
+            });
+            const editedRequest = await FM_Reuqest.findByIdAndUpdate(
+              requestId,
+              params
+            );
+            if (isAdminLead) {
+              editedRequest.status.isAdminLeadApproval = false;
+              editedRequest.status.isDeputyHeadApproval = false;
+              await editedRequest.save();
+            }
+            return res.json({ message: "Update complete" });
+          }
+        }
+      }
     }
     return next(new HttpError("Can't save request", 501));
   } catch (error) {
+    console.log(error);
     return next(new HttpError("Can't save request", 501));
   }
-  return res.json({ message: "Save complete" });
 };
 
 module.exports = {
